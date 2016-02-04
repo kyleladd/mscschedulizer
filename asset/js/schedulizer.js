@@ -189,9 +189,10 @@ $.extend(mscSchedulizer, {
                     var earlyStartTime = 2400;
                     var lateEndTime = 0;
                     $.each(schedule, function(c, course){
+                        var allSectionsHaveMeeting = true;
                         $.each(course.Sections, function(s, section){
                             if(section.Meetings.length == 0){
-                                noMeetings.push(section);
+                                allSectionsHaveMeeting = false;
                             }
                             $.each(section.Meetings, function(m, meeting){
                                 if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
@@ -207,7 +208,9 @@ $.extend(mscSchedulizer, {
                                 });
                             });
                         });
-                        
+                        if(!allSectionsHaveMeeting){
+                            noMeetings.push(course);
+                        }
                     });
                     if(parseInt(earlyStartTime)>parseInt(lateEndTime)){
                         //Schedule does not have any meeting times
@@ -217,7 +220,7 @@ $.extend(mscSchedulizer, {
                     schedule.earlyStartTime = earlyStartTime;
                     schedule.lateEndTime = lateEndTime;
                     schedule.events = events;
-                    schedule.sectionWithoutMeeting = noMeetings;
+                    schedule.courseWithoutMeeting = noMeetings;
                     outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
                 });
                 mscSchedulizer.gen_schedules = schedules;
@@ -234,7 +237,6 @@ $.extend(mscSchedulizer, {
         for (i = 0; i < count ; i++) { 
             var num = start + i;
             if(mscSchedulizer.gen_schedules[num] !== undefined){
-                // console.log(mscSchedulizer.gen_schedules[num]);
                 $('#schedule_' + num).fullCalendar({                
                     editable: false,
                     handleWindowResize: true,
@@ -252,21 +254,20 @@ $.extend(mscSchedulizer, {
                     allDaySlot: false,
                     events: mscSchedulizer.gen_schedules[num].events
                 });
-                if(mscSchedulizer.gen_schedules[num].sectionWithoutMeeting.length > 0){
-                    var noMeetingsOutput = mscSchedulizer.genNoMeetingsOutput(mscSchedulizer.gen_schedules[num].sectionWithoutMeeting);
+                if(mscSchedulizer.gen_schedules[num].courseWithoutMeeting.length > 0){
+                    var noMeetingsOutput = mscSchedulizer.genNoMeetingsOutput(mscSchedulizer.gen_schedules[num].courseWithoutMeeting);
                    $('#schedule_' + num).append(noMeetingsOutput); 
                 }
                 mscSchedulizer.num_loaded++;
             }
         }
     },
-    genNoMeetingsOutput: function(sections){
+    genNoMeetingsOutput: function(courses){
         try{
             var output = "";
-            for(var i = 0; i < sections.length; i++){
-                var section = sections[i];
-                console.log(section);
-                output += section.DepartmentCode + ' ' + section.CourseNumber + ': ' + section.SectionNumber + ', ';
+            for(var i = 0; i < courses.length; i++){
+                var course = courses[i];
+                output += course.DepartmentCode + ' ' + course.CourseNumber + ', ';
             }
             if(output != ""){
                 output= output.replace(/,+\s*$/, '');
