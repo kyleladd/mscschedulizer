@@ -1,0 +1,92 @@
+    <footer id="footer">
+      <div class="container">
+        <!-- Start Copyright -->
+        <div class="copyright-section">
+          <div class="row">
+            <div class="col-md-6">
+              <p>&copy; <span class="copy-year"></span> <a href="http://kyleladd.us">Kyle Ladd</a> - All Rights Reserved</p>
+            </div>
+            <!-- .col-md-6 -->
+            <div class="col-md-6">
+              <ul class="footer-nav">
+                <li><a href="about.html">About</a>
+                </li>
+                <li><a href="https://github.com/kyleladd/MSCschedulizer_FrontEnd">GitHub</a>
+                </li>
+                <li><a href="mailto:kladd6@gmail.com">Contact</a>
+                </li>
+              </ul>
+            </div>
+            <!-- .col-md-6 -->
+          </div>
+          <!-- .row -->
+        </div>
+        <!-- End Copyright -->
+
+      </div>
+    </footer>
+    <!-- End Footer Section -->
+
+
+  </div>
+  <!-- End Full Body Container -->
+
+  <!-- Go To Top Link -->
+  <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
+  <script type="text/javascript" src="asset/js/config.js"></script>
+  <script type="text/javascript" src="asset/js/schedulizer.js"></script>
+  <script>
+  $(function(){ 
+    mscSchedulizer.loadSelections();
+    // Select Classes page
+    if(location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "select-classes.html" || location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "course-listings.html" ){
+        mscSchedulizer.getDepartments();
+        mscSchedulizer.getDepartmentCourses();
+        // Department selected - View Department Courses
+        $('#departments').on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+            if($('#departments').val() != ""){
+                $(mscSchedulizer.department_class_list).addClass("loader");
+                //Get From Endpoint - Department Courses
+                mscSchedulizer.getDepartmentCourses($('#departments').val());
+            }
+        });
+
+        // Course selected - Add Course
+        $(mscSchedulizer.department_class_list).on("click", "a.a_course", function (event) {
+            event.preventDefault();
+            //Add Course
+            var course = JSON.parse(this.getAttribute('data-value'));
+            if (mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{id:course.id}) === -1) {
+                mscSchedulizer.classes_selected.push(course);
+                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+                //reload selections area
+                mscSchedulizer.loadSelections();
+            }
+        });
+
+         // Remove Course Selections
+        $(mscSchedulizer.course_selections).on("click", "a.a_selection", function (event) {
+            event.preventDefault();
+            // //Remove Course
+            var course = JSON.parse(this.getAttribute('data-value'));
+            var index = mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{id:course.id});
+            if (index != -1) {
+                mscSchedulizer.classes_selected.splice(index,1);
+                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+                //reload selections area
+                mscSchedulizer.loadSelections();
+            }
+        });
+    } 
+    // Generate Page
+    if(location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "generate.html"){
+      mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
+      $(window).scroll(function(){
+        if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
+          mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
+        }
+      });
+    }
+});
+    
+  </script>
