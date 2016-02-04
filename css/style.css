@@ -5817,6 +5817,9 @@ ul.slicknav_nav{
 .fc-body{
 	border-top:2px solid #eee;
 }
+.nomeetings{
+    text-align:center;
+}
 @media only screen and (max-width: 479px) { 
 	.fc-time-grid-event .fc-time span{
 		font-size:xx-small !important;

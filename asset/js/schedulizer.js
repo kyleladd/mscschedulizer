@@ -53,6 +53,43 @@ $.extend(mscSchedulizer, {
             $(mscSchedulizer.department_class_list).removeClass("loader");
         });
     },
+    getDepartmentCoursesDetails: function(department){
+        // Overview
+        // List Term Meaning Table
+
+        // List Courses
+
+        // Group by course section title
+        // End Overview
+
+        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments).val();
+        $.getJSON(mscSchedulizer.api_host + "/courses/?department_id=" + department, function(results){
+            //remove this later
+            var output = "<table>";
+            var terms = []; //List of term objects used in this department
+            var grouped_sections = [];
+            $.each(results, function(i, course){
+                //Change to just one html output set
+                // output += "<tr><td><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +"</a></td></tr>";
+
+
+            });
+            // Terms output
+            // Try to merge section records? Nah
+            // Course Header Output
+            // Section output
+            
+            output += "</table>";
+            $(mscSchedulizer.department_class_list).html(output);
+        })
+        .fail(function() {
+            $(mscSchedulizer.department_class_list).html("<p>Unable to load course listings.</p>");
+        })
+        .always(function() {
+            $(mscSchedulizer.department_class_list).removeClass("loader-large");
+            $(mscSchedulizer.department_class_list).removeClass("loader");
+        });
+    },
     getDepartments:function(callback){
         $.getJSON(mscSchedulizer.api_host + "/departments/", function(results){
             var output = "";
@@ -270,8 +307,8 @@ $.extend(mscSchedulizer, {
                 output += course.DepartmentCode + ' ' + course.CourseNumber + ', ';
             }
             if(output != ""){
-                output= output.replace(/,+\s*$/, '');
-                output = "<p><h3>Online/TBD</h3>" + output + "</p>";
+                output = output.replace(/,+\s*$/, '');
+                output = "<div class='nomeetings'><h3>Online/TBD</h3>" + output + "</div>";
             }
             return output;
         }
