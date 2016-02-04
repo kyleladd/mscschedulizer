@@ -40,14 +40,13 @@
     mscSchedulizer.loadSelections();
     // Select Classes page
     if(location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "select-classes.html" || location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "course-listings.html" ){
-        mscSchedulizer.getDepartments();
-        mscSchedulizer.getDepartmentCourses();
+        mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCourses);
         // Department selected - View Department Courses
-        $('#departments').on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-            if($('#departments').val() != ""){
+        $(mscSchedulizer.departments).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+            if($(mscSchedulizer.departments).val() != ""){
                 $(mscSchedulizer.department_class_list).addClass("loader");
                 //Get From Endpoint - Department Courses
-                mscSchedulizer.getDepartmentCourses($('#departments').val());
+                mscSchedulizer.getDepartmentCourses($(mscSchedulizer.departments).val());
             }
         });
 
@@ -56,7 +55,7 @@
             event.preventDefault();
             //Add Course
             var course = JSON.parse(this.getAttribute('data-value'));
-            if (mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{id:course.id}) === -1) {
+            if (mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber}) === -1) {
                 mscSchedulizer.classes_selected.push(course);
                 localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
                 //reload selections area
@@ -69,7 +68,7 @@
             event.preventDefault();
             // //Remove Course
             var course = JSON.parse(this.getAttribute('data-value'));
-            var index = mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{id:course.id});
+            var index = mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber});
             if (index != -1) {
                 mscSchedulizer.classes_selected.splice(index,1);
                 localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));

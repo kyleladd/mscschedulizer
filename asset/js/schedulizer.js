@@ -30,16 +30,15 @@ $.extend(mscSchedulizer, {
     loadSelections: function(){
         var output = "";
         $.each(mscSchedulizer.classes_selected, function(i, course){
-            output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.departments.abbreviation+" " + course.courseNumber + " <i class=\"fa fa-times\"></i></a>";
+            output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + " <i class=\"fa fa-times\"></i></a>";
         });
         $(mscSchedulizer.course_selections).html(output);
     },
     getDepartmentCourses: function(department){
-        department = typeof department !== 'undefined' ?  department : 1;
+        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments).val();
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_id=" + department, function(results){
             //remove this later
             var output = "";
-            console.log(results);
             $.each(results, function(i, course){
                 //Change to just one html output set
                 output += "<li><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +"</a></li>";
@@ -54,7 +53,7 @@ $.extend(mscSchedulizer, {
             $(mscSchedulizer.department_class_list).removeClass("loader");
         });
     },
-    getDepartments:function(){
+    getDepartments:function(callback){
         $.getJSON(mscSchedulizer.api_host + "/departments/", function(results){
             var output = "";
             $.each(results, function(i, department){
@@ -68,13 +67,14 @@ $.extend(mscSchedulizer, {
         .always(function() {
             $('.selectpicker').selectpicker({dropupAuto:false});
             $('.selectpicker').selectpicker('refresh');
+            callback();
         });
     },
     getSchedules:function(callback){
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
         $.each(mscSchedulizer.classes_selected, function(i, course){
-            courses_list += "&courses[]=" + course.id;
+            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber;
         });
         courses_list = courses_list.replace('&','?');
         if(courses_list != ""){
@@ -147,81 +147,94 @@ $.extend(mscSchedulizer, {
     splitMeetings:function(meeting){
         // Warning, this could get ugly
         var meetups = [];
-        if(meeting.monday == 1){
+        if(meeting.Monday == 1){
             var m_date = mscSchedulizer.convertDate("M");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.startTime)+":"+mscSchedulizer.getMinutesStr(meeting.startTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.endTime)+":"+mscSchedulizer.getMinutesStr(meeting.endTime);
-            meetups.push({startTime: st,endTime: et});
+            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
+            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            meetups.push({StartTime: st,EndTime: et});
         }
-        if(meeting.tuesday == 1){
+        if(meeting.Tuesday == 1){
             var m_date = mscSchedulizer.convertDate("T");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.startTime)+":"+mscSchedulizer.getMinutesStr(meeting.startTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.endTime)+":"+mscSchedulizer.getMinutesStr(meeting.endTime);
-            meetups.push({startTime: st,endTime: et});
+            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
+            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            meetups.push({StartTime: st,EndTime: et});
         }
-        if(meeting.wednesday == 1){
+        if(meeting.Wednesday == 1){
             var m_date = mscSchedulizer.convertDate("W");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.startTime)+":"+mscSchedulizer.getMinutesStr(meeting.startTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.endTime)+":"+mscSchedulizer.getMinutesStr(meeting.endTime);
-            meetups.push({startTime: st,endTime: et});
+            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
+            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            meetups.push({StartTime: st,EndTime: et});
         }
-        if(meeting.thursday == 1){
+        if(meeting.Thursday == 1){
             var m_date = mscSchedulizer.convertDate("R");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.startTime)+":"+mscSchedulizer.getMinutesStr(meeting.startTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.endTime)+":"+mscSchedulizer.getMinutesStr(meeting.endTime);
-            meetups.push({startTime: st,endTime: et});
+            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
+            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            meetups.push({StartTime: st,EndTime: et});
         }
-        if(meeting.friday == 1){
+        if(meeting.Friday == 1){
             var m_date = mscSchedulizer.convertDate("F");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.startTime)+":"+mscSchedulizer.getMinutesStr(meeting.startTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.endTime)+":"+mscSchedulizer.getMinutesStr(meeting.endTime);
-            meetups.push({startTime: st,endTime: et});
+            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
+            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            meetups.push({StartTime: st,EndTime: et});
         }
         return meetups;
     },
     createSchedules:function(schedules){
-        if(schedules.length == 0 ){
-            $(mscSchedulizer.schedules).html("No schedule combinations");
-        }
-        else{
-            var outputSchedules = schedules.length + " combinations";
-            $.each(schedules, function(i, schedule){
-                var events = [];
-                var earlyStartTime = 2400;
-                var lateEndTime = 0;
-                $.each(schedule, function(c, course){
-                    $.each(course.course_sections, function(s, section){
-                        $.each(section.meetings, function(m, meeting){
-                            if(meeting.startTime < earlyStartTime){
-                                earlyStartTime = meeting.startTime;
+        if(schedules != null){
+            if(schedules.length > 0 ){
+                var outputSchedules = schedules.length + " combinations";
+                $.each(schedules, function(i, schedule){
+                    var events = [];
+                    var noMeetings = [];
+                    var earlyStartTime = 2400;
+                    var lateEndTime = 0;
+                    $.each(schedule, function(c, course){
+                        $.each(course.Sections, function(s, section){
+                            if(section.Meetings.length == 0){
+                                noMeetings.push(section);
                             }
-                            if(meeting.endTime > lateEndTime){
-                                lateEndTime = meeting.endTime;
-                            }
-                            //Meeting could be on multiple days, needs to be split into separate events
-                            var meetups = mscSchedulizer.splitMeetings(meeting);
-                            $.each(meetups, function(u, meetup){
-                                events.push({title:course.department.abbreviation + " " + course.courseNumber,start:meetup.startTime,end:meetup.endTime,color: mscSchedulizer.colors[c]});
+                            $.each(section.Meetings, function(m, meeting){
+                                if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
+                                    earlyStartTime = meeting.StartTime;
+                                }
+                                if(parseInt(meeting.EndTime) > parseInt(lateEndTime)){
+                                    lateEndTime = meeting.EndTime;
+                                }
+                                //Meeting could be on multiple days, needs to be split into separate events
+                                var meetups = mscSchedulizer.splitMeetings(meeting);
+                                $.each(meetups, function(u, meetup){
+                                    events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer.colors[c]});
+                                });
                             });
                         });
+                        
                     });
+                    if(parseInt(earlyStartTime)>parseInt(lateEndTime)){
+                        //Schedule does not have any meeting times
+                        earlyStartTime = 0;
+                        lateEndTime = 100;
+                    }
                     schedule.earlyStartTime = earlyStartTime;
                     schedule.lateEndTime = lateEndTime;
                     schedule.events = events;
+                    schedule.sectionWithoutMeeting = noMeetings;
+                    outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
                 });
-                outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
-            });
-            mscSchedulizer.gen_schedules = schedules;
-            $(mscSchedulizer.schedules).html(outputSchedules);
-            mscSchedulizer.initSchedules(0,mscSchedulizer.numToLoad);
+                mscSchedulizer.gen_schedules = schedules;
+                $(mscSchedulizer.schedules).html(outputSchedules);
+                mscSchedulizer.initSchedules(0,mscSchedulizer.numToLoad);
+            }
+        }
+        else{
+            $(mscSchedulizer.schedules).html("No schedule combinations");
         }
     },
     initSchedules:function(start,count){
 
         for (i = 0; i < count ; i++) { 
             var num = start + i;
-            console.log(num);
-            if(mscSchedulizer.gen_schedules[num] != undefined){
+            if(mscSchedulizer.gen_schedules[num] !== undefined){
+                // console.log(mscSchedulizer.gen_schedules[num]);
                 $('#schedule_' + num).fullCalendar({                
                     editable: false,
                     handleWindowResize: true,
@@ -239,8 +252,30 @@ $.extend(mscSchedulizer, {
                     allDaySlot: false,
                     events: mscSchedulizer.gen_schedules[num].events
                 });
+                if(mscSchedulizer.gen_schedules[num].sectionWithoutMeeting.length > 0){
+                    var noMeetingsOutput = mscSchedulizer.genNoMeetingsOutput(mscSchedulizer.gen_schedules[num].sectionWithoutMeeting);
+                   $('#schedule_' + num).append(noMeetingsOutput); 
+                }
                 mscSchedulizer.num_loaded++;
             }
+        }
+    },
+    genNoMeetingsOutput: function(sections){
+        try{
+            var output = "";
+            for(var i = 0; i < sections.length; i++){
+                var section = sections[i];
+                console.log(section);
+                output += section.DepartmentCode + ' ' + section.CourseNumber + ': ' + section.SectionNumber + ', ';
+            }
+            if(output != ""){
+                output= output.replace(/,+\s*$/, '');
+                output = "<p><h3>Online/TBD</h3>" + output + "</p>";
+            }
+            return output;
+        }
+        catch(err){
+            return "";
         }
     },
     isScrolledIntoView:function(elem) {
