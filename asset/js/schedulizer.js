@@ -41,7 +41,7 @@ $.extend(mscSchedulizer, {
             var output = "";
             $.each(results, function(i, course){
                 //Change to just one html output set
-                output += "<li><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +"</a></li>";
+                output += "<li><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
             });
             $(mscSchedulizer.department_class_list).html(output);
         })
@@ -111,7 +111,7 @@ $.extend(mscSchedulizer, {
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
         $.each(mscSchedulizer.classes_selected, function(i, course){
-            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber;
+            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + course.CourseTitle;
         });
         courses_list = courses_list.replace('&','?');
         if(courses_list != ""){
