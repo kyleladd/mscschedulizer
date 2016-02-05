@@ -96,6 +96,31 @@
                 mscSchedulizer.getDepartmentCoursesDetails($(mscSchedulizer.departments).val());
             }
         });
+        // Course selected - Add Course
+        $(mscSchedulizer.department_class_list).on("click", "a.a_course", function (event) {
+            event.preventDefault();
+            //Add Course
+            var course = JSON.parse(this.getAttribute('data-value'));
+            if (mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle}) === -1) {
+                mscSchedulizer.classes_selected.push(course);
+                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+                //reload selections area
+                mscSchedulizer.loadSelections();
+            }
+        });
+         // Remove Course Selections
+        $(mscSchedulizer.course_selections).on("click", "a.a_selection", function (event) {
+            event.preventDefault();
+            // //Remove Course
+            var course = JSON.parse(this.getAttribute('data-value'));
+            var index = mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
+            if (index != -1) {
+                mscSchedulizer.classes_selected.splice(index,1);
+                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+                //reload selections area
+                mscSchedulizer.loadSelections();
+            }
+        });
     }
 });
     

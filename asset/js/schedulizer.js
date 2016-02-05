@@ -53,33 +53,89 @@ $.extend(mscSchedulizer, {
             $(mscSchedulizer.department_class_list).removeClass("loader");
         });
     },
+    daysList: function(meeting, include_empty){
+        include_empty = typeof include_empty !== 'undefined' ? include_empty : true;
+        var result = [];
+        if(Boolean(meeting.Monday)){
+            result.push("M");
+        }
+        else if(include_empty)
+        {
+            result.push(" ");
+        }
+        if(Boolean(meeting.Tuesday)){
+            result.push("T");
+        }
+        else if(include_empty)
+        {
+            result.push(" ");
+        }
+        if(Boolean(meeting.Wednesday)){
+            result.push("W");
+        }
+        else if(include_empty)
+        {
+            result.push(" ");
+        }
+        if(Boolean(meeting.Thursday)){
+            result.push("R");
+        }
+        else if(include_empty)
+        {
+            result.push(" ");
+        }
+        if(Boolean(meeting.Friday)){
+            result.push("F");
+        }
+        else if(include_empty)
+        {
+            result.push(" ");
+        }
+        return result;
+    },
     getDepartmentCoursesDetails: function(department){
-        // Overview
-        // List Term Meaning Table
-
-        // List Courses
-
-        // Group by course section title
-        // End Overview
-
         department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments).val();
-        $.getJSON(mscSchedulizer.api_host + "/courses/?department_id=" + department, function(results){
-            //remove this later
-            var output = "<table>";
+        $.getJSON(mscSchedulizer.api_host + "/courses/?department_id=" + department + "&include_objects=1", function(results){
+            var output = "";
             var terms = []; //List of term objects used in this department
-            var grouped_sections = [];
             $.each(results, function(i, course){
-                //Change to just one html output set
-                // output += "<tr><td><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +"</a></td></tr>";
-
-
-            });
-            // Terms output
-            // Try to merge section records? Nah
-            // Course Header Output
-            // Section output
-            
+                //Table Header
+                output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
+                output+="<table class=\"course_details\">";
+                output+="<thead><tr class=\"field-name\"><td>P/T</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
+                $.each(course.Sections, function(i, section){
+                    var meeting = {};
+                    try
+                    {
+                        meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("HH:mm");
+                        meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("HH:mm");
+                        meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
+                    }
+                    catch(err)
+                    {
+                        meeting.startTime = "TBD";
+                        meeting.endTime = "";
+                        meeting.days = [];
+                    }
+                    if(mscSchedulizer.listContainsDictionaryIndex(terms,section.CourseTerm) == -1){
+                        terms.push(section.CourseTerm);
+                    }
+                    output+="<tr><td>" + section.Term + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + "-" + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+                });
+                output+="</table>";
+            });            
             output += "</table>";
+
+            // Term Table
+            var term_output = "<table class=\"term_details\">"
+                            + "<thead><tr class=\"field-name\">"
+                            + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
+                            + "</tr></thead>";
+            $.each(terms, function(i, term){
+              term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
+            });
+            term_output += "</table>";
+            output= term_output + output;
             $(mscSchedulizer.department_class_list).html(output);
         })
         .fail(function() {
@@ -146,72 +202,36 @@ $.extend(mscSchedulizer, {
         }
         return weekDate;
     },
-    getMinutesStr:function(strtime){
-        strtime = strtime.toString();
-        return strtime.substring(strtime.length-2,strtime.length);
-    },
-    getHourStr:function(strtime){
-        strtime = strtime.toString();
-        strtime = strtime.substring(0,strtime.length-2);
-        strtime = mscSchedulizer.padStr(strtime,2);
-        return strtime
-    },
-    insertString:function(str,insert,index){
-        str = str.toString();
-        if (index > 0){
-            if(index > str.length){
-                return str + insert;
-            }
-            else{
-                return str.substring(0, index) + insert + str.substring(index, str.length);
-            }
-        } 
-        else{
-            return insert + str;
-        }
-    },
-    timeFormat:function(timestr){
-        timestr = mscSchedulizer.padStr(timestr,4);
-        timestr = mscSchedulizer.insertString(timestr,":",2);
-        return timestr + ":00";
-    },
-    padStr:function(str,padToLength){
-        while (str.toString().length < padToLength) {
-            str = "0" + str;
-        }
-        return str;
-    },
     splitMeetings:function(meeting){
-        // Warning, this could get ugly
         var meetups = [];
         if(meeting.Monday == 1){
             var m_date = mscSchedulizer.convertDate("M");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Tuesday == 1){
             var m_date = mscSchedulizer.convertDate("T");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Wednesday == 1){
             var m_date = mscSchedulizer.convertDate("W");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Thursday == 1){
             var m_date = mscSchedulizer.convertDate("R");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Friday == 1){
             var m_date = mscSchedulizer.convertDate("F");
-            var st = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.StartTime)+":"+mscSchedulizer.getMinutesStr(meeting.StartTime);
-            var et = m_date.getFullYear() + "-" + mscSchedulizer.padStr(parseInt(m_date.getMonth()) + 1,2) + "-" + mscSchedulizer.padStr(m_date.getDate(),2) + "T" + mscSchedulizer.getHourStr(meeting.EndTime)+":"+mscSchedulizer.getMinutesStr(meeting.EndTime);
+            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         return meetups;
@@ -280,8 +300,8 @@ $.extend(mscSchedulizer, {
                     weekends: false, // Hide weekends
                     defaultView: 'agendaWeek', // Only show week view
                     header: false, // Hide buttons/titles
-                    minTime: mscSchedulizer.timeFormat(mscSchedulizer.gen_schedules[num].earlyStartTime), // Start time for the calendar
-                    maxTime: mscSchedulizer.timeFormat(mscSchedulizer.gen_schedules[num].lateEndTime), // End time for the calendar
+                    minTime: moment(mscSchedulizer.gen_schedules[num].earlyStartTime,"Hmm").format("HH:mm"), // Start time for the calendar
+                    maxTime: moment(mscSchedulizer.gen_schedules[num].lateEndTime,"Hmm").format("HH:mm"), // End time for the calendar
                     columnFormat: {
                         week: 'ddd' // Only show day of the week names
                     },

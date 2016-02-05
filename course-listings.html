@@ -57,6 +57,7 @@
   <script type="text/javascript" src="js/jquery.parallax.js"></script>
   <script type="text/javascript" src="js/mediaelement-and-player.js"></script>
   <script type="text/javascript" src="js/jquery.slicknav.js"></script>
+  <script type="text/javascript" src='bower_components/moment/min/moment.min.js'></script>
   
 
   <!--[if IE 8]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -84,7 +85,12 @@
           
                     <!--Sidebar-->
           <div class="col-sm-3 col-xs-12 sidebar left-sidebar">
-
+            <!-- Tags Widget -->
+            <div class="widget widget-tags">
+              <h4>Selections <span class="head-line"></span></h4>
+              <div class="tagcloud" id="course_selections">
+              </div>
+            </div>
             <!-- Categories Widget -->
             <div class="widget widget-categories">
               <h4>Departments <span class="head-line"></span></h4>
@@ -97,7 +103,7 @@
           <div class="col-sm-9 col-xs-12 page-content">
             
             <!-- Classic Heading -->
-            <h4 class="classic-title"><span>Courses</span></h4>
+            <!-- <h4 class="classic-title"><span>Courses</span></h4> -->
             
             <div id="dept_class_list" class="loader"></div>
                         
