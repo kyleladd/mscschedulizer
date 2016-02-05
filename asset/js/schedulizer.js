@@ -4,7 +4,8 @@ $.extend(mscSchedulizer, {
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
     gen_schedules:[],
     num_loaded:0,
-    listContainsDictionaryIndex: function(list,keyvaluelist){
+    searchListDictionaries:function (list,keyvaluelist,bool_index){
+        var bool_index = typeof bool_index !== 'undefined' ?  bool_index : false;
         try{
             var numcriterion = 0;
             for (var key in keyvaluelist) {
@@ -16,15 +17,16 @@ $.extend(mscSchedulizer, {
                     if(list[i][key] == keyvaluelist[key]){
                         counter++;
                         if(counter == numcriterion){
-                            return i;
+                            if(bool_index){return i;}
+                            else{return list[i];}
                         }
                     }
                 }
             }
-            return -1;
+            if(bool_index){return -1;}else{return null;}
         }
         catch(err){
-            return -1;
+            if(bool_index){return -1;}else{return null;}
         }
     },
     loadSelections: function(){
@@ -117,7 +119,7 @@ $.extend(mscSchedulizer, {
                         meeting.endTime = "";
                         meeting.days = [];
                     }
-                    if(mscSchedulizer.listContainsDictionaryIndex(terms,section.CourseTerm) == -1){
+                    if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
                         terms.push(section.CourseTerm);
                     }
                     output+="<tr><td>" + section.Term + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + "-" + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
@@ -181,6 +183,187 @@ $.extend(mscSchedulizer, {
         else{
             $(mscSchedulizer.schedules).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
         }
+    },
+    getCourseInfos:function(callback,callback2){
+        // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
+        var courses_list = "";
+        $.each(mscSchedulizer.classes_selected, function(i, course){
+            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + course.CourseTitle;
+        });
+        courses_list = courses_list.replace('&','?');
+        if(courses_list != ""){
+            $.getJSON(mscSchedulizer.api_host + "/schedule/" + courses_list + "&generate_schedule=0", function(courses){
+                return callback(courses,callback2);
+            })
+            .fail(function() {
+                return callback(null);
+            });
+        }
+        else{
+            $(mscSchedulizer.schedules).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+        }
+    },
+    getCombinations:function(courses,callback){
+        var sectionCombinations = [];
+        var courseslist = [];
+        var outputCombinations = [];
+        for (var i in courses) {
+          var course = courses[i];
+          var aSectionCombination = mscSchedulizer.getSectionCombinations(course.Sections);
+          sectionCombinations.push(aSectionCombination);
+          courseslist.push({DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
+        }
+        var scheduleCombinations = mscSchedulizer.getScheduleCombinations(sectionCombinations);
+        // For each schedule
+        for (var h = scheduleCombinations.length-1; h >= 0; h--) {
+            outputCombinations[h] = [];
+            //for each class in the schedule
+            for (var c = scheduleCombinations[h].length-1; c >= 0; c--) {
+                var coursekey = mscSchedulizer.searchListDictionaries(courseslist,{id:scheduleCombinations[h][c][0].course_id});
+                // Deep copy around ByRef
+                outputCombinations[h][c] = JSON.parse(JSON.stringify(coursekey));
+                outputCombinations[h][c].Sections = JSON.parse(JSON.stringify(scheduleCombinations[h][c]));
+            }
+        }
+        callback(outputCombinations);
+    },
+    getSectionCombinations:function(course_sections){
+        var grouped_sections = mscSchedulizer.groupSections(course_sections);
+        var values = [];
+        Object.keys(grouped_sections).forEach(function(key) {
+          var val = grouped_sections[key];
+          values.push(val);
+        });
+        var cp = Combinatorics.cartesianProduct.apply(null,values)
+        cp = cp.toArray();
+        //For each combination
+        for (var i = cp.length-1; i >= 0; i--) {
+            var combination = cp[i];
+            for (var s = combination.length-1; s >= 1; s--) {
+                var section1 = combination[s];
+                for (var t = s-1; t >= 0; t--) {
+                    var section2 = combination[t];
+                    if(mscSchedulizer.doSectionsOverlap(section1,section2)){
+                        //If they do overlap, remove combination and break
+                        cp.splice(i, 1);
+                        //break out of section loop
+                    }
+                }
+            }
+        }
+        return cp;
+    },
+    getScheduleCombinations:function(section_combinations){
+        var cp = Combinatorics.cartesianProduct.apply(null,section_combinations)
+        cp = cp.toArray();
+        //filter based on overlapping
+        // returns list of schedules containing 
+        //  a list of classes containing
+        //   a list of sections
+        // http://localhost:8014/v1/schedule/?courses[]=121&courses[]=127
+        
+        //for each schedule
+        for (var h = cp.length-1; h >= 0; h--) {
+            //for each class in the schedule
+            classloop:
+            for (var c = cp[h].length-1; c >= 1; c--) {
+                var course = cp[h][c];
+                //for each section in the class
+                for (var s = course.length-1; s >= 0; s--) {
+                    var section1 = course[s];
+                    // Compare against all other class sections within schedule
+                    // don't need to compare against current class' sections because that was already done
+                    for (var oc = c-1; oc >= 0; oc--) {
+                        var acourse = cp[h][oc];
+                        for (var os = acourse.length-1; os >= 0; os--) {
+                            var section2 = acourse[os];
+                            if(mscSchedulizer.doSectionsOverlap(section1,section2)){
+                                //If they do overlap, remove combination and break
+                                cp.splice(h, 1);
+                                //Break out of course loop
+                                break classloop;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return cp;
+    },
+    groupSections:function(course_sections){
+        var grouped_sections = {};
+        for (var i in course_sections) {
+          var course_section = course_sections[i];
+          var identifier = course_section['Identifier'];
+          if(identifier == ""){
+            identifier = "empty";
+          }
+          if (!(identifier in grouped_sections)){
+            grouped_sections[identifier] = [];
+          }
+          grouped_sections[identifier].push(course_section);
+        }
+        return grouped_sections;
+    },
+    doDaysOverlap:function(meeting1,meeting2){
+        if(meeting1.Monday==1&&meeting2.Monday==1){
+            return true;
+        }
+        else if(meeting1.Tuesday==1&&meeting2.Tuesday==1){
+            return true;
+        }
+        else if(meeting1.Wednesday==1&&meeting2.Wednesday==1){
+            return true;
+        }
+        else if(meeting1.Thursday==1&&meeting2.Thursday==1){
+            return true;
+        }
+        else if(meeting1.Friday==1&&meeting2.Friday==1){
+            return true;
+        }
+        return false;
+    },
+    doTimesOverlap:function(timeblock1,timeblock2){
+        if(timeblock1.StartTime != 0 && timeblock1.EndTime != 0 &&timeblock2.StartTime != 0 &&timeblock2.EndTime != 0){
+            if((timeblock1.StartTime <= timeblock2.StartTime && timeblock1.EndTime > timeblock2.StartTime)||((timeblock2.StartTime <= timeblock1.StartTime && timeblock2.EndTime > timeblock1.StartTime))){
+                return true;
+            }
+        }
+        return false;
+    },
+    doTermsOverlap:function(term1,term2){
+        if(term1.TermStart != 0 && term1.TermEnd != 0 &&term2.TermStart != 0 &&term2.TermEnd != 0){
+            if((term1.TermStart <= term2.TermStart && term1.TermEnd > term2.TermStart)||((term2.TermStart <= term1.TermStart && term2.TermEnd > term1.TermStart))){
+                return true;
+            }
+        }
+        return false;
+    },
+    doMeetingsOverlap:function(section1meetings,section2meetings){
+        //for each meeting in section1
+        if(typeof section1meetings !== 'undefined' && typeof section2meetings !== 'undefined'){
+            for (var i = section1meetings.length-1; i >= 0; i--) {
+                var s1meeting = section1meetings[i];
+                //for each meeting in section2
+                for (var m = section2meetings.length-1; m >= 0; m--) {
+                    var s2meeting = section2meetings[m];
+                    if(mscSchedulizer.doTimesOverlap({StartTime:s1meeting.StartTime,EndTime:s1meeting.EndTime},{StartTime:s2meeting.StartTime,EndTime:s2meeting.EndTime})){
+                        if(mscSchedulizer.doDaysOverlap(s1meeting,s2meeting)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    },
+    doSectionsOverlap:function(section1,section2){
+        if(mscSchedulizer.doMeetingsOverlap(section1.Meetings,section2.Meetings)){
+            if(mscSchedulizer.doTermsOverlap(section1.CourseTerm,section2.CourseTerm)){
+                return true;
+            }
+        }
+        return false;
     },
     convertDate:function(dayOfWeek){
         var today = new Date();
