@@ -55,7 +55,7 @@
             event.preventDefault();
             //Add Course
             var course = JSON.parse(this.getAttribute('data-value'));
-            if (mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle}) === -1) {
+            if (mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true) === -1) {
                 mscSchedulizer.classes_selected.push(course);
                 localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
                 //reload selections area
@@ -68,7 +68,7 @@
             event.preventDefault();
             // //Remove Course
             var course = JSON.parse(this.getAttribute('data-value'));
-            var index = mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
+            var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
             if (index != -1) {
                 mscSchedulizer.classes_selected.splice(index,1);
                 localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
@@ -79,7 +79,13 @@
     } 
     // Generate Page
     if(location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "generate.html"){
-      mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
+      if(mscSchedulizer.generateLocation === "Remote"){
+       mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
+
+      }
+      else{
+        mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
+      }
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
           mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
@@ -101,7 +107,7 @@
             event.preventDefault();
             //Add Course
             var course = JSON.parse(this.getAttribute('data-value'));
-            if (mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle}) === -1) {
+            if (mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true) === -1) {
                 mscSchedulizer.classes_selected.push(course);
                 localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
                 //reload selections area
@@ -113,7 +119,7 @@
             event.preventDefault();
             // //Remove Course
             var course = JSON.parse(this.getAttribute('data-value'));
-            var index = mscSchedulizer.listContainsDictionaryIndex(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
+            var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
             if (index != -1) {
                 mscSchedulizer.classes_selected.splice(index,1);
                 localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));

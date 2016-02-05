@@ -1,0 +1,11 @@
+{
+  "name": "mscschedulizer_frontend",
+  "version": "1.0.0",
+  "description": "Front end for generating class schedules for MSCschedulizer",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "js-combinatorics": "^0.5.0"
+  },
+  "devDependencies": {}
+}
