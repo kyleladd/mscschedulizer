@@ -2,6 +2,7 @@ var mscSchedulizer = mscSchedulizer === undefined ? {} : mscSchedulizer;
 $.extend(mscSchedulizer, {
     classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
+    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {},
     gen_schedules:[],
     num_loaded:0,
     searchListDictionaries:function (list,keyvaluelist,bool_index){
@@ -29,6 +30,27 @@ $.extend(mscSchedulizer, {
             if(bool_index){return -1;}else{return null;}
         }
     },
+    searchListObjects:function (list,comp_object){
+        try{
+            for(var i = 0; i < list.length; i++){
+                if(JSON.stringify(list[i]) == JSON.stringify(comp_object)){
+                    return i;
+                }
+            }
+            return -1;
+        }
+        catch(err){
+            return -1;
+        }
+    },
+    inList:function (needle, haystack) 
+    {
+        var i = haystack.length;
+        while (i--) {
+            if (haystack[i] === needle) return true;
+        }
+        return false;
+    },
     loadSelections: function(){
         var output = "";
         $.each(mscSchedulizer.classes_selected, function(i, course){
@@ -38,7 +60,7 @@ $.extend(mscSchedulizer, {
     },
     getDepartmentCourses: function(department){
         department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments).val();
-        $.getJSON(mscSchedulizer.api_host + "/courses/?department_id=" + department, function(results){
+        $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department, function(results){
             //remove this later
             var output = "";
             $.each(results, function(i, course){
@@ -97,7 +119,7 @@ $.extend(mscSchedulizer, {
     },
     getDepartmentCoursesDetails: function(department){
         department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments).val();
-        $.getJSON(mscSchedulizer.api_host + "/courses/?department_id=" + department + "&include_objects=1", function(results){
+        $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department + "&include_objects=1", function(results){
             var output = "";
             var terms = []; //List of term objects used in this department
             $.each(results, function(i, course){
@@ -169,7 +191,7 @@ $.extend(mscSchedulizer, {
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
         $.each(mscSchedulizer.classes_selected, function(i, course){
-            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + course.CourseTitle;
+            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
         });
         courses_list = courses_list.replace('&','?');
         if(courses_list != ""){
@@ -188,7 +210,7 @@ $.extend(mscSchedulizer, {
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
         $.each(mscSchedulizer.classes_selected, function(i, course){
-            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + course.CourseTitle;
+            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
         });
         courses_list = courses_list.replace('&','?');
         if(courses_list != ""){
@@ -219,7 +241,7 @@ $.extend(mscSchedulizer, {
             outputCombinations[h] = [];
             //for each class in the schedule
             for (var c = scheduleCombinations[h].length-1; c >= 0; c--) {
-                var coursekey = mscSchedulizer.searchListDictionaries(courseslist,{id:scheduleCombinations[h][c][0].course_id});
+                var coursekey = mscSchedulizer.searchListDictionaries(courseslist,{DepartmentCode:scheduleCombinations[h][c][0].DepartmentCode,CourseNumber:scheduleCombinations[h][c][0].CourseNumber,CourseTitle:scheduleCombinations[h][c][0].CourseTitle});
                 // Deep copy around ByRef
                 outputCombinations[h][c] = JSON.parse(JSON.stringify(coursekey));
                 outputCombinations[h][c].Sections = JSON.parse(JSON.stringify(scheduleCombinations[h][c]));
@@ -420,56 +442,55 @@ $.extend(mscSchedulizer, {
         return meetups;
     },
     createSchedules:function(schedules){
-        if(schedules != null){
-            if(schedules.length > 0 ){
-                var outputSchedules = schedules.length + " combinations";
-                $.each(schedules, function(i, schedule){
-                    var events = [];
-                    var noMeetings = [];
-                    var earlyStartTime = 2400;
-                    var lateEndTime = 0;
-                    $.each(schedule, function(c, course){
-                        var allSectionsHaveMeeting = true;
-                        $.each(course.Sections, function(s, section){
-                            if(section.Meetings.length == 0){
-                                allSectionsHaveMeeting = false;
+        if(schedules != null && schedules.length > 0 ){
+            var outputSchedules = schedules.length + " schedule";
+            if(schedules.length != 1){outputSchedules += "s";}
+            $.each(schedules, function(i, schedule){
+                var events = [];
+                var noMeetings = [];
+                var earlyStartTime = 2400;
+                var lateEndTime = 0;
+                $.each(schedule, function(c, course){
+                    var allSectionsHaveMeeting = true;
+                    $.each(course.Sections, function(s, section){
+                        if(section.Meetings.length == 0){
+                            allSectionsHaveMeeting = false;
+                        }
+                        $.each(section.Meetings, function(m, meeting){
+                            if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
+                                earlyStartTime = meeting.StartTime;
                             }
-                            $.each(section.Meetings, function(m, meeting){
-                                if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
-                                    earlyStartTime = meeting.StartTime;
-                                }
-                                if(parseInt(meeting.EndTime) > parseInt(lateEndTime)){
-                                    lateEndTime = meeting.EndTime;
-                                }
-                                //Meeting could be on multiple days, needs to be split into separate events
-                                var meetups = mscSchedulizer.splitMeetings(meeting);
-                                $.each(meetups, function(u, meetup){
-                                    events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer.colors[c]});
-                                });
+                            if(parseInt(meeting.EndTime) > parseInt(lateEndTime)){
+                                lateEndTime = meeting.EndTime;
+                            }
+                            //Meeting could be on multiple days, needs to be split into separate events
+                            var meetups = mscSchedulizer.splitMeetings(meeting);
+                            $.each(meetups, function(u, meetup){
+                                events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer.colors[c]});
                             });
                         });
-                        if(!allSectionsHaveMeeting){
-                            noMeetings.push(course);
-                        }
                     });
-                    if(parseInt(earlyStartTime)>parseInt(lateEndTime)){
-                        //Schedule does not have any meeting times
-                        earlyStartTime = 0;
-                        lateEndTime = 100;
+                    if(!allSectionsHaveMeeting){
+                        noMeetings.push(course);
                     }
-                    schedule.earlyStartTime = earlyStartTime;
-                    schedule.lateEndTime = lateEndTime;
-                    schedule.events = events;
-                    schedule.courseWithoutMeeting = noMeetings;
-                    outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
                 });
-                mscSchedulizer.gen_schedules = schedules;
-                $(mscSchedulizer.schedules).html(outputSchedules);
-                mscSchedulizer.initSchedules(0,mscSchedulizer.numToLoad);
-            }
+                if(parseInt(earlyStartTime)>parseInt(lateEndTime)){
+                    //Schedule does not have any meeting times
+                    earlyStartTime = 0;
+                    lateEndTime = 100;
+                }
+                schedule.earlyStartTime = earlyStartTime;
+                schedule.lateEndTime = lateEndTime;
+                schedule.events = events;
+                schedule.courseWithoutMeeting = noMeetings;
+                outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
+            });
+            mscSchedulizer.gen_schedules = schedules;
+            $(mscSchedulizer.schedules).html(outputSchedules);
+            mscSchedulizer.initSchedules(0,mscSchedulizer.numToLoad);
         }
         else{
-            $(mscSchedulizer.schedules).html("No schedule combinations");
+            $(mscSchedulizer.schedules).html("No schedules");
         }
     },
     initSchedules:function(start,count){
@@ -498,9 +519,23 @@ $.extend(mscSchedulizer, {
                     var noMeetingsOutput = mscSchedulizer.genNoMeetingsOutput(mscSchedulizer.gen_schedules[num].courseWithoutMeeting);
                    $('#schedule_' + num).append(noMeetingsOutput); 
                 }
+                $('#schedule_' + num).append(mscSchedulizer.optionsOutput(mscSchedulizer.gen_schedules[num])); 
                 mscSchedulizer.num_loaded++;
             }
         }
+    },
+    optionsOutput:function(schedule){
+        var result = "<div class=\"options\">";
+        result += mscSchedulizer.favoriteOutput(schedule);
+        result+="</div>";
+        return result;
+    },
+    favoriteOutput:function(schedule){
+        // If a favorite
+        if(mscSchedulizer.searchListObjects(mscSchedulizer.favorite_schedules,schedule) !== -1){
+            return "<a class=\"unfavorite_schedule favoriting\" data-value='" + JSON.stringify(schedule) + "'>Unfavorite</a>";
+        }
+        return "<a class=\"favorite_schedule favoriting\" data-value='" + JSON.stringify(schedule) + "'>Favorite</a>";
     },
     genNoMeetingsOutput: function(courses){
         try{

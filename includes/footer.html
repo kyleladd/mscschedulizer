@@ -39,7 +39,7 @@
   $(function(){ 
     mscSchedulizer.loadSelections();
     // Select Classes page
-    if(location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "select-classes.html"){
+    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html"])){
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCourses);
         // Department selected - View Department Courses
         $(mscSchedulizer.departments).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
@@ -49,39 +49,11 @@
                 mscSchedulizer.getDepartmentCourses($(mscSchedulizer.departments).val());
             }
         });
-
-        // Course selected - Add Course
-        $(mscSchedulizer.department_class_list).on("click", "a.a_course", function (event) {
-            event.preventDefault();
-            //Add Course
-            var course = JSON.parse(this.getAttribute('data-value'));
-            if (mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true) === -1) {
-                mscSchedulizer.classes_selected.push(course);
-                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
-                //reload selections area
-                mscSchedulizer.loadSelections();
-            }
-        });
-
-         // Remove Course Selections
-        $(mscSchedulizer.course_selections).on("click", "a.a_selection", function (event) {
-            event.preventDefault();
-            // //Remove Course
-            var course = JSON.parse(this.getAttribute('data-value'));
-            var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
-            if (index != -1) {
-                mscSchedulizer.classes_selected.splice(index,1);
-                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
-                //reload selections area
-                mscSchedulizer.loadSelections();
-            }
-        });
-    } 
+    }
     // Generate Page
-    if(location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "generate.html"){
+    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html"])){
       if(mscSchedulizer.generateLocation === "Remote"){
        mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
-
       }
       else{
         mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
@@ -92,7 +64,19 @@
         }
       });
     }
-    if(location.pathname.substr(location.pathname.lastIndexOf("/")+1) == "course-listings.html" ){
+    // Load schedules from favorites array
+    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["favorites.html"])){
+      // console.log(mscSchedulizer.favorite_schedules);
+        mscSchedulizer.createSchedules(mscSchedulizer.favorite_schedules);
+      $(window).scroll(function(){
+        if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
+          mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
+        }
+      });
+    }
+
+    // Course Listings page
+    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);
         // Department selected - View Department Courses
         $(mscSchedulizer.departments).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
@@ -102,31 +86,69 @@
                 mscSchedulizer.getDepartmentCoursesDetails($(mscSchedulizer.departments).val());
             }
         });
-        // Course selected - Add Course
-        $(mscSchedulizer.department_class_list).on("click", "a.a_course", function (event) {
+    }
+
+    // Favorites
+    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html","favorites.html"])){
+      // Add Favorite
+      $(mscSchedulizer.schedules).on("click", "a.favorite_schedule", function (event) {
             event.preventDefault();
             //Add Course
-            var course = JSON.parse(this.getAttribute('data-value'));
-            if (mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true) === -1) {
-                mscSchedulizer.classes_selected.push(course);
-                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
-                //reload selections area
-                mscSchedulizer.loadSelections();
+            var schedule = JSON.parse(this.getAttribute('data-value'));
+            if (mscSchedulizer.searchListObjects(mscSchedulizer.favorite_schedules,schedule) === -1) {
+                mscSchedulizer.favorite_schedules.push(schedule);
+                localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
+                // Update Element so it can be unfavorited
+                $(this).addClass("unfavorite_schedule");
+                $(this).removeClass("favorite_schedule");
+                $(this).text("Unfavorite");
             }
         });
-         // Remove Course Selections
-        $(mscSchedulizer.course_selections).on("click", "a.a_selection", function (event) {
-            event.preventDefault();
-            // //Remove Course
-            var course = JSON.parse(this.getAttribute('data-value'));
-            var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
-            if (index != -1) {
-                mscSchedulizer.classes_selected.splice(index,1);
-                localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
-                //reload selections area
-                mscSchedulizer.loadSelections();
-            }
-        });
+      // Remove Favorite
+      $(mscSchedulizer.schedules).on("click", "a.unfavorite_schedule", function (event) {
+          event.preventDefault();
+          //Add Course
+          var schedule = JSON.parse(this.getAttribute('data-value'));
+          var index = mscSchedulizer.searchListObjects(mscSchedulizer.favorite_schedules,schedule);
+          if (index !== -1) {
+              mscSchedulizer.favorite_schedules.splice(index, 1);
+              localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
+              // Update Element so it can be favorited
+              $(this).addClass("favorite_schedule");
+              $(this).removeClass("unfavorite_schedule");
+              $(this).text("Favorite");
+          }
+      });
+    }
+    
+    // Course Selections
+    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html","course-listings.html"])){
+      // Course selected - Add Course
+      $(mscSchedulizer.department_class_list).on("click", "a.a_course", function (event) {
+          event.preventDefault();
+          //Add Course
+          var course = JSON.parse(this.getAttribute('data-value'));
+          if (mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true) === -1) {
+              mscSchedulizer.classes_selected.push(course);
+              localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+              //reload selections area
+              mscSchedulizer.loadSelections();
+          }
+      });
+
+       // Remove Course Selections
+      $(mscSchedulizer.course_selections).on("click", "a.a_selection", function (event) {
+          event.preventDefault();
+          // //Remove Course
+          var course = JSON.parse(this.getAttribute('data-value'));
+          var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
+          if (index != -1) {
+              mscSchedulizer.classes_selected.splice(index,1);
+              localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+              //reload selections area
+              mscSchedulizer.loadSelections();
+          }
+      });
     }
 });
     
