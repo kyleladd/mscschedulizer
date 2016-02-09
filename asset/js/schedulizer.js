@@ -542,7 +542,10 @@ $.extend(mscSchedulizer, {
                         }
                         // $.each(section.Meetings, function(m, meeting){
                         for (var m in section.Meetings) {
-                            var meeting = section.Meetings[m];    
+                            var meeting = section.Meetings[m];
+                            if(meeting.StartTime == null || meeting.EndTime == null || (meeting.Monday==0 && meeting.Tuesday==0 && meeting.Wednesday==0 && meeting.Thursday==0 && meeting.Friday==0)){
+                                allSectionsHaveMeeting = false;
+                            }    
                             if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
                                 earlyStartTime = meeting.StartTime;
                             }

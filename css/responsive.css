@@ -249,43 +249,47 @@
 	}
 	
 	ul.social-list li a.facebook:hover {
-		color: #507CBE;
+		color: #507CBE !important;
 	}
 	
 	ul.social-list li a.twitter:hover {
-		color: #63CDF1;
+		color: #63CDF1 !important;
 	}
 	
 	ul.social-list li a.google:hover {
-		color: #F16261;
+		color: #F16261 !important;
 	}
 	
 	ul.social-list li a.dribbble:hover {
-		color: #E46387;
+		color: #E46387 !important;
 	}
 	
-	ul.social-list li a.linkdin:hover {
-		color: #90CADD;
+	ul.social-list li a.linkedin:hover {
+		color: #90CADD !important;
 	}
 	
 	ul.social-list li a.tumblr:hover {
-		color: #4D7EA3;
+		color: #4D7EA3 !important;
 	}
 	
 	ul.social-list li a.flickr:hover {
-		color: #E474AF;
+		color: #E474AF !important;
 	}
 	
-	ul.social-list li a.instgram:hover {
-		color: #4D4F54;
+	ul.social-list li a.instagram:hover {
+		color: #4D4F54 !important;
+	}
+
+	ul.social-list li a.github:hover {
+	    color: #4D4F54 !important;
 	}
 	
 	ul.social-list li a.vimeo:hover {
-		color: #87D3E0;
+		color: #87D3E0 !important;
 	}
 	
 	ul.social-list li a.skype:hover {
-		color: #36C4F3
+		color: #36C4F3 !important;
 	}
 	
 	.navbar-default .navbar-toggle {

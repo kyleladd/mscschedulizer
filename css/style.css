@@ -498,9 +498,9 @@ ul.social-list li a {
     -o-transition: all 0.2s ease-in-out;
 }
 
-/*ul.social-list li a:hover {
+ul.social-list li a:hover {
 	color: #fff;
-}*/
+}
 
 ul.social-list li a.facebook:hover {
 	background-color: #507CBE;
@@ -518,7 +518,7 @@ ul.social-list li a.dribbble:hover {
 	background-color: #E46387;
 }
 
-ul.social-list li a.linkdin:hover {
+ul.social-list li a.linkedin:hover {
 	background-color: #90CADD;
 }
 
@@ -530,7 +530,7 @@ ul.social-list li a.flickr:hover {
 	background-color: #E474AF;
 }
 
-ul.social-list li a.instgram:hover {
+ul.social-list li a.instagram:hover {
 	background-color: #4D4F54;
 }
 
@@ -4201,7 +4201,7 @@ footer a:hover {
 	background-color: #E46387;
 }
 
-.social-widget ul.social-icons li a.linkdin:hover i {
+.social-widget ul.social-icons li a.linkedin:hover i {
 	background-color: #90CADD;
 }
 
@@ -4213,7 +4213,7 @@ footer a:hover {
 	background-color: #E474AF;
 }
 
-.social-widget ul.social-icons li a.instgram:hover i {
+.social-widget ul.social-icons li a.instagram:hover i {
 	background-color: #4D4F54;
 }
 
@@ -5845,20 +5845,20 @@ table.term_details{
 
     table.course_details{overflow-y: hidden;}
     /* Force table to not be like tables anymore */
-    table, thead, tbody, th, td, tr { 
+    table.course_details, table.course_details thead, table.course_details tbody, table.course_details th, table.course_details td, table.course_details tr { 
         display: block; 
     }
     
     /* Hide table headers (but not display: none;, for accessibility) */
-    thead tr { 
+    table.course_details thead tr { 
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
     
-    tr { border-bottom: 1px solid #ccc;border-top: 1px solid #ccc; }
+    table.course_details tr { border-bottom: 1px solid #ccc;border-top: 1px solid #ccc; }
     
-    td { 
+    table.course_details td { 
         /* Behave  like a "row" */
         border: none;
         border-bottom: 1px solid #eee; 
@@ -5866,7 +5866,7 @@ table.term_details{
         padding-left: 50%; 
     }
     
-    td:before { 
+    table.course_details td:before { 
         /* Now like a table header */
         position: absolute;
         /* Top/left values mimic padding */
