@@ -374,34 +374,42 @@ $.extend(mscSchedulizer, {
     getSectionCombinations:function(course_sections){
         var grouped_sections = mscSchedulizer.groupSections(course_sections);
         var values = [];
-        Object.keys(grouped_sections).forEach(function(key) {
-          var val = grouped_sections[key];
-          for (var s = grouped_sections[key].length-1; s >= 0; s--) {
-            if(mscSchedulizer.applyFiltersToSection(grouped_sections[key][s],mscSchedulizer.schedule_filters)){
-                // If it gets filtered out
-                grouped_sections[key].splice(s, 1);
-            }
-          }
-          values.push(val);
+        Object.keys(grouped_sections).forEach(function(campus) {
+            values[campus] = [];
+            Object.keys(grouped_sections[campus]).forEach(function(key) {
+              var val = grouped_sections[campus][key];
+              for (var s = grouped_sections[campus][key].length-1; s >= 0; s--) {
+                if(mscSchedulizer.applyFiltersToSection(grouped_sections[campus][key][s],mscSchedulizer.schedule_filters)){
+                    // If it gets filtered out
+                    grouped_sections[campus][key].splice(s, 1);
+                }
+              }
+              // ByRef to the Rescue: note what the filters are being applied to
+              values[campus].push(val);
+            });
         });
-        var cp = Combinatorics.cartesianProduct.apply(null,values)
-        cp = cp.toArray();
+        var all_cp = [];
+        Object.keys(values).forEach(function(campus) {
+            var cp = Combinatorics.cartesianProduct.apply(null,values[campus])
+            cp = cp.toArray();
+            all_cp = all_cp.concat(cp);
+        });
         //For each combination
-        for (var i = cp.length-1; i >= 0; i--) {
-            var combination = cp[i];
+        for (var i = all_cp.length-1; i >= 0; i--) {
+            var combination = all_cp[i];
             for (var s = combination.length-1; s >= 1; s--) {
                 var section1 = combination[s];
                 for (var t = s-1; t >= 0; t--) {
                     var section2 = combination[t];
                     if(mscSchedulizer.doSectionsOverlap(section1,section2)){
                         //If they do overlap, remove combination and break
-                        cp.splice(i, 1);
+                        all_cp.splice(i, 1);
                         //break out of section loop
                     }
                 }
             }
         }
-        return cp;
+        return all_cp;
     },
     getScheduleCombinations:function(section_combinations){
         var cp = Combinatorics.cartesianProduct.apply(null,section_combinations)
@@ -441,18 +449,22 @@ $.extend(mscSchedulizer, {
         return cp;
     },
     groupSections:function(course_sections){
+        // Sections are to be grouped by Campus and by identifier
         var grouped_sections = {};
         for (var i in course_sections) {
           var course_section = course_sections[i];
           var identifier = course_section.Identifier;
+          var campus = course_section.Campus;
           if(identifier == "" || identifier == null){
             identifier = "empty";
           }
-          // identifier += "-" + course_section.Campus
-          if (!(identifier in grouped_sections)){
-            grouped_sections[identifier] = [];
+          if (!(campus in grouped_sections)){
+            grouped_sections[campus] = [];
           }
-          grouped_sections[identifier].push(course_section);
+          if (!(identifier in grouped_sections[campus])){
+            grouped_sections[campus][identifier] = [];
+          }
+          grouped_sections[campus][identifier].push(course_section);
         }
         return grouped_sections;
     },
