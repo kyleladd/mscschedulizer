@@ -52,6 +52,42 @@ $.extend(mscSchedulizer, {
         }
         return false;
     },
+    queryData:function(queryString, preserveDuplicates){
+      // http://code.stephenmorley.org/javascript/parsing-query-strings-for-get-data/
+      var result = {};
+      // if a query string wasn't specified, use the query string from the URL
+      if (queryString == undefined){
+        queryString = location.search ? location.search : '';
+      }
+      // remove the leading question mark from the query string if it is present
+      if (queryString.charAt(0) == '?') queryString = queryString.substring(1);
+      // check whether the query string is empty
+      if (queryString.length > 0){
+        // replace plus signs in the query string with spaces
+        queryString = queryString.replace(/\+/g, ' ');
+        // split the query string around ampersands and semicolons
+        var queryComponents = queryString.split(/[&;]/g);
+        // loop over the query string components
+        for (var index = 0; index < queryComponents.length; index ++){
+          // extract this component's key-value pair
+          var keyValuePair = queryComponents[index].split('=');
+          var key          = decodeURIComponent(keyValuePair[0].replace(/[\[\]]/g, ""));
+          var value        = keyValuePair.length > 1
+                           ? decodeURIComponent(keyValuePair[1])
+                           : '';
+          // check whether duplicates should be preserved
+          if (preserveDuplicates){
+            // create the value array if necessary and store the value
+            if (!(key in result)) result[key] = [];
+            result[key].push(value);
+          }else{
+            // store the value
+            result[key] = value;
+          }
+        }
+      }
+      return result;
+    },
     loadSelections: function(){
         var output = "";
         // $.each(mscSchedulizer.classes_selected, function(i, course){
@@ -221,6 +257,73 @@ $.extend(mscSchedulizer, {
             $(mscSchedulizer.schedules_element).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
         }
     },
+    getScheduleDetails:function(crns,callback){
+        $.getJSON(mscSchedulizer.api_host + "/info/?crn=" + crns.join("&crn[]="), function(schedule){
+            return callback(schedule);
+        })
+        .fail(function() {
+            return callback([]);
+        })
+        .always(function() {
+            $(mscSchedulizer.department_class_list_element).removeClass("loader-large");
+            $(mscSchedulizer.department_class_list_element).removeClass("loader");
+        });
+    },
+    displayDetails:function(schedule){
+        var output = "";
+        if(schedule != null && schedule.length > 0){
+            // var output = "";
+            var terms = []; //List of term objects used in this department
+            // $.each(results, function(i, course){
+            for (var i in schedule) {
+                var course = schedule[i];
+                //Table Header
+                output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
+                output+="<table class=\"course_details\">";
+                output+="<thead><tr class=\"field-name\"><td>P/T</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
+                // $.each(course.Sections, function(i, section){
+                for (var s in course.Sections) {
+                    var section = course.Sections[s];
+                    var meeting = {};
+                    try
+                    {
+                        meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("HH:mm");
+                        meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("HH:mm");
+                        meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
+                    }
+                    catch(err)
+                    {
+                        meeting.startTime = "TBD";
+                        meeting.endTime = "";
+                        meeting.days = [];
+                    }
+                    if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
+                        terms.push(section.CourseTerm);
+                    }
+                    output+="<tr><td>" + section.Term + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + "-" + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+                }
+                output+="</table>";
+            }          
+            output += "</table>";
+
+            // Term Table
+            var term_output = "<table class=\"term_details\">"
+                            + "<thead><tr class=\"field-name\">"
+                            + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
+                            + "</tr></thead>";
+            // $.each(terms, function(i, term){
+            for (var i in terms) {
+              var term = terms[i];
+              term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
+            }
+            term_output += "</table>";
+            output = term_output + output;
+        }
+        else{
+            output = "Unable to get Schedule details";
+        }
+        $(mscSchedulizer.department_class_list_element).html(output);
+    },
     getCourseInfos:function(callback,callback2){
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
@@ -341,10 +444,11 @@ $.extend(mscSchedulizer, {
         var grouped_sections = {};
         for (var i in course_sections) {
           var course_section = course_sections[i];
-          var identifier = course_section['Identifier'];
-          if(identifier == ""){
+          var identifier = course_section.Identifier;
+          if(identifier == "" || identifier == null){
             identifier = "empty";
           }
+          // identifier += "-" + course_section.Campus
           if (!(identifier in grouped_sections)){
             grouped_sections[identifier] = [];
           }
@@ -617,16 +721,30 @@ $.extend(mscSchedulizer, {
     },
     optionsOutput:function(schedule){
         var result = "<div class=\"options\">";
-        result += mscSchedulizer.favoriteOutput(schedule);
+        result += mscSchedulizer.favoriteLinkOutput(schedule);
+        result += mscSchedulizer.detailsLinkOutput(schedule);
+        result += mscSchedulizer.previewLinkOutput(schedule);
         result+="</div>";
         return result;
     },
-    favoriteOutput:function(schedule){
+    favoriteLinkOutput:function(schedule){
         // If a favorite
         if(mscSchedulizer.searchListObjects(mscSchedulizer.favorite_schedules,schedule) !== -1){
             return "<a class=\"unfavorite_schedule favoriting\" data-value='" + JSON.stringify(schedule) + "'>Unfavorite</a>";
         }
         return "<a class=\"favorite_schedule favoriting\" data-value='" + JSON.stringify(schedule) + "'>Favorite</a>";
+    },
+    detailsLinkOutput:function(schedule){
+        var crns = [];
+        for(var i = 0; i < schedule.length; i++){
+            for(var s = 0; s < schedule[i].Sections.length; s++){
+                crns.push(schedule[i].Sections[s].CourseCRN);
+            }
+        }
+       return "<a href=\"schedule-details.html?crn[]="+crns.join("&crn[]=")+"\">Details</a>";
+    },
+    previewLinkOutput:function(schedule){
+         return "<a>Preview</a>";
     },
     genNoMeetingsOutput: function(courses){
         try{

@@ -81,6 +81,18 @@
         }
       });
     }
+    // Load schedule details
+    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["schedule-details.html"])){
+      try
+      {
+       mscSchedulizer.getScheduleDetails(mscSchedulizer.queryData(location.search,true).crn,mscSchedulizer.displayDetails);
+      }
+      catch (err)
+      {
+
+      }
+
+    }
 
     // Course Listings page
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
