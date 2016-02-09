@@ -2,7 +2,8 @@ var mscSchedulizer = mscSchedulizer === undefined ? {} : mscSchedulizer;
 $.extend(mscSchedulizer, {
     classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
-    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {},
+    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:[],NotFull:false},
+    gen_courses :[],
     gen_schedules:[],
     num_loaded:0,
     searchListDictionaries:function (list,keyvaluelist,bool_index){
@@ -56,10 +57,10 @@ $.extend(mscSchedulizer, {
         $.each(mscSchedulizer.classes_selected, function(i, course){
             output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + " <i class=\"fa fa-times\"></i></a>";
         });
-        $(mscSchedulizer.course_selections).html(output);
+        $(mscSchedulizer.course_selections_element).html(output);
     },
     getDepartmentCourses: function(department){
-        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments).val();
+        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments_element).val();
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department, function(results){
             //remove this later
             var output = "";
@@ -67,14 +68,14 @@ $.extend(mscSchedulizer, {
                 //Change to just one html output set
                 output += "<li><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
             });
-            $(mscSchedulizer.department_class_list).html(output);
+            $(mscSchedulizer.department_class_list_element).html(output);
         })
         .fail(function() {
-            $(mscSchedulizer.department_class_list).html("<li>Unable to load courses.</li>");
+            $(mscSchedulizer.department_class_list_element).html("<li>Unable to load courses.</li>");
         })
         .always(function() {
-            $(mscSchedulizer.department_class_list).removeClass("loader-large");
-            $(mscSchedulizer.department_class_list).removeClass("loader");
+            $(mscSchedulizer.department_class_list_element).removeClass("loader-large");
+            $(mscSchedulizer.department_class_list_element).removeClass("loader");
         });
     },
     daysList: function(meeting, include_empty){
@@ -118,7 +119,7 @@ $.extend(mscSchedulizer, {
         return result;
     },
     getDepartmentCoursesDetails: function(department){
-        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments).val();
+        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments_element).val();
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department + "&include_objects=1", function(results){
             var output = "";
             var terms = []; //List of term objects used in this department
@@ -160,14 +161,14 @@ $.extend(mscSchedulizer, {
             });
             term_output += "</table>";
             output= term_output + output;
-            $(mscSchedulizer.department_class_list).html(output);
+            $(mscSchedulizer.department_class_list_element).html(output);
         })
         .fail(function() {
-            $(mscSchedulizer.department_class_list).html("<p>Unable to load course listings.</p>");
+            $(mscSchedulizer.department_class_list_element).html("<p>Unable to load course listings.</p>");
         })
         .always(function() {
-            $(mscSchedulizer.department_class_list).removeClass("loader-large");
-            $(mscSchedulizer.department_class_list).removeClass("loader");
+            $(mscSchedulizer.department_class_list_element).removeClass("loader-large");
+            $(mscSchedulizer.department_class_list_element).removeClass("loader");
         });
     },
     getDepartments:function(callback){
@@ -176,10 +177,10 @@ $.extend(mscSchedulizer, {
             $.each(results, function(i, department){
                 output += "<option class='a_department' value='"+department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
             });
-            $(mscSchedulizer.departments).html(output);
+            $(mscSchedulizer.departments_element).html(output);
         })
         .fail(function() {
-            $(mscSchedulizer.departments).html("<option>Unable to load departments.</option>");
+            $(mscSchedulizer.departments_element).html("<option>Unable to load departments.</option>");
         })
         .always(function() {
             $('.selectpicker').selectpicker({dropupAuto:false});
@@ -199,11 +200,11 @@ $.extend(mscSchedulizer, {
                 return callback(schedules);
             })
             .fail(function() {
-                return callback(null);
+                return callback([]);
             });
         }
         else{
-            $(mscSchedulizer.schedules).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+            $(mscSchedulizer.schedules_element).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
         }
     },
     getCourseInfos:function(callback,callback2){
@@ -215,14 +216,16 @@ $.extend(mscSchedulizer, {
         courses_list = courses_list.replace('&','?');
         if(courses_list != ""){
             $.getJSON(mscSchedulizer.api_host + "/schedule/" + courses_list + "&generate_schedule=0", function(courses){
+                mscSchedulizer.gen_courses = courses;
                 return callback(courses,callback2);
             })
             .fail(function() {
-                return callback(null);
+                mscSchedulizer.gen_courses = [];
+                return callback([]);
             });
         }
         else{
-            $(mscSchedulizer.schedules).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+            $(mscSchedulizer.schedules_elements).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
         }
     },
     getCombinations:function(courses,callback){
@@ -254,6 +257,12 @@ $.extend(mscSchedulizer, {
         var values = [];
         Object.keys(grouped_sections).forEach(function(key) {
           var val = grouped_sections[key];
+          for (var s = grouped_sections[key].length-1; s >= 0; s--) {
+            if(mscSchedulizer.applyFiltersToSection(grouped_sections[key][s],mscSchedulizer.schedule_filters)){
+                // If it gets filtered out
+                grouped_sections[key].splice(s, 1);
+            }
+          }
           values.push(val);
         });
         var cp = Combinatorics.cartesianProduct.apply(null,values)
@@ -326,6 +335,58 @@ $.extend(mscSchedulizer, {
           grouped_sections[identifier].push(course_section);
         }
         return grouped_sections;
+    },
+    filtersDisplay:function(){
+        var result = "";
+        result += "<input type=\"checkbox\" name=\"notFull\" id=\"notFullFilter\"> Not Full";
+        return result;
+    },
+    updateFiltersDisplay:function(filters){
+        mscSchedulizer.notFullFilterDisplay(mscSchedulizer.schedule_filters.NotFull);
+    },
+    notFullFilterDisplay:function(filter){
+      if (filter) 
+      {
+          document.getElementById("notFullFilter").checked = true;
+      } 
+      else
+      {
+          document.getElementById("notFullFilter").checked = false;
+      }
+    },
+    applyFiltersToSection:function(section,filters){
+        var filteredOut = false;
+        if(typeof filters.Campus !== "undefined" && filters.Campus != []){
+            filteredOut = mscSchedulizer.campusFilter(section,filters.Campus);
+        }
+        if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
+            filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
+        }
+        if(typeof filters.TimeBlocks !== "undefined" && filters.TimeBlocks != [] && filteredOut === false){
+            filteredOut = mscSchedulizer.timeBlockFilter(section,filters.TimeBlocks);
+        }
+        if(typeof filters.NotFull !== "undefined" && filters.NotFull !== false && filteredOut === false){
+            filteredOut = mscSchedulizer.NotFullFilter(section,filters.NotFull);
+        }
+        return filteredOut;
+    },
+    professorFilter:function(section,filter){
+        return false;
+    },
+    campusFilter:function(section,filter){
+        return false;
+    },
+    timeBlockFilter:function(section,filter){
+        return false;
+    },
+    NotFullFilter:function(section,filter){
+        // 0 is unlimited
+        if(section.MaxEnrollment!=0){
+            if(section.CurrentEnrollment>=section.MaxEnrollment){
+                return true
+            }
+        }
+        return false;
     },
     doDaysOverlap:function(meeting1,meeting2){
         if(meeting1.Monday==1&&meeting2.Monday==1){
@@ -486,11 +547,11 @@ $.extend(mscSchedulizer, {
                 outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
             });
             mscSchedulizer.gen_schedules = schedules;
-            $(mscSchedulizer.schedules).html(outputSchedules);
+            $(mscSchedulizer.schedules_element).html(outputSchedules);
             mscSchedulizer.initSchedules(0,mscSchedulizer.numToLoad);
         }
         else{
-            $(mscSchedulizer.schedules).html("No schedules");
+            $(mscSchedulizer.schedules_element).html("No schedules");
         }
     },
     initSchedules:function(start,count){
