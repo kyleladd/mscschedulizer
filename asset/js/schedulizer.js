@@ -503,6 +503,7 @@ $.extend(mscSchedulizer, {
         return meetups;
     },
     createSchedules:function(schedules){
+        mscSchedulizer.num_loaded = 0;
         if(schedules != null && schedules.length > 0 ){
             var outputSchedules = schedules.length + " schedule";
             if(schedules.length != 1){outputSchedules += "s";}
@@ -548,14 +549,13 @@ $.extend(mscSchedulizer, {
             });
             mscSchedulizer.gen_schedules = schedules;
             $(mscSchedulizer.schedules_element).html(outputSchedules);
-            mscSchedulizer.initSchedules(0,mscSchedulizer.numToLoad);
+            mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
         else{
             $(mscSchedulizer.schedules_element).html("No schedules");
         }
     },
     initSchedules:function(start,count){
-
         for (i = 0; i < count ; i++) { 
             var num = start + i;
             if(mscSchedulizer.gen_schedules[num] !== undefined){
