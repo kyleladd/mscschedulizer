@@ -179,8 +179,8 @@ $.extend(mscSchedulizer, {
                         if(section.Meetings[0].StartTime == null || section.Meetings[0].EndTime == null ||section.Meetings[0].StartTime == "" ||section.Meetings[0].EndTime == ""){
                             throw("Not a valid date");
                         }
-                        meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("HH:mm");
-                        meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("HH:mm");
+                        meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("h:mma");
+                        meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("h:mma");
                         meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
                     }
                     catch(err)
@@ -192,7 +192,7 @@ $.extend(mscSchedulizer, {
                     if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
                         terms.push(section.CourseTerm);
                     }
-                    output+="<tr><td>" + section.Term + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + "-" + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+                    output+="<tr><td>" + section.Term + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
                 output+="</table>";
             }          
