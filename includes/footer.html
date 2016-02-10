@@ -42,17 +42,17 @@
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html"])){
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCourses);
         // Department selected - View Department Courses
-        $(mscSchedulizer.departments_element).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-            if($(mscSchedulizer.departments_element).val() != ""){
-                $(mscSchedulizer.department_class_list_element).addClass("loader");
+        $("#"+mscSchedulizer.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+            if($("#"+mscSchedulizer.html_elements.departments_select).val() != ""){
+                $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
                 //Get From Endpoint - Department Courses
-                mscSchedulizer.getDepartmentCourses($(mscSchedulizer.departments_element).val());
+                mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer.html_elements.departments_select).val());
             }
         });
     }
     // Generate Page
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html"])){
-      $(mscSchedulizer.filters_element).html(mscSchedulizer.filtersDisplay());
+      $("#"+mscSchedulizer.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
       if(mscSchedulizer.generateLocation === "Remote"){
        mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
@@ -65,8 +65,20 @@
           mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
       });
-      $(mscSchedulizer.filter_not_full).click(function(){
+      $("#"+mscSchedulizer.html_elements.filters.not_full).click(function(){
           mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
+          localStorage.setItem('schedule_filters', JSON.stringify(mscSchedulizer.schedule_filters));
+          mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+          mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+      });
+      $("#"+mscSchedulizer.html_elements.filters.morrisville_campus).click(function(){
+          mscSchedulizer.schedule_filters.Campuses.Morrisville = !mscSchedulizer.schedule_filters.Campuses.Morrisville;
+          localStorage.setItem('schedule_filters', JSON.stringify(mscSchedulizer.schedule_filters));
+          mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+          mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+      });
+      $("#"+mscSchedulizer.html_elements.filters.norwich_campus).click(function(){
+          mscSchedulizer.schedule_filters.Campuses.Norwich = !mscSchedulizer.schedule_filters.Campuses.Norwich;
           localStorage.setItem('schedule_filters', JSON.stringify(mscSchedulizer.schedule_filters));
           mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
@@ -85,7 +97,7 @@
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["schedule-details.html"])){
       try
       {
-       mscSchedulizer.getScheduleDetails(mscSchedulizer.queryData(location.search,true).crn,mscSchedulizer.displayDetails);
+       mscSchedulizer.getScheduleDetails(mscSchedulizer.queryData(location.search,true).crn,"#"+mscSchedulizer.html_elements.department_class_list);
       }
       catch (err)
       {
@@ -98,11 +110,11 @@
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);
         // Department selected - View Department Courses
-        $(mscSchedulizer.departments_element).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-            if($(mscSchedulizer.departments_element).val() != ""){
-                $(mscSchedulizer.department_class_list_element).addClass("loader");
+        $("#"+mscSchedulizer.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+            if($("#"+mscSchedulizer.html_elements.departments_select).val() != ""){
+                $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
                 //Get From Endpoint - Department Courses
-                mscSchedulizer.getDepartmentCoursesDetails($(mscSchedulizer.departments_element).val());
+                mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer.html_elements.departments_select).val());
             }
         });
     }
@@ -110,7 +122,7 @@
     // Favorites
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html","favorites.html"])){
       // Add Favorite
-      $(mscSchedulizer.schedules_element).on("click", "a.favorite_schedule", function (event) {
+      $("#"+mscSchedulizer.html_elements.schedules_container).on("click", "a.favorite_schedule", function (event) {
             event.preventDefault();
             //Add Course
             var schedule = JSON.parse(this.getAttribute('data-value'));
@@ -124,7 +136,7 @@
             }
         });
       // Remove Favorite
-      $(mscSchedulizer.schedules_element).on("click", "a.unfavorite_schedule", function (event) {
+      $("#"+mscSchedulizer.html_elements.schedules_container).on("click", "a.unfavorite_schedule", function (event) {
           event.preventDefault();
           //Add Course
           var schedule = JSON.parse(this.getAttribute('data-value'));
@@ -143,7 +155,7 @@
     // Course Selections
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html","course-listings.html"])){
       // Course selected - Add Course
-      $(mscSchedulizer.department_class_list_element).on("click", "a.a_course", function (event) {
+      $("#"+mscSchedulizer.html_elements.department_class_list).on("click", "a.a_course", function (event) {
           event.preventDefault();
           //Add Course
           var course = JSON.parse(this.getAttribute('data-value'));
@@ -156,7 +168,7 @@
       });
 
        // Remove Course Selections
-      $(mscSchedulizer.course_selections_element).on("click", "a.a_selection", function (event) {
+      $("#"+mscSchedulizer.html_elements.course_selections_list).on("click", "a.a_selection", function (event) {
           event.preventDefault();
           // //Remove Course
           var course = JSON.parse(this.getAttribute('data-value'));

@@ -94,10 +94,10 @@ $.extend(mscSchedulizer, {
             var course = mscSchedulizer.classes_selected[i];
             output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + " <i class=\"fa fa-times\"></i></a>";
         }
-        $(mscSchedulizer.course_selections_element).html(output);
+        $("#"+mscSchedulizer.html_elements.course_selections_list).html(output);
     },
     getDepartmentCourses: function(department){
-        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments_element).val();
+        department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department, function(results){
             //remove this later
             var output = "";
@@ -106,14 +106,14 @@ $.extend(mscSchedulizer, {
                 //Change to just one html output set
                 output += "<li><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
             }
-            $(mscSchedulizer.department_class_list_element).html(output);
+            $("#"+mscSchedulizer.html_elements.department_class_list).html(output);
         })
         .fail(function() {
-            $(mscSchedulizer.department_class_list_element).html("<li>Unable to load courses.</li>");
+            $("#"+mscSchedulizer.html_elements.department_class_list).html("<li>Unable to load courses.</li>");
         })
         .always(function() {
-            $(mscSchedulizer.department_class_list_element).removeClass("loader-large");
-            $(mscSchedulizer.department_class_list_element).removeClass("loader");
+            $("#"+mscSchedulizer.html_elements.department_class_list).removeClass("loader-large");
+            $("#"+mscSchedulizer.html_elements.department_class_list).removeClass("loader");
         });
     },
     daysList: function(meeting, include_empty){
@@ -157,66 +157,17 @@ $.extend(mscSchedulizer, {
         return result;
     },
     getDepartmentCoursesDetails: function(department){
-        department = typeof department !== 'undefined' ?  department : $(mscSchedulizer.departments_element).val();
+        department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department + "&include_objects=1", function(results){
-            var output = "";
-            var terms = []; //List of term objects used in this department
-            for (var i in results) {
-                var course = results[i];
-                //Order by Section Number
-                course.Sections.sort(function(a, b) { 
-                    return a.SectionNumber - b.SectionNumber;
-                });
-                //Table Header
-                output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
-                output+="<table class=\"course_details\">";
-                output+="<thead><tr class=\"field-name\"><td>P/T</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
-                for (var s in course.Sections) {
-                    var section = course.Sections[s];
-                    var meeting = {};
-                    try
-                    {
-                        if(section.Meetings[0].StartTime == null || section.Meetings[0].EndTime == null ||section.Meetings[0].StartTime == "" ||section.Meetings[0].EndTime == ""){
-                            throw("Not a valid date");
-                        }
-                        meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("h:mma");
-                        meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("h:mma");
-                        meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
-                    }
-                    catch(err)
-                    {
-                        meeting.startTime = "TBD";
-                        meeting.endTime = "";
-                        meeting.days = [];
-                    }
-                    if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
-                        terms.push(section.CourseTerm);
-                    }
-                    output+="<tr><td>" + section.Term + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
-                }
-                output+="</table>";
-            }          
-            output += "</table>";
-
-            // Term Table
-            var term_output = "<table class=\"term_details\">"
-                            + "<thead><tr class=\"field-name\">"
-                            + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
-                            + "</tr></thead>";
-            for (var i in terms) {
-              var term = terms[i];
-              term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
-            }
-            term_output += "</table>";
-            output= term_output + output;
-            $(mscSchedulizer.department_class_list_element).html(output);
+            var output = mscSchedulizer.detailedCoursesOutput(results);
+            $("#"+mscSchedulizer.html_elements.department_class_list).html(output);
         })
         .fail(function() {
-            $(mscSchedulizer.department_class_list_element).html("<p>Unable to load course listings.</p>");
+            $("#"+mscSchedulizer.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
         })
         .always(function() {
-            $(mscSchedulizer.department_class_list_element).removeClass("loader-large");
-            $(mscSchedulizer.department_class_list_element).removeClass("loader");
+            $("#"+mscSchedulizer.html_elements.department_class_list).removeClass("loader-large");
+            $("#"+mscSchedulizer.html_elements.department_class_list).removeClass("loader");
         });
     },
     getDepartments:function(callback){
@@ -226,10 +177,10 @@ $.extend(mscSchedulizer, {
                 var department = results[i];
                 output += "<option class='a_department' value='"+department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
             }
-            $(mscSchedulizer.departments_element).html(output);
+            $("#"+mscSchedulizer.html_elements.departments_select).html(output);
         })
         .fail(function() {
-            $(mscSchedulizer.departments_element).html("<option>Unable to load departments.</option>");
+            $("#"+mscSchedulizer.html_elements.departments_select).html("<option>Unable to load departments.</option>");
         })
         .always(function() {
             $('.selectpicker').selectpicker({dropupAuto:false});
@@ -254,72 +205,73 @@ $.extend(mscSchedulizer, {
             });
         }
         else{
-            $(mscSchedulizer.schedules_element).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+            $("#"+mscSchedulizer.html_elements.schedules_container).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
         }
     },
-    getScheduleDetails:function(crns,callback){
+    getScheduleDetails:function(crns,element){
         $.getJSON(mscSchedulizer.api_host + "/info/?crn=" + crns.join("&crn[]="), function(schedule){
-            return callback(schedule);
+            $(element).html(mscSchedulizer.detailedCoursesOutput(schedule));
         })
         .fail(function() {
-            return callback([]);
+            $(element).html(mscSchedulizer.detailedCoursesOutput([]));
         })
         .always(function() {
-            $(mscSchedulizer.department_class_list_element).removeClass("loader-large");
-            $(mscSchedulizer.department_class_list_element).removeClass("loader");
+            $(element).removeClass("loader-large");
+            $(element).removeClass("loader");
         });
     },
-    displayDetails:function(schedule){
+    detailedCoursesOutput:function(courses){
         var output = "";
-        if(schedule != null && schedule.length > 0){
-            // var output = "";
-            var terms = []; //List of term objects used in this department
-            for (var i in schedule) {
-                var course = schedule[i];
-                //Table Header
-                output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
-                output+="<table class=\"course_details\">";
-                output+="<thead><tr class=\"field-name\"><td>P/T</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
-                for (var s in course.Sections) {
-                    var section = course.Sections[s];
-                    var meeting = {};
-                    try
-                    {
-                        meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("HH:mm");
-                        meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("HH:mm");
-                        meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
+        var terms = []; //List of term objects used in this department
+        for (var i in courses) {
+            var course = courses[i];
+            //Order by Section Number
+            course.Sections.sort(function(a, b) { 
+                return a.SectionNumber - b.SectionNumber;
+            });
+            //Table Header
+            output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
+            output+="<table class=\"course_details\">";
+            output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
+            for (var s in course.Sections) {
+                var section = course.Sections[s];
+                var meeting = {};
+                try
+                {
+                    if(!moment(section.Meetings[0].StartTime,"Hmm").isValid() || !moment(section.Meetings[0].EndTime,"Hmm").isValid()){
+                        throw("Not a valid date");
                     }
-                    catch(err)
-                    {
-                        meeting.startTime = "TBD";
-                        meeting.endTime = "";
-                        meeting.days = [];
-                    }
-                    if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
-                        terms.push(section.CourseTerm);
-                    }
-                    output+="<tr><td>" + section.Term + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + "-" + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+                    meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("h:mma");
+                    meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("h:mma");
+                    meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
                 }
-                output+="</table>";
-            }          
-            output += "</table>";
-
-            // Term Table
-            var term_output = "<table class=\"term_details\">"
-                            + "<thead><tr class=\"field-name\">"
-                            + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
-                            + "</tr></thead>";
-            for (var i in terms) {
-              var term = terms[i];
-              term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
+                catch(err)
+                {
+                    meeting.startTime = "TBD";
+                    meeting.endTime = "";
+                    meeting.days = [];
+                }
+                if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
+                    terms.push(section.CourseTerm);
+                }
+                output+="<tr><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
             }
-            term_output += "</table>";
-            output = term_output + output;
+            output+="</table>";
+        }          
+        output += "</table>";
+
+        // Term Table
+        var term_output = "<table class=\"term_details\">"
+                        + "<thead><tr class=\"field-name\">"
+                        + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
+                        + "</tr></thead>";
+        for (var i in terms) {
+          var term = terms[i];
+          term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
         }
-        else{
-            output = "Unable to get Schedule details";
-        }
-        $(mscSchedulizer.department_class_list_element).html(output);
+        term_output += "</table>";
+        output= term_output + output;
+        return output;
     },
     getCourseInfos:function(callback,callback2){
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
@@ -340,7 +292,7 @@ $.extend(mscSchedulizer, {
             });
         }
         else{
-            $(mscSchedulizer.schedules_elements).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+            $("#"+mscSchedulizer.html_elements.schedules_containers).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
         }
     },
     getCombinations:function(courses,callback){
@@ -381,14 +333,21 @@ $.extend(mscSchedulizer, {
                 }
               }
               // ByRef to the Rescue: note what the filters are being applied to
-              values[campus].push(val);
+              // Only push if there is a valid grouping (after filters)
+              if(val.length>0){
+                values[campus].push(val);
+              }
+
             });
         });
         var all_cp = [];
         Object.keys(values).forEach(function(campus) {
-            var cp = Combinatorics.cartesianProduct.apply(null,values[campus])
-            cp = cp.toArray();
-            all_cp = all_cp.concat(cp);
+            // Only if there is a grouping for the campus (After filters)
+            if(values[campus].length>0){
+                var cp = Combinatorics.cartesianProduct.apply(null,values[campus])
+                cp = cp.toArray();
+                all_cp = all_cp.concat(cp);
+            }
         });
         //For each combination
         for (var i = all_cp.length-1; i >= 0; i--) {
@@ -408,6 +367,12 @@ $.extend(mscSchedulizer, {
         return all_cp;
     },
     getScheduleCombinations:function(section_combinations){
+        // Make sure each class has at least one available section (After filters)
+        for (var i = section_combinations.length-1; i >= 0; i--) {
+            if(section_combinations[i].length === 0){
+                return [];
+            }
+        }
         var cp = Combinatorics.cartesianProduct.apply(null,section_combinations)
         cp = cp.toArray();
         //filter based on overlapping
@@ -466,17 +431,17 @@ $.extend(mscSchedulizer, {
     },
     filtersDisplay:function(){
         var result = "";
-        result += "<input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer.filter_not_full+"\"> Not Full";
-        result += "<input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer.filter_morrisville_campus+"\"> Morrisville";
-        result += "<input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer.filter_morrisville_campus+"\"> Norwich";
+        result += "<label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer.html_elements.filters.not_full+"\"> Not Full</label>";
+        result += "<label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label>";
+        result += "<label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer.html_elements.filters.norwich_campus+"\"> Norwich Campus</label>";
         return result;
     },
     updateFiltersDisplay:function(filters){
-        mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.NotFull,mscSchedulizer.filter_not_full);
-        // mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.Campuses.Morrisville,mscSchedulizer.filter_morrisville_campus);
-        // mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.Campuses.Norwich,mscSchedulizer.filter_morrisville_campus);
+        mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.NotFull,mscSchedulizer.html_elements.filters.not_full);
+        mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.Campuses.Morrisville,mscSchedulizer.html_elements.filters.morrisville_campus);
+        mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.Campuses.Norwich,mscSchedulizer.html_elements.filters.norwich_campus);
     },
-    checkboxFilterDisplay:function(filter,elementID){
+    checkboxFilterDisplay:function(filter,elementID){       
       if (filter) 
       {
           document.getElementById(elementID).checked = true;
@@ -488,8 +453,8 @@ $.extend(mscSchedulizer, {
     },
     applyFiltersToSection:function(section,filters){
         var filteredOut = false;
-        if(typeof filters.Campus !== "undefined" && filters.Campus != {}){
-            filteredOut = mscSchedulizer.campusFilter(section,filters.Campus);
+        if(typeof filters.Campuses !== "undefined" && filters.Campuses != {}){
+            filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
         }
         if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
             filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
@@ -506,6 +471,12 @@ $.extend(mscSchedulizer, {
         return false;
     },
     campusFilter:function(section,filter){
+        if(filter.Morrisville === false && section.Campus == "M"){
+            return true;
+        }
+        if(filter.Norwich === false && section.Campus == "N"){
+            return true;
+        }
         return false;
     },
     timeBlockFilter:function(section,filter){
@@ -688,11 +659,11 @@ $.extend(mscSchedulizer, {
                 outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
             }
             mscSchedulizer.gen_schedules = schedules;
-            $(mscSchedulizer.schedules_element).html(outputSchedules);
+            $("#"+mscSchedulizer.html_elements.schedules_container).html(outputSchedules);
             mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
         else{
-            $(mscSchedulizer.schedules_element).html("No schedules");
+            $("#"+mscSchedulizer.html_elements.schedules_container).html("No schedules");
         }
     },
     initSchedules:function(start,count){
@@ -748,10 +719,10 @@ $.extend(mscSchedulizer, {
                 crns.push(schedule[i].Sections[s].CourseCRN);
             }
         }
-       return "<a href=\"schedule-details.html?crn[]="+crns.join("&crn[]=")+"\">Details</a>";
+       return "<a target=\"_blank\"href=\"schedule-details.html?crn[]="+crns.join("&crn[]=")+"\">Details</a>";
     },
     previewLinkOutput:function(schedule){
-         return "<a>Preview</a>";
+         return "<a target=\"_blank\" href=\"#\">Preview</a>";
     },
     genNoMeetingsOutput: function(courses){
         try{

@@ -5825,6 +5825,12 @@ ul.slicknav_nav{
     width:100%;
     overflow-x:auto;
 }
+.options a{
+    padding: 5px;
+}
+input[type=checkbox], input[type=radio]{
+    margin-left:8px;
+}
 tr.field-name td {
     font-weight: 600;
 }
@@ -5842,6 +5848,12 @@ table.term_details{
 	}
 }
 @media only screen and (max-width: 479px) {
+    .classic-title span{
+        border:none;
+    }
+    .classic-title{
+        border-bottom-color: #0BB586;
+    }
 
     table.course_details{overflow-y: hidden;}
     /* Force table to not be like tables anymore */
