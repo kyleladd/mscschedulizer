@@ -210,17 +210,20 @@ $.extend(mscSchedulizer, {
     },
     getScheduleDetails:function(crns,element){
         $.getJSON(mscSchedulizer.api_host + "/info/?crn=" + crns.join("&crn[]="), function(schedule){
-            $(element).html(mscSchedulizer.detailedCoursesOutput(schedule));
+            $(element).html(mscSchedulizer.detailedCoursesOutput(schedule,false));
         })
         .fail(function() {
-            $(element).html(mscSchedulizer.detailedCoursesOutput([]));
+            $(element).html(mscSchedulizer.detailedCoursesOutput([],false));
         })
         .always(function() {
             $(element).removeClass("loader-large");
             $(element).removeClass("loader");
         });
     },
-    detailedCoursesOutput:function(courses){
+    detailedCoursesOutput:function(courses,icon){
+        if(typeof icon === "undefined"){
+            icon = true;
+        }
         var output = "";
         var terms = []; //List of term objects used in this department
         for (var i in courses) {
@@ -230,7 +233,18 @@ $.extend(mscSchedulizer, {
                 return a.SectionNumber - b.SectionNumber;
             });
             //Table Header
-            output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
+            var icon_str = "";
+            if(icon === true){
+                icon_str += "<a class=\"a_course\" data-value='"+JSON.stringify(course)+"'>";
+                if(mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true) !== -1){
+                    icon_str += "<i class=\"fa fa-minus-circle\"></i>";
+                }
+                else{
+                    icon_str += "<i class=\"fa fa-plus-circle\"></i>";
+                }
+                icon_str += "</a> ";
+            }
+            output+="<h4 class=\"classic-title\"><span>" + icon_str + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
             output+="<table class=\"course_details\">";
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
             for (var s in course.Sections) {
@@ -292,7 +306,7 @@ $.extend(mscSchedulizer, {
             });
         }
         else{
-            $("#"+mscSchedulizer.html_elements.schedules_containers).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+            $("#"+mscSchedulizer.html_elements.schedules_container).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
         }
     },
     getCombinations:function(courses,callback){

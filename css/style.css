@@ -5839,6 +5839,9 @@ table.term_details{
     max-width:400px;
     margin-bottom:2em;
 }
+.fa.fa-minus-circle{
+    color:#B50B0B;
+}
 @media only screen and (max-width: 479px) { 
 	.fc-time-grid-event .fc-time span{
 		font-size:xx-small !important;

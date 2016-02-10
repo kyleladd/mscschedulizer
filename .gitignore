@@ -2,3 +2,4 @@
 bower_components/*
 node_modules/*
 asset/js/config.js
+Web.config
