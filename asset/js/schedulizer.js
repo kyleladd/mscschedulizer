@@ -90,7 +90,6 @@ $.extend(mscSchedulizer, {
     },
     loadSelections: function(){
         var output = "";
-        // $.each(mscSchedulizer.classes_selected, function(i, course){
         for (var i in mscSchedulizer.classes_selected) {
             var course = mscSchedulizer.classes_selected[i];
             output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + " <i class=\"fa fa-times\"></i></a>";
@@ -102,7 +101,6 @@ $.extend(mscSchedulizer, {
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department, function(results){
             //remove this later
             var output = "";
-            // $.each(results, function(i, course){
             for (var i in results) {
                 var course = results[i];
                 //Change to just one html output set
@@ -163,19 +161,24 @@ $.extend(mscSchedulizer, {
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department + "&include_objects=1", function(results){
             var output = "";
             var terms = []; //List of term objects used in this department
-            // $.each(results, function(i, course){
             for (var i in results) {
                 var course = results[i];
+                //Order by Section Number
+                course.Sections.sort(function(a, b) { 
+                    return a.SectionNumber - b.SectionNumber;
+                });
                 //Table Header
                 output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
                 output+="<table class=\"course_details\">";
                 output+="<thead><tr class=\"field-name\"><td>P/T</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
-                // $.each(course.Sections, function(i, section){
                 for (var s in course.Sections) {
                     var section = course.Sections[s];
                     var meeting = {};
                     try
                     {
+                        if(section.Meetings[0].StartTime == null || section.Meetings[0].EndTime == null ||section.Meetings[0].StartTime == "" ||section.Meetings[0].EndTime == ""){
+                            throw("Not a valid date");
+                        }
                         meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("HH:mm");
                         meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("HH:mm");
                         meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
@@ -200,7 +203,6 @@ $.extend(mscSchedulizer, {
                             + "<thead><tr class=\"field-name\">"
                             + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
                             + "</tr></thead>";
-            // $.each(terms, function(i, term){
             for (var i in terms) {
               var term = terms[i];
               term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
@@ -220,7 +222,6 @@ $.extend(mscSchedulizer, {
     getDepartments:function(callback){
         $.getJSON(mscSchedulizer.api_host + "/departments/", function(results){
             var output = "";
-            // $.each(results, function(i, department){
             for (var i in results) {
                 var department = results[i];
                 output += "<option class='a_department' value='"+department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
@@ -239,7 +240,6 @@ $.extend(mscSchedulizer, {
     getSchedules:function(callback){
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
-        // $.each(mscSchedulizer.classes_selected, function(i, course){
         for (var i in mscSchedulizer.classes_selected) {
             var course = mscSchedulizer.classes_selected[i];    
             courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
@@ -274,14 +274,12 @@ $.extend(mscSchedulizer, {
         if(schedule != null && schedule.length > 0){
             // var output = "";
             var terms = []; //List of term objects used in this department
-            // $.each(results, function(i, course){
             for (var i in schedule) {
                 var course = schedule[i];
                 //Table Header
                 output+="<h4 class=\"classic-title\"><span><a class=\"a_course\" data-value='"+JSON.stringify(course)+"'><i class=\"fa fa-plus-circle\"></i></a> " + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
                 output+="<table class=\"course_details\">";
                 output+="<thead><tr class=\"field-name\"><td>P/T</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
-                // $.each(course.Sections, function(i, section){
                 for (var s in course.Sections) {
                     var section = course.Sections[s];
                     var meeting = {};
@@ -311,7 +309,6 @@ $.extend(mscSchedulizer, {
                             + "<thead><tr class=\"field-name\">"
                             + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
                             + "</tr></thead>";
-            // $.each(terms, function(i, term){
             for (var i in terms) {
               var term = terms[i];
               term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
@@ -327,7 +324,6 @@ $.extend(mscSchedulizer, {
     getCourseInfos:function(callback,callback2){
         // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
-        // $.each(mscSchedulizer.classes_selected, function(i, course){
         for (var i in mscSchedulizer.classes_selected) {
             var course = mscSchedulizer.classes_selected[i];  
             courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
@@ -639,24 +635,20 @@ $.extend(mscSchedulizer, {
         if(schedules != null && schedules.length > 0 ){
             var outputSchedules = schedules.length + " schedule";
             if(schedules.length != 1){outputSchedules += "s";}
-            // $.each(schedules, function(i, schedule){
             for (var i in schedules) {
                 var schedule = schedules[i];  
                 var events = [];
                 var noMeetings = [];
                 var earlyStartTime = 2400;
                 var lateEndTime = 0;
-                // $.each(schedule, function(c, course){
                 for (var c in schedule) {
                     var course = schedule[c]; 
                     var allSectionsHaveMeeting = true;
-                    // $.each(course.Sections, function(s, section){
                     for (var s in course.Sections) {
                         var section = course.Sections[s]; 
                         if(section.Meetings.length == 0){
                             allSectionsHaveMeeting = false;
                         }
-                        // $.each(section.Meetings, function(m, meeting){
                         for (var m in section.Meetings) {
                             var meeting = section.Meetings[m];
                             if(meeting.StartTime == null || meeting.EndTime == null || (meeting.Monday==0 && meeting.Tuesday==0 && meeting.Wednesday==0 && meeting.Thursday==0 && meeting.Friday==0)){
@@ -670,7 +662,6 @@ $.extend(mscSchedulizer, {
                             }
                             //Meeting could be on multiple days, needs to be split into separate events
                             var meetups = mscSchedulizer.splitMeetings(meeting);
-                            // $.each(meetups, function(u, meetup){
                             for (var u in meetups) {
                                 var meetup = meetups[u]; 
                                 events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer.colors[c]});
