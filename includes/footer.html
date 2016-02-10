@@ -65,7 +65,7 @@
           mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
       });
-      $('#notFullFilter').click(function(){
+      $(mscSchedulizer.filter_not_full).click(function(){
           mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
           localStorage.setItem('schedule_filters', JSON.stringify(mscSchedulizer.schedule_filters));
           mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);

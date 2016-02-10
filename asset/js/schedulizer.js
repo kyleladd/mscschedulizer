@@ -2,7 +2,7 @@ var mscSchedulizer = mscSchedulizer === undefined ? {} : mscSchedulizer;
 $.extend(mscSchedulizer, {
     classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
-    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:[],NotFull:false},
+    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false},
     gen_courses :[],
     gen_schedules:[],
     num_loaded:0,
@@ -466,25 +466,29 @@ $.extend(mscSchedulizer, {
     },
     filtersDisplay:function(){
         var result = "";
-        result += "<input type=\"checkbox\" name=\"notFull\" id=\"notFullFilter\"> Not Full";
+        result += "<input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer.filter_not_full+"\"> Not Full";
+        result += "<input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer.filter_morrisville_campus+"\"> Morrisville";
+        result += "<input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer.filter_morrisville_campus+"\"> Norwich";
         return result;
     },
     updateFiltersDisplay:function(filters){
-        mscSchedulizer.notFullFilterDisplay(mscSchedulizer.schedule_filters.NotFull);
+        mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.NotFull,mscSchedulizer.filter_not_full);
+        // mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.Campuses.Morrisville,mscSchedulizer.filter_morrisville_campus);
+        // mscSchedulizer.checkboxFilterDisplay(mscSchedulizer.schedule_filters.Campuses.Norwich,mscSchedulizer.filter_morrisville_campus);
     },
-    notFullFilterDisplay:function(filter){
+    checkboxFilterDisplay:function(filter,elementID){
       if (filter) 
       {
-          document.getElementById("notFullFilter").checked = true;
+          document.getElementById(elementID).checked = true;
       } 
       else
       {
-          document.getElementById("notFullFilter").checked = false;
+          document.getElementById(elementID).checked = false;
       }
     },
     applyFiltersToSection:function(section,filters){
         var filteredOut = false;
-        if(typeof filters.Campus !== "undefined" && filters.Campus != []){
+        if(typeof filters.Campus !== "undefined" && filters.Campus != {}){
             filteredOut = mscSchedulizer.campusFilter(section,filters.Campus);
         }
         if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
