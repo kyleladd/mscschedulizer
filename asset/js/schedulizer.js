@@ -833,7 +833,8 @@ $.extend(mscSchedulizer, {
        return "<a target=\"_blank\"href=\"schedule-details.html?crn[]="+crns.join("&crn[]=")+"\">Details</a>";
     },
     previewLinkOutput:function(schedule){
-         return "<a target=\"_blank\" href=\"#\">Preview</a>";
+         // return "<a target=\"_blank\" href=\"#\">Preview</a>";
+         return "";
     },
     genNoMeetingsOutput: function(courses){
         try{
