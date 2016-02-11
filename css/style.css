@@ -5845,6 +5845,9 @@ table.term_details{
 .inline-block{
     display:inline-block;
 }
+.notice{
+    font-weight: 600;
+}
 /*WeekLine*/
 .ui-WeekDays a
 {

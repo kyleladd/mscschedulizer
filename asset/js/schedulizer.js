@@ -211,7 +211,7 @@ $.extend(mscSchedulizer, {
             });
         }
         else{
-            $("#"+mscSchedulizer.html_elements.schedules_container).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+            $("#"+mscSchedulizer.html_elements.schedules_container).html("<p><span class=\"notice\">No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</span></p>");
         }
     },
     getScheduleDetails:function(crns,element){
@@ -312,7 +312,7 @@ $.extend(mscSchedulizer, {
             });
         }
         else{
-            $("#"+mscSchedulizer.html_elements.schedules_container).html("No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.");
+            $("#"+mscSchedulizer.html_elements.schedules_container).html("<p><strong>No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</strong></p>");
         }
     },
     getCombinations:function(courses,callback){
@@ -451,7 +451,7 @@ $.extend(mscSchedulizer, {
     },
     filtersDisplay:function(){
         var result = "";
-        result += "<label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer.html_elements.filters.not_full+"\"> Not Full</label>";
+        result += "<label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer.html_elements.filters.not_full+"\"> Hide Full</label>";
         result += "<label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label>";
         result += "<label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer.html_elements.filters.norwich_campus+"\"> Norwich Campus</label>";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
@@ -719,8 +719,9 @@ $.extend(mscSchedulizer, {
     createSchedules:function(schedules){
         mscSchedulizer.num_loaded = 0;
         if(schedules != null && schedules.length > 0 ){
-            var outputSchedules = schedules.length + " schedule";
+            var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
             if(schedules.length != 1){outputSchedules += "s";}
+            outputSchedules +="</span>";
             for (var i in schedules) {
                 var schedule = schedules[i];  
                 var events = [];
@@ -774,7 +775,7 @@ $.extend(mscSchedulizer, {
             mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
         else{
-            $("#"+mscSchedulizer.html_elements.schedules_container).html("No schedules");
+            $("#"+mscSchedulizer.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span></p>");
         }
     },
     initSchedules:function(start,count){
