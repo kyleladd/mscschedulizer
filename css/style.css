@@ -5842,6 +5842,27 @@ table.term_details{
 .fa.fa-minus-circle{
     color:#B50B0B;
 }
+.inline-block{
+    display:inline-block;
+}
+/*WeekLine*/
+.ui-WeekDays a
+{
+    padding: 2px 3px !important;
+    border: 1px solid transparent;
+}
+.ui-WeekDays a:hover
+{
+    border-color:#0bb586 !important;
+
+}
+
+.ui-WeekDays .ui-state-active
+{
+    border-style: solid !important;
+    border-width: 1px !important;
+    border-color:#0bb586 !important;
+}
 @media only screen and (max-width: 479px) { 
 	.fc-time-grid-event .fc-time span{
 		font-size:xx-small !important;

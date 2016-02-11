@@ -53,6 +53,8 @@
     // Generate Page
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html"])){
       $("#"+mscSchedulizer.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+      // mscSchedulizer.initTimeBlockPickers();
+
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
       if(mscSchedulizer.generateLocation === "Remote"){
        mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
@@ -67,20 +69,17 @@
       });
       $("#"+mscSchedulizer.html_elements.filters.not_full).click(function(){
           mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
-          localStorage.setItem('schedule_filters', JSON.stringify(mscSchedulizer.schedule_filters));
-          mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+          mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
       });
       $("#"+mscSchedulizer.html_elements.filters.morrisville_campus).click(function(){
           mscSchedulizer.schedule_filters.Campuses.Morrisville = !mscSchedulizer.schedule_filters.Campuses.Morrisville;
-          localStorage.setItem('schedule_filters', JSON.stringify(mscSchedulizer.schedule_filters));
-          mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+          mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
       });
       $("#"+mscSchedulizer.html_elements.filters.norwich_campus).click(function(){
           mscSchedulizer.schedule_filters.Campuses.Norwich = !mscSchedulizer.schedule_filters.Campuses.Norwich;
-          localStorage.setItem('schedule_filters', JSON.stringify(mscSchedulizer.schedule_filters));
-          mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+          mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
       });
     }
@@ -103,7 +102,6 @@
       {
 
       }
-
     }
 
     // Course Listings page
