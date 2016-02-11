@@ -528,7 +528,7 @@ $.extend(mscSchedulizer, {
     },
     applyFiltersToSection:function(section,filters){
         var filteredOut = false;
-        if(typeof filters.Campuses !== "undefined" && filters.Campuses != {}){
+        if(typeof filters.Campuses !== "undefined"){
             filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
         }
         if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
@@ -546,12 +546,22 @@ $.extend(mscSchedulizer, {
         return false;
     },
     campusFilter:function(section,filter){
-        if(filter.Morrisville === false && section.Campus == "M"){
-            return true;
+        // Only filter out if it has a meeting location
+        if(section.Meetings.length>0){
+            var count = 0;
+            for (var m in section.Meetings) {
+                var meeting = section.Meetings[m];
+                if(meeting.StartTime == null || meeting.EndTime == null || (meeting.Monday==0 && meeting.Tuesday==0 && meeting.Wednesday==0 && meeting.Thursday==0 && meeting.Friday==0)){
+                    count++;
+                }
+            }
+            if(count !== section.Meetings.length){
+                if((filter.Morrisville === false && section.Campus == "M")||(filter.Norwich === false && section.Campus == "N")){
+                    return true;
+                }
+            }
         }
-        if(filter.Norwich === false && section.Campus == "N"){
-            return true;
-        }
+        
         return false;
     },
     timeBlockFilter:function(section,filter){
