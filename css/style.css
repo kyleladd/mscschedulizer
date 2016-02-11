@@ -5679,8 +5679,12 @@ ul.footer-nav li a:hover {
 .navbar-collapse {
 	max-height: 340px;
 }
-/*Preloader*/
+/*Custom*/
+body{
+    font-weight:500;
+}
 
+/*Preloader*/
 .loader.block{
     display:block;
 }

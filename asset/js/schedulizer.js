@@ -475,13 +475,13 @@ $.extend(mscSchedulizer, {
             result += "<div id=\"timeOnly_"+i+"\"><span id=\"weekCal_"+i+"\"></span> "
                     + "<input type=\"text\" class=\"time start ui-timepicker-input\" autocomplete=\"off\"> to "
                     + "<input type=\"text\" class=\"time end ui-timepicker-input\" autocomplete=\"off\">"
-                + "<a onclick=\"mscSchedulizer.updateDayTimeBlockFilter("+i+")\"> Set</a> <a onclick=\"mscSchedulizer.removeTimeBlockFilter("+i+")\"> Remove</a></div>";
+                + "<a onclick=\"mscSchedulizer.updateDayTimeBlockFilter("+i+")\"> Apply </a> <a onclick=\"mscSchedulizer.removeTimeBlockFilter("+i+")\"> Remove</a></div>";
         }
         result += "</div>";
         return result;
     },
     addTimeBlockFilter:function(){
-        mscSchedulizer.schedule_filters.TimeBlocks[mscSchedulizer.schedule_filters.TimeBlocks.length] = {StartTime:0,EndTime:0,Days:""};
+        mscSchedulizer.schedule_filters.TimeBlocks[mscSchedulizer.schedule_filters.TimeBlocks.length] = {StartTime:"0000",EndTime:"2330",Days:""};
         $("#"+mscSchedulizer.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
         mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
         mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
@@ -506,7 +506,9 @@ $.extend(mscSchedulizer, {
         for(var i=0; i<filters.length;i++){
             $("#timeOnly_"+i+" .time").timepicker({
               'showDuration': true,
-              'timeFormat': 'g:ia'
+              'timeFormat': 'g:ia',
+              "minTime":"12:00am",
+              "maxTime":"11:30pm"
             });
             $("#weekCal_"+i).weekLine({theme:"jquery-ui"});
             var timeOnlyExampleEl = document.getElementById("timeOnly_"+i);
