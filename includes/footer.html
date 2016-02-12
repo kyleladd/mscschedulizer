@@ -64,7 +64,7 @@
       }
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
-          mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
+          mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
       });
       $("#"+mscSchedulizer.html_elements.filters.not_full).click(function(){
@@ -88,7 +88,7 @@
         mscSchedulizer.createSchedules(mscSchedulizer.favorite_schedules);
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
-          mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
+          mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
       });
     }

@@ -226,6 +226,16 @@ $.extend(mscSchedulizer, {
             $(element).removeClass("loader");
         });
     },
+    getLargeSchedule:function(crns,callback){
+        $.getJSON(mscSchedulizer.api_host + "/info/?crn=" + crns.join("&crn[]="), function(schedule){
+            var schedules = [];
+            schedules.push(schedule);
+            callback(schedules);
+        })
+        .fail(function() {
+            callback([]);
+        });
+    },
     detailedCoursesOutput:function(courses,icon){
         if(typeof icon === "undefined"){
             icon = true;
@@ -337,6 +347,7 @@ $.extend(mscSchedulizer, {
                 outputCombinations[h][c].Sections = JSON.parse(JSON.stringify(scheduleCombinations[h][c]));
             }
         }
+        mscSchedulizer.gen_schedules = outputCombinations;
         callback(outputCombinations);
     },
     getSectionCombinations:function(course_sections){
@@ -772,26 +783,25 @@ $.extend(mscSchedulizer, {
                 schedule.courseWithoutMeeting = noMeetings;
                 outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
             }
-            mscSchedulizer.gen_schedules = schedules;
             $("#"+mscSchedulizer.html_elements.schedules_container).html(outputSchedules);
-            mscSchedulizer.initSchedules(mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
+            mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
         else{
             $("#"+mscSchedulizer.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span></p>");
         }
     },
-    initSchedules:function(start,count){
+    initSchedules:function(schedules,start,count){
         for (i = 0; i < count ; i++) { 
             var num = start + i;
-            if(mscSchedulizer.gen_schedules[num] !== undefined){
+            if(schedules[num] !== undefined){
                 $('#schedule_' + num).fullCalendar({                
                     editable: false,
                     handleWindowResize: true,
                     weekends: false, // Hide weekends
                     defaultView: 'agendaWeek', // Only show week view
                     header: false, // Hide buttons/titles
-                    minTime: moment(mscSchedulizer.gen_schedules[num].earlyStartTime,"Hmm").format("HH:mm"), // Start time for the calendar
-                    maxTime: moment(mscSchedulizer.gen_schedules[num].lateEndTime,"Hmm").format("HH:mm"), // End time for the calendar
+                    minTime: moment(schedules[num].earlyStartTime,"Hmm").format("HH:mm"), // Start time for the calendar
+                    maxTime: moment(schedules[num].lateEndTime,"Hmm").format("HH:mm"), // End time for the calendar
                     columnFormat: {
                         week: 'ddd' // Only show day of the week names
                     },
@@ -799,13 +809,13 @@ $.extend(mscSchedulizer, {
                     height:'auto',
                     // allDayText: 'TBD',
                     allDaySlot: false,
-                    events: mscSchedulizer.gen_schedules[num].events
+                    events: schedules[num].events
                 });
                 var additionalOutput = "";
-                if(mscSchedulizer.gen_schedules[num].courseWithoutMeeting.length > 0){
-                    additionalOutput += mscSchedulizer.genNoMeetingsOutput(mscSchedulizer.gen_schedules[num].courseWithoutMeeting);
+                if(schedules[num].courseWithoutMeeting.length > 0){
+                    additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
                 }
-                additionalOutput += mscSchedulizer.optionsOutput(mscSchedulizer.gen_schedules[num]);
+                additionalOutput += mscSchedulizer.optionsOutput(schedules[num]);
                 $('#schedule_' + num).append(additionalOutput); 
                 mscSchedulizer.num_loaded++;
             }
@@ -836,8 +846,13 @@ $.extend(mscSchedulizer, {
        return "<a target=\"_blank\"href=\"schedule-details.html?crn[]="+crns.join("&crn[]=")+"\">Details</a>";
     },
     previewLinkOutput:function(schedule){
-         // return "<a target=\"_blank\" href=\"#\">Preview</a>";
-         return "";
+        var crns = [];
+        for(var i = 0; i < schedule.length; i++){
+            for(var s = 0; s < schedule[i].Sections.length; s++){
+                crns.push(schedule[i].Sections[s].CourseCRN);
+            }
+        }
+        return "<a target=\"_blank\" href=\"preview.html?crn[]="+crns.join("&crn[]=")+"\">Preview</a>";
     },
     genNoMeetingsOutput: function(courses){
         try{
