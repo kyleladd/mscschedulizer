@@ -37,6 +37,10 @@
   <script type="text/javascript" src="asset/js/schedulizer.js"></script>
   <script>
   $(function(){ 
+    mscSchedulizer.setSemesterCurrentList(function(semesters_list){
+      mscSchedulizer.setSemester();
+      mscSchedulizer.getSemestersSelect(semesters_list);
+    
     mscSchedulizer.loadSelections();
     // Select Classes page
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html"])){
@@ -48,6 +52,13 @@
                 //Get From Endpoint - Department Courses
                 mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer.html_elements.departments_select).val());
             }
+        });
+        //Semester select
+        $("#"+mscSchedulizer.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+          mscSchedulizer.setSemesterVar(JSON.parse($("#"+mscSchedulizer.html_elements.semesters_select).val()));
+          $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
+          //Get From Endpoint - Department Courses
+          mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer.html_elements.departments_select).val());
         });
     }
     // Generate Page
@@ -114,6 +125,13 @@
                 //Get From Endpoint - Department Courses
                 mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer.html_elements.departments_select).val());
             }
+        });
+        //Semester select
+        $("#"+mscSchedulizer.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+          mscSchedulizer.setSemesterVar(JSON.parse($("#"+mscSchedulizer.html_elements.semesters_select).val()));
+          $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
+          //Get From Endpoint - Department Courses
+          mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer.html_elements.departments_select).val());
         });
     }
 
@@ -205,6 +223,7 @@
           mscSchedulizer.loadSelections();
       });
     }
+  });
 });
     
   </script>
