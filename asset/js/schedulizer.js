@@ -322,6 +322,40 @@ $.extend(mscSchedulizer, {
             callback([]);
         });
     },
+    groupMeetings:function(meetings){
+        console.log(meetings);
+        groupedMeetings = [];
+        for (var m in meetings) {
+            var meeting = meetings[m];
+            var index = mscSchedulizer.searchListDictionaries(groupedMeetings,{CourseCRN:meeting.CourseCRN,StartTime:meeting.StartTime,EndTime:meeting.EndTime},true);
+            if(index !== -1){
+                groupedMeetings[index] = mscSchedulizer.mergeDays(groupedMeetings[index],meeting);
+            }
+            else{
+                groupedMeetings.push(meeting);
+            }
+        }
+        return  groupedMeetings;
+    },
+    mergeDays:function(meeting1,meeting2){
+        meeting = meeting1;
+        if(!Boolean(meeting.Monday) && Boolean(meeting2.Monday)){
+            meeting.Monday = 1;
+        }
+        if(!Boolean(meeting.Tuesday) && Boolean(meeting2.Tuesday)){
+            meeting.Tuesday = 1;
+        }
+        if(!Boolean(meeting.Wednesday) && Boolean(meeting2.Wednesday)){
+            meeting.Wednesday = 1;
+        }
+        if(!Boolean(meeting.Thursday) && Boolean(meeting2.Thursday)){
+            meeting.Thursday = 1;
+        }
+        if(!Boolean(meeting.Friday) && Boolean(meeting2.Friday)){
+            meeting.Friday = 1;
+        }
+        return meeting;
+    },
     detailedCoursesOutput:function(courses,icon){
         if(typeof icon === "undefined"){
             icon = true;
@@ -351,26 +385,29 @@ $.extend(mscSchedulizer, {
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
             for (var s in course.Sections) {
                 var section = course.Sections[s];
-                var meeting = {};
-                try
-                {
-                    if(!moment(section.Meetings[0].StartTime,"Hmm").isValid() || !moment(section.Meetings[0].EndTime,"Hmm").isValid()){
-                        throw("Not a valid date");
+                var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
+                for (var m in groupedmeetings) {
+                    var meeting = groupedmeetings[m];
+                    try
+                    {
+                        if(!moment(meeting.StartTime,"Hmm").isValid() || !moment(meeting.EndTime,"Hmm").isValid()){
+                            throw("Not a valid date");
+                        }
+                        meeting.startTime = moment(meeting.StartTime,"Hmm").format("h:mma");
+                        meeting.endTime = moment(meeting.EndTime,"Hmm").format("h:mma");
+                        meeting.days = mscSchedulizer.daysList(meeting);
                     }
-                    meeting.startTime = moment(section.Meetings[0].StartTime,"Hmm").format("h:mma");
-                    meeting.endTime = moment(section.Meetings[0].EndTime,"Hmm").format("h:mma");
-                    meeting.days = mscSchedulizer.daysList(section.Meetings[0]);
+                    catch(err)
+                    {
+                        meeting.startTime = "TBD";
+                        meeting.endTime = "";
+                        meeting.days = [];
+                    }
+                    if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
+                        terms.push(section.CourseTerm);
+                    }
+                    output+="<tr><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
-                catch(err)
-                {
-                    meeting.startTime = "TBD";
-                    meeting.endTime = "";
-                    meeting.days = [];
-                }
-                if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
-                    terms.push(section.CourseTerm);
-                }
-                output+="<tr><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
             }
             output+="</table>";
         }          
