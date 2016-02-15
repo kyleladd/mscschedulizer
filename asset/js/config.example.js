@@ -5,6 +5,7 @@ $.extend(mscSchedulizer, {
         // All elements are By ID
         course_selections_list:"course_selections",
         departments_select:"departments",
+        semesters_select:"semesters",
         department_class_list:"dept_class_list",
         schedules_container:"schedules",
         filters_container:"filters",
