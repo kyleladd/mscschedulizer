@@ -716,12 +716,12 @@ $.extend(mscSchedulizer, {
         return false;
     },
     NotFullFilter:function(section,filter){
-        // 0 is unlimited
-        if(section.MaxEnrollment!=0){
+        // 0 is NOT unlimited, 0 means manual registration
+        // if(section.MaxEnrollment!=0){
             if(section.CurrentEnrollment>=section.MaxEnrollment){
                 return true
             }
-        }
+        // }
         return false;
     },
     doBlockDaysOverlap:function(meeting1,days){
