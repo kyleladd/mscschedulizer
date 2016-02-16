@@ -644,7 +644,7 @@ $.extend(mscSchedulizer, {
               "minTime":"12:00am",
               "maxTime":"11:30pm"
             });
-            $("#weekCal_"+i).weekLine({theme:"jquery-ui"});
+            $("#weekCal_"+i).weekLine({theme:"jquery-ui",dayLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"]});
             var timeOnlyExampleEl = document.getElementById("timeOnly_"+i);
             var timeOnlyDatepair = new Datepair(timeOnlyExampleEl);
                 $("#timeOnly_"+i+" .start.time").timepicker('setTime',  moment(filters[i].StartTime,"Hmm").format('h:mma'));
