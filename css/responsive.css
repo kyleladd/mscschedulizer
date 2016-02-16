@@ -283,6 +283,10 @@
 	ul.social-list li a.github:hover {
 	    color: #4D4F54 !important;
 	}
+
+	ul.social-list li a.trello:hover {
+	    color: #298FCA !important;
+	}
 	
 	ul.social-list li a.vimeo:hover {
 		color: #87D3E0 !important;

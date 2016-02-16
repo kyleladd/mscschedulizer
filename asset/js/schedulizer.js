@@ -230,6 +230,7 @@ $.extend(mscSchedulizer, {
         $.getJSON(mscSchedulizer.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(results){
             var output = mscSchedulizer.detailedCoursesOutput(results);
             $("#"+mscSchedulizer.html_elements.department_class_list).html(output);
+            $('.course_details').basictable();
         })
         .fail(function() {
             $("#"+mscSchedulizer.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
@@ -323,7 +324,6 @@ $.extend(mscSchedulizer, {
         });
     },
     groupMeetings:function(meetings){
-        console.log(meetings);
         groupedMeetings = [];
         for (var m in meetings) {
             var meeting = meetings[m];
@@ -644,7 +644,7 @@ $.extend(mscSchedulizer, {
               "minTime":"12:00am",
               "maxTime":"11:30pm"
             });
-            $("#weekCal_"+i).weekLine({theme:"jquery-ui"});
+            $("#weekCal_"+i).weekLine({theme:"jquery-ui",dayLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"]});
             var timeOnlyExampleEl = document.getElementById("timeOnly_"+i);
             var timeOnlyDatepair = new Datepair(timeOnlyExampleEl);
                 $("#timeOnly_"+i+" .start.time").timepicker('setTime',  moment(filters[i].StartTime,"Hmm").format('h:mma'));

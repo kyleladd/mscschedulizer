@@ -538,6 +538,10 @@ ul.social-list li a.github:hover {
     background-color: #4D4F54;
 }
 
+ul.social-list li a.trello:hover {
+    background-color: #298FCA;
+}
+
 ul.social-list li a.vimeo:hover {
 	background-color: #87D3E0;
 }
@@ -2764,6 +2768,10 @@ ul.icons-list li i {
 	background-color: #4D4F54;
 }
 
+.team-member .member-social a.trello:hover i {
+	background-color: #298FCA;
+}
+
 .team-member .member-social a.linkedin:hover i {
 	background-color: #90CADD;
 }
@@ -4219,6 +4227,10 @@ footer a:hover {
 
 .social-widget ul.social-icons li a.github:hover i {
     background-color: #4D4F54;
+}
+
+.social-widget ul.social-icons li a.trello:hover i {
+    background-color: #298FCA;
 }
 
 .social-widget ul.social-icons li a.vimeo:hover i {
@@ -5885,50 +5897,5 @@ table.term_details{
     .classic-title{
         border-bottom-color: #0BB586;
     }
-
-    table.course_details{overflow-y: hidden;}
-    /* Force table to not be like tables anymore */
-    table.course_details, table.course_details thead, table.course_details tbody, table.course_details th, table.course_details td, table.course_details tr { 
-        display: block; 
-    }
-    
-    /* Hide table headers (but not display: none;, for accessibility) */
-    table.course_details thead tr { 
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-    
-    table.course_details tr { border-bottom: 1px solid #ccc;border-top: 1px solid #ccc; }
-    
-    table.course_details td { 
-        /* Behave  like a "row" */
-        border: none;
-        border-bottom: 1px solid #eee; 
-        position: relative;
-        padding-left: 50%; 
-    }
-    
-    table.course_details td:before { 
-        /* Now like a table header */
-        position: absolute;
-        /* Top/left values mimic padding */
-        top: 6px;
-        left: 6px;
-        width: 45%; 
-        padding-right: 10px; 
-        white-space: nowrap;
-    }
-    
-    /*
-    Label the data
-    */
-    .course_details td:nth-of-type(1):before { content: "P/T"; }
-    .course_details td:nth-of-type(2):before { content: "CRN"; }
-    .course_details td:nth-of-type(3):before { content: "Sec"; }
-    .course_details td:nth-of-type(4):before { content: "CrHr"; }
-    .course_details td:nth-of-type(5):before { content: "Enrl/Max"; }
-    .course_details td:nth-of-type(6):before { content: "Days"; }
-    .course_details td:nth-of-type(7):before { content: "Time"; }
-    .course_details td:nth-of-type(8):before { content: "Instructor"; }
+	table.course_details tr { border-bottom: 1px solid #ccc;border-top: 1px solid #ccc; }
 }
