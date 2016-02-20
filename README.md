@@ -12,3 +12,9 @@
 
 ### Trello Board
 https://trello.com/b/bNiEIopB/mscschedulizer
+
+## Running Tests
+
+```
+./node_modules/mocha-phantomjs/bin/mocha-phantomjs ./tests/schedulizerRunner.html 
+```

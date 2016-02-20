@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+  <style type="text/css">
+  #todoapp, #info {
+    display: none;
+  }
+</style>
+</head>
+<body>
+<script src="../js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="../asset/js/schedulizer.js"></script>
+<div id="mocha"></div>
+<script src="../node_modules/mocha/mocha.js"></script>
+<script src="../node_modules/chai/chai.js"></script>
+<script>
+  mocha.ui('bdd'); 
+  mocha.reporter('html');
+  var expect = chai.expect;
+</script>
+<script src="./schedulizerSpec.js"></script>
+<script>
+  if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+  else { mocha.run(); }
+</script>
+</body>
+</html>
