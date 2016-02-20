@@ -66,6 +66,158 @@ describe('mscSchedulizer', function () {
     });
   });
 
+  describe('doBlockDaysOverlap', function () {
+    it('should return true if meeting is monday and monday in list of days', function () {
+      var meeting = {
+        'Monday': 1
+      };
+      var days = ['Mon'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(true)
+    });
+
+    it('should return false if meeting is not monday and monday in list of days', function () {
+      var meeting = {
+        'Monday': 2
+      };
+      var days = ['Mon'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return false if meeting is monday and monday in list of days', function () {
+      var meeting = {
+        'Monday': 1
+      };
+      var days = ['Sat'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return true if meeting is tuesday and tuesday in list of days', function () {
+      var meeting = {
+        'Tuesday': 1
+      };
+      var days = ['Tue'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(true)
+    });
+
+    it('should return false if meeting is not tuesday and tuesday in list of days', function () {
+      var meeting = {
+        'Tuesday': 2
+      };
+      var days = ['Tue'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return false if meeting is tuesday and tuesday in list of days', function () {
+      var meeting = {
+        'Tuesday': 1
+      };
+      var days = ['Sat'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return true if meeting is wednesday and wednesday in list of days', function () {
+      var meeting = {
+        'Wednesday': 1
+      };
+      var days = ['Wed'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(true)
+    });
+
+    it('should return false if meeting is not wednesday and wednesday in list of days', function () {
+      var meeting = {
+        'Wednesday': 2
+      };
+      var days = ['Wed'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return false if meeting is wednesday and wednesday in list of days', function () {
+      var meeting = {
+        'Wednesday': 1
+      };
+      var days = ['Sat'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return true if meeting is thursday and thursday in list of days', function () {
+      var meeting = {
+        'Thursday': 1
+      };
+      var days = ['Thu'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(true)
+    });
+
+    it('should return false if meeting is not thursday and thursday in list of days', function () {
+      var meeting = {
+        'Thursday': 2
+      };
+      var days = ['Thu'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return false if meeting is thursday and thursday in list of days', function () {
+      var meeting = {
+        'Thursday': 1
+      };
+      var days = ['Sat'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return true if meeting is friday and friday in list of days', function () {
+      var meeting = {
+        'Friday': 1
+      };
+      var days = ['Fri'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(true)
+    });
+
+    it('should return false if meeting is not friday and friday in list of days', function () {
+      var meeting = {
+        'Friday': 2
+      };
+      var days = ['Fri'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+
+    it('should return false if meeting is friday and friday in list of days', function () {
+      var meeting = {
+        'Friday': 1
+      };
+      var days = ['Sat'];
+      result = mscSchedulizer.doBlockDaysOverlap(meeting, days);
+
+      expect(result).to.be.equal(false)
+    });
+  });
+
   describe('convertIntToStrTime', function () {
     it('should return 12:00am when no time provided', function () {
       result = mscSchedulizer['convertIntToStrTime'](NaN);
