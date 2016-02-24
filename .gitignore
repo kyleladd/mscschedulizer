@@ -1,5 +1,15 @@
 .sass-cache
+
+# Generated
+asset/js/schedulizer_bundle.js
+
+# Dependencies
 bower_components/*
 node_modules/*
+
+# Logs
+npm-debug.log
+
+# Config Files
 asset/js/config.js
 Web.config

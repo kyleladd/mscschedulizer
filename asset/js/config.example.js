@@ -1,5 +1,4 @@
-var mscSchedulizer = mscSchedulizer === undefined ? {} : mscSchedulizer;
-$.extend(mscSchedulizer, {
+module.exports = {
     api_host:"http://schedulizer-api.morrisville.edu",
     html_elements:{
         // All elements are By ID
@@ -18,4 +17,4 @@ $.extend(mscSchedulizer, {
     colors: ["#22B548","#2293B5","#3222B5","#B58122","#B52222","#B522B0","#686967","#433050","#B3B522"],
     numToLoad:10,
     generateLocation:'Local'//["Local","Remote"] //Deprecating remote
-});
+}

@@ -1,0 +1,9 @@
+var mscSchedulizer = window.mscSchedulizer || {};
+var mscSchedulizer_config = window.mscSchedulizer_config || {};
+var node_generic_functions = window.node_generic_functions || {};
+var mscSchedulizer_config = require('./config.js');
+var node_generic_functions = require('node_generic_functions');
+var mscSchedulizer = require('./schedulizer.js');
+window.mscSchedulizer = mscSchedulizer;
+window.mscSchedulizer_config = mscSchedulizer_config;
+window.node_generic_functions = node_generic_functions;

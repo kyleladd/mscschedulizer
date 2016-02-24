@@ -31,8 +31,8 @@
 
   <!-- Go To Top Link -->
   <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
-  <script type="text/javascript" src="asset/js/config.js"></script>
-  <script type="text/javascript" src="asset/js/schedulizer.js"></script>
+  <!-- <script type="text/javascript" src="asset/js/config.js"></script> -->
+  <script type="text/javascript" src="asset/js/schedulizer_bundle.js"></script>
   <script>
   $(function(){ 
     mscSchedulizer.setSemesterCurrentList(function(semesters_list){
@@ -41,32 +41,32 @@
     
     mscSchedulizer.loadSelections();
     // Select Classes page
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html"])){
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCourses);
         // Department selected - View Department Courses
-        $("#"+mscSchedulizer.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-            if($("#"+mscSchedulizer.html_elements.departments_select).val() != ""){
-                $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
+        $("#"+mscSchedulizer_config.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+            if($("#"+mscSchedulizer_config.html_elements.departments_select).val() != ""){
+                $("#"+mscSchedulizer_config.html_elements.department_class_list).addClass("loader");
                 //Get From Endpoint - Department Courses
-                mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer.html_elements.departments_select).val());
+                mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer_config.html_elements.departments_select).val());
             }
         });
         //Semester select
-        $("#"+mscSchedulizer.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-          mscSchedulizer.setSemesterVar(JSON.parse($("#"+mscSchedulizer.html_elements.semesters_select).val()));
-          $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
+        $("#"+mscSchedulizer_config.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+          mscSchedulizer.setSemesterVar(JSON.parse($("#"+mscSchedulizer_config.html_elements.semesters_select).val()));
+          $("#"+mscSchedulizer_config.html_elements.department_class_list).addClass("loader");
           mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCourses);
           //Get From Endpoint - Department Courses
-          mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer.html_elements.departments_select).val());
+          mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer_config.html_elements.departments_select).val());
         });
     }
     // Generate Page
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html"])){
-      $("#"+mscSchedulizer.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html"])){
+      $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
       // mscSchedulizer.initTimeBlockPickers();
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
-      if(mscSchedulizer.generateLocation === "Remote"){
+      if(mscSchedulizer_config.generateLocation === "Remote"){
        mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
       }
       else{
@@ -77,24 +77,24 @@
           mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
         }
       });
-      $("#"+mscSchedulizer.html_elements.filters.not_full).click(function(){
+      $("#"+mscSchedulizer_config.html_elements.filters.not_full).click(function(){
           mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
       });
-      $("#"+mscSchedulizer.html_elements.filters.morrisville_campus).click(function(){
+      $("#"+mscSchedulizer_config.html_elements.filters.morrisville_campus).click(function(){
           mscSchedulizer.schedule_filters.Campuses.Morrisville = !mscSchedulizer.schedule_filters.Campuses.Morrisville;
           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
       });
-      $("#"+mscSchedulizer.html_elements.filters.norwich_campus).click(function(){
+      $("#"+mscSchedulizer_config.html_elements.filters.norwich_campus).click(function(){
           mscSchedulizer.schedule_filters.Campuses.Norwich = !mscSchedulizer.schedule_filters.Campuses.Norwich;
           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
       });
     }
     // Load schedules from favorites array
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["favorites.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["favorites.html"])){
         mscSchedulizer.createSchedules(mscSchedulizer.favorite_schedules);
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
@@ -103,10 +103,10 @@
       });
     }
     // Load schedule details
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["schedule-details.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["schedule-details.html"])){
       try
       {
-       mscSchedulizer.getScheduleDetails(mscSchedulizer.queryData(location.search,true).crn,"#"+mscSchedulizer.html_elements.department_class_list);
+       mscSchedulizer.getScheduleDetails(mscSchedulizer.queryData(location.search,true).crn,"#"+mscSchedulizer_config.html_elements.department_class_list);
       }
       catch (err)
       {
@@ -115,33 +115,33 @@
     }
 
     // Course Listings page
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);        // Department selected - View Department Courses
-        $("#"+mscSchedulizer.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-            if($("#"+mscSchedulizer.html_elements.departments_select).val() != ""){
-                $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
+        $("#"+mscSchedulizer_config.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+            if($("#"+mscSchedulizer_config.html_elements.departments_select).val() != ""){
+                $("#"+mscSchedulizer_config.html_elements.department_class_list).addClass("loader");
                 //Get From Endpoint - Department Courses
-                mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer.html_elements.departments_select).val());
+                mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer_config.html_elements.departments_select).val());
             }
         });
         //Semester select
-        $("#"+mscSchedulizer.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-          mscSchedulizer.setSemesterVar(JSON.parse($("#"+mscSchedulizer.html_elements.semesters_select).val()));
-          $("#"+mscSchedulizer.html_elements.department_class_list).addClass("loader");
+        $("#"+mscSchedulizer_config.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+          mscSchedulizer.setSemesterVar(JSON.parse($("#"+mscSchedulizer_config.html_elements.semesters_select).val()));
+          $("#"+mscSchedulizer_config.html_elements.department_class_list).addClass("loader");
           mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);
           //Get From Endpoint - Department Courses
-          mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer.html_elements.departments_select).val());
+          mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer_config.html_elements.departments_select).val());
         });
     }
 
     // Favorites
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html","favorites.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html","favorites.html"])){
       // Add Favorite
-      $("#"+mscSchedulizer.html_elements.schedules_container).on("click", "a.favorite_schedule", function (event) {
+      $("#"+mscSchedulizer_config.html_elements.schedules_container).on("click", "a.favorite_schedule", function (event) {
             event.preventDefault();
             //Add Course
             var schedule = JSON.parse(this.getAttribute('data-value'));
-            if (mscSchedulizer.searchListObjects(mscSchedulizer.favorite_schedules,schedule) === -1) {
+            if (node_generic_functions.searchListObjects(mscSchedulizer.favorite_schedules,schedule) === -1) {
                 mscSchedulizer.favorite_schedules.push(schedule);
                 localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
                 // Update Element so it can be unfavorited
@@ -151,11 +151,11 @@
             }
         });
       // Remove Favorite
-      $("#"+mscSchedulizer.html_elements.schedules_container).on("click", "a.unfavorite_schedule", function (event) {
+      $("#"+mscSchedulizer_config.html_elements.schedules_container).on("click", "a.unfavorite_schedule", function (event) {
           event.preventDefault();
           //Add Course
           var schedule = JSON.parse(this.getAttribute('data-value'));
-          var index = mscSchedulizer.searchListObjects(mscSchedulizer.favorite_schedules,schedule);
+          var index = node_generic_functions.searchListObjects(mscSchedulizer.favorite_schedules,schedule);
           if (index !== -1) {
               mscSchedulizer.favorite_schedules.splice(index, 1);
               localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
@@ -168,13 +168,13 @@
     }
     
     // // Course Selections
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html","course-listings.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html","course-listings.html"])){
        // Remove Course Selections
-      $("#"+mscSchedulizer.html_elements.course_selections_list).on("click", "a.a_selection", function (event) {
+      $("#"+mscSchedulizer_config.html_elements.course_selections_list).on("click", "a.a_selection", function (event) {
           event.preventDefault();
           // //Remove Course
           var course = JSON.parse(this.getAttribute('data-value'));
-          var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
+          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
           if (index != -1) {
               mscSchedulizer.classes_selected.splice(index,1);
               localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
@@ -184,13 +184,13 @@
       });
     }
     // Course Selections
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["select-classes.html"])){
       // Course selected - Add Course
-      $("#"+mscSchedulizer.html_elements.department_class_list).on("click", "a.a_course", function (event) {
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "a.a_course", function (event) {
           event.preventDefault();
           //Add Course
           var course = JSON.parse(this.getAttribute('data-value'));
-          var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
+          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
           if (index === -1) {
             mscSchedulizer.classes_selected.push(course);
             // Store var and reload selections
@@ -200,13 +200,13 @@
           }
       });
     }
-    if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
       // Course selected - Add Course
-      $("#"+mscSchedulizer.html_elements.department_class_list).on("click", "a.a_course", function (event) {
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "a.a_course", function (event) {
           event.preventDefault();
           //Add Course
           var course = JSON.parse(this.getAttribute('data-value'));
-          var index = mscSchedulizer.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
+          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
           if (index === -1) {
             mscSchedulizer.classes_selected.push(course);
             $(this).html("<i class=\"fa fa-minus-circle\"></i>")

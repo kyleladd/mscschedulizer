@@ -5,7 +5,17 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "js-combinatorics": "^0.5.0"
+    "js-combinatorics": "^0.5.0",
+    "node_generic_functions": "git+https://github.com/kyleladd/node_generic_functions.git"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "chai": "latest",
+    "chai-spies": "latest",
+    "expect.js": "latest",
+    "mocha": "latest",
+    "mock-local-storage": "^1.0.2",
+    "sinon": "latest",
+    "sinon-chai": "latest"
+  }
 }
