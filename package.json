@@ -16,6 +16,7 @@
     "mocha": "latest",
     "mock-local-storage": "^1.0.2",
     "sinon": "latest",
-    "sinon-chai": "latest"
+    "sinon-chai": "latest",
+    "mocha-phantomjs": "^4.0.2"
   }
 }
