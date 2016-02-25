@@ -152,9 +152,54 @@ QUnit.module("doTermsOverlap");
         assert.equal(result, true, "should return true"); 
     });
 QUnit.module("doMeetingsOverlap");
+var sandbox;
+QUnit.module( "doSectionsOverlap", {
 
-QUnit.module("doSectionsOverlap");
+  beforeEach: function() {
+    // prepare something for all following tests
+    sandbox = sinon.sandbox.create();
+  },
+  afterEach: function() {
+    // clean up after each test
+    sandbox.restore();
+  }
+});
+    QUnit.test("should return true if meeting is monday and monday in list of days", function(assert) {
+        var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
+        stub.returns(false);
+        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
+        stub2.returns(false);
+        var result = mscSchedulizer.doSectionsOverlap({}, {});
 
+        assert.equal(result, false, "should return false"); 
+    });
+    QUnit.test("should return true if meeting is monday and monday in list of days", function(assert) {
+        var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
+        stub.returns(true);
+        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
+        stub2.returns(false);
+        var result = mscSchedulizer.doSectionsOverlap({}, {});
+
+        assert.equal(result, false, "should return true"); 
+    });
+    QUnit.test("should return true if meeting is monday and monday in list of days", function(assert) {
+        var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
+        stub.returns(false);
+        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
+        stub2.returns(true);
+        var result = mscSchedulizer.doSectionsOverlap({}, {});
+
+        assert.equal(result, false, "should return true"); 
+    });
+    QUnit.test("should return true if meeting is monday and monday in list of days", function(assert) {
+        var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
+        stub.returns(true);
+        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
+        stub2.returns(true);
+        var result = mscSchedulizer.doSectionsOverlap({}, {});
+
+        assert.equal(result, true, "should return true"); 
+    });
 QUnit.module("convertDate");
 
 QUnit.module("splitMeetings");
