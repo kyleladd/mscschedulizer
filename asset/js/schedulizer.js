@@ -279,7 +279,7 @@ module.exports = {
         return  groupedMeetings;
     },
     mergeDays:function(meeting1,meeting2){
-        meeting = meeting1;
+        var meeting = meeting1;
         if(!Boolean(meeting.Monday) && Boolean(meeting2.Monday)){
             meeting.Monday = 1;
         }
