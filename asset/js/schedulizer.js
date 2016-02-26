@@ -624,21 +624,23 @@ module.exports = {
     },
     campusFilter:function(section,filter){
         // Only filter out if it has a meeting location
-        if(section.Meetings.length>0){
-            var count = 0;
-            for (var m in section.Meetings) {
-                var meeting = section.Meetings[m];
-                if(meeting.StartTime == null || meeting.EndTime == null || (meeting.Monday==0 && meeting.Tuesday==0 && meeting.Wednesday==0 && meeting.Thursday==0 && meeting.Friday==0)){
-                    count++;
+        try{
+            if(section.Meetings.length>0){
+                var count = 0;
+                for (var m in section.Meetings) {
+                    var meeting = section.Meetings[m];
+                    if(meeting.StartTime == null || meeting.EndTime == null || (meeting.Monday==0 && meeting.Tuesday==0 && meeting.Wednesday==0 && meeting.Thursday==0 && meeting.Friday==0)){
+                        count++;
+                    }
                 }
-            }
-            if(count !== section.Meetings.length){
-                if((filter.Morrisville === false && section.Campus == "M")||(filter.Norwich === false && section.Campus == "N")){
-                    return true;
+                if(count !== section.Meetings.length){
+                    if((filter.Morrisville === false && section.Campus == "M")||(filter.Norwich === false && section.Campus == "N")){
+                        return true;
+                    }
                 }
             }
         }
-        
+        catch (err){}
         return false;
     },
     timeBlockFilter:function(section,filter){

@@ -1,7 +1,9 @@
+QUnit.config.reorder = false;
 var sandbox;
+var clock;
 QUnit.module("professorFilter");
     QUnit.test("test the startsWith function", function(assert) {
-      var result = mscSchedulizer['professorFilter']();
+      var result = mscSchedulizer.professorFilter();
       // Not implemented
       assert.equal(result, false, "should return false");
     });
@@ -12,7 +14,7 @@ QUnit.module("notFullFilter");
             'CurrentEnrollment': 11,
             'MaxEnrollment': 10
         };
-        var result = mscSchedulizer['notFullFilter'](section, NaN);
+        var result = mscSchedulizer.notFullFilter(section, NaN);
 
         assert.equal(result, true, "should return true");
     });
@@ -21,7 +23,7 @@ QUnit.module("notFullFilter");
             'CurrentEnrollment': 10,
             'MaxEnrollment': 10
         };
-        var result = mscSchedulizer['notFullFilter'](section, NaN);
+        var result = mscSchedulizer.notFullFilter(section, NaN);
 
         assert.equal(result, true, "should be true when equal"); 
     });
@@ -30,9 +32,100 @@ QUnit.module("notFullFilter");
             'CurrentEnrollment': 9,
             'MaxEnrollment': 10
         };
-        var result = mscSchedulizer['notFullFilter'](section, NaN);
+        var result = mscSchedulizer.notFullFilter(section, NaN);
 
         assert.equal(result, false, "should be false when not full"); 
+    });
+
+QUnit.module("campusFilter");
+    QUnit.test("should not be filtered out when it does not have meetings", function(assert) {
+        var section = {};
+        var filter = {Morrisville:true,Norwich:true};
+        var result = mscSchedulizer.campusFilter(section, filter);
+
+        assert.equal(result, false, "should be false when Campus is undefined no matter the filter settings");
+        
+        filter = {Morrisville:false,Norwich:false};
+        result = mscSchedulizer.campusFilter(section, filter);
+        assert.equal(result, false, "should be false when Campus is undefined no matter the filter settings");
+    });
+    QUnit.test("should not be filtered out when it has meetings that do not have times even though campuses are false", function(assert) {
+        var section = {Meetings:[{StartTime:null,EndTime:null,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}]};
+        var filter = {Morrisville:false,Norwich:false};
+        var result = mscSchedulizer.campusFilter(section, filter);
+        assert.equal(result, false, "should be false when Campus is undefined");        
+
+        section = {Meetings:[{StartTime:null,EndTime:null,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}]};
+        result = mscSchedulizer.campusFilter(section, filter);
+
+        assert.equal(result, false, "should be false when Campus is undefined");
+
+        section = {Meetings:[{StartTime:1000,EndTime:1200,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}]};
+        result = mscSchedulizer.campusFilter(section, filter);
+
+        assert.equal(result, false, "should be false when Campus is undefined");
+    });
+    QUnit.test("should not be filtered out when meeting is missing time/day", function(assert) {
+        var section = {Meetings:[{StartTime:null,EndTime:null,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}]};
+        var filter = {Morrisville:false,Norwich:false};
+        var result = mscSchedulizer.campusFilter(section, filter);
+
+        assert.equal(result, false, "should be false when Campus is undefined"); 
+        
+        section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:0,Tuesday:0,Wednesday:0,Thursday:0,Friday:0}]};
+        assert.equal(result, false, "should be false when Campus is undefined"); 
+    });
+    QUnit.test("should not be filtered out when it has meetings that have times,days and campus but filters are true", function(assert) {
+        var section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}],Campus:'M'};
+        var filter = {Morrisville:true,Norwich:true};
+        var result = mscSchedulizer.campusFilter(section, filter);
+
+        assert.equal(result, false, "should be false when matching campus is true in filter"); 
+        
+        section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1,Campus:'N'}]};
+        assert.equal(result, false, "should be false when matching campus is true in filter"); 
+    });
+    QUnit.test("should be filtered out when it has meetings that have times,days and campus is set but matching campus filter is false", function(assert) {
+        var section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}],Campus:'N'};
+        var filter = {Morrisville:true,Norwich:false};
+        var result = mscSchedulizer.campusFilter(section, filter);
+
+        assert.equal(result, true, "should be true when matching Campus is false in filter"); 
+        section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}],Campus:'M'};
+        filter = {Morrisville:false,Norwich:true};
+        result = mscSchedulizer.campusFilter(section, filter);
+
+        assert.equal(result, true, "should be true when matching Campus is false in filter"); 
+    });
+
+QUnit.module("timeBlockFilter");
+    QUnit.test("should be false when timeblock filter is empty", function(assert) {
+        var section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}]};
+        var filter =  [];
+        var result = mscSchedulizer.timeBlockFilter(section, filter);
+
+        assert.equal(result, false, "should be false when timeblock filter is empty"); 
+    });
+    QUnit.test("should be false when timeblock filter does not overlap meetings due to time", function(assert) {
+        var section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}]};
+        var filter =  [{Days:"Mon,Tue,Wed,Thu,Fri",StartTime:"0000",EndTime:"1130"}];
+        var result = mscSchedulizer.timeBlockFilter(section, filter);
+
+        assert.equal(result, false, "should be false when timeblock filter is empty"); 
+    });
+    QUnit.test("should be false when timeblock filter does not overlap meetings due to days", function(assert) {
+        var section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:0,Wednesday:1,Thursday:1,Friday:1}]};
+        var filter =  [{Days:"Tue",StartTime:"0000",EndTime:"2330"}];
+        var result = mscSchedulizer.timeBlockFilter(section, filter);
+
+        assert.equal(result, false, "should be false when timeblock filter is empty"); 
+    });
+    QUnit.test("should be true when timeblock filter does overlap meetings", function(assert) {
+        var section = {Meetings:[{StartTime:1200,EndTime:1300,Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1}]};
+        var filter =  [{Days:"Mon,Tue,Wed,Thu,Fri",StartTime:"0000",EndTime:"2330"}];
+        var result = mscSchedulizer.timeBlockFilter(section, filter);
+
+        assert.equal(result, true, "should be true when timeblock filter is overlaps meeting day/time"); 
     });
 
 QUnit.module("doDaysOverlap");
@@ -528,18 +621,65 @@ QUnit.module("mergeDays");
         assert.deepEqual(result, {'Wednesday':1,'Thursday': 1,'Friday': 1}, "should return an object with Wednesday:1, Thursday:1,Friday:1"); 
     });
 
-// DOM TESTS
-QUnit.module("convertDate");
+QUnit.module("convertDate", {
+  beforeEach: function() {
+    // prepare something for all following tests
+    clock = sinon.useFakeTimers(new Date(2016,1,26).getTime());
+  },
+  afterEach: function() {
+    // clean up after each test
+    clock.restore();
+  }
+});
+    QUnit.test("should return the corresponding date based on day of week", function(assert) {
+        var result = mscSchedulizer.convertDate("M");
+
+        assert.deepEqual(result, new Date(2016,1,22), "should return the corresponding date based on day of week"); 
+    });
+    QUnit.test("should return the corresponding date based on day of week", function(assert) {
+        var result = mscSchedulizer.convertDate("T");
+
+        assert.deepEqual(result, new Date(2016,1,23), "should return the corresponding date based on day of week"); 
+    });
+    QUnit.test("should return the corresponding date based on day of week", function(assert) {
+        var result = mscSchedulizer.convertDate("W");
+
+        assert.deepEqual(result, new Date(2016,1,24), "should return the corresponding date based on day of week"); 
+    });
+    QUnit.test("should return the corresponding date based on day of week", function(assert) {
+        var result = mscSchedulizer.convertDate("R");
+
+        assert.deepEqual(result, new Date(2016,1,25), "should return the corresponding date based on day of week"); 
+    });
+    QUnit.test("should return the corresponding date based on day of week", function(assert) {
+        var result = mscSchedulizer.convertDate("F");
+
+        assert.deepEqual(result, new Date(2016,1,26), "should return the corresponding date based on day of week"); 
+    });
 
 
-QUnit.module("splitMeetings");
+QUnit.module("splitMeetings", {
+  beforeEach: function() {
+    // prepare something for all following tests
+    clock = sinon.useFakeTimers(new Date(2016,1,26).getTime());
+  },
+  afterEach: function() {
+    // clean up after each test
+    clock.restore();
+  }
+});
+    QUnit.test("should return the appropriate datetime format", function(assert) {
+        var result = mscSchedulizer.splitMeetings({Monday:1,Tuesday:0,Wednesday:0,Thursday:0,Friday:0,StartTime:1000,EndTime:1200});
 
+        assert.deepEqual(result, [{StartTime:"2016-02-22T10:00",EndTime:"2016-02-22T12:00"}], "should return the appropriate datetime format"); 
+    });
+    QUnit.test("should return a list of the datetimes for each meeting in the appropriate format", function(assert) {
+        var result = mscSchedulizer.splitMeetings({Monday:1,Tuesday:1,Wednesday:0,Thursday:0,Friday:0,StartTime:1000,EndTime:1200});
 
-QUnit.module("applyFiltersToSection");
+        assert.deepEqual(result, [{StartTime:"2016-02-22T10:00",EndTime:"2016-02-22T12:00"},{StartTime:"2016-02-23T10:00",EndTime:"2016-02-23T12:00"}], "should return the appropriate datetime format"); 
+    });
+    QUnit.test("should return a list of the datetimes for each meeting in the appropriate format", function(assert) {
+        var result = mscSchedulizer.splitMeetings({Monday:1,Tuesday:1,Wednesday:1,Thursday:1,Friday:1,StartTime:1000,EndTime:1200});
 
-
-QUnit.module("campusFilter");
-
-
-QUnit.module("timeBlockFilter");
-
+        assert.deepEqual(result, [{StartTime:"2016-02-22T10:00",EndTime:"2016-02-22T12:00"},{StartTime:"2016-02-23T10:00",EndTime:"2016-02-23T12:00"},{StartTime:"2016-02-24T10:00",EndTime:"2016-02-24T12:00"},{StartTime:"2016-02-25T10:00",EndTime:"2016-02-25T12:00"},{StartTime:"2016-02-26T10:00",EndTime:"2016-02-26T12:00"}], "should return the appropriate datetime format"); 
+    });
