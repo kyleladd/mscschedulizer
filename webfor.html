@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<HTML lang="en">
+<HEAD>
+<TITLE>Add or Drop Classes</TITLE>
+</HEAD>
+<BODY>
+<H3>Add Classes Worksheet</H3>
+<a onclick="loadMSCschedulizerCRNs()">Import from MSCschedulizer</a>
+
+<script>
+  function loadMSCschedulizerCRNs(){
+    var crns = [];
+    try{
+      crns = JSON.parse(getCookie("MSCschedulizer"));
+    }
+    catch(err){
+      crns = [];
+    }
+    var elementList = document.querySelectorAll("[name=CRN_IN][type=text]");
+    // Clear existing values
+    for(var e in elementList){
+      elementList[e].value = "";
+    }
+    // Import Values
+    for(var c in crns){
+      if(!isNaN(crns[c])){
+        elementList[c].value = crns[c];
+      }
+    }
+    // console.log(crns);
+  }
+  function getCookie(c_name) {
+        var i, x, y, ARRcookies = document.cookie.split(";");
+        for (i = 0; i < ARRcookies.length; i++) {
+            x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+            y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+            x = x.replace(/^\s+|\s+$/g, "");
+            if (x == c_name) {
+                return unescape(y);
+            }
+        }
+    }
+</script>
+<FORM ACTION="#" METHOD="POST">
+<TABLE  CLASS="dataentrytable" SUMMARY="Add Classes Data Entry" WIDTH="100%">
+<TR>
+<TD COLSPAN="10" CLASS="detitle" scope="colgroup" ><ACRONYM title = "Course Reference Numbers">CRNs</ACRONYM></TD>
+</TR>
+<TR>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id1><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id1">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id2><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id2">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id3><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id3">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id4><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id4">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id5><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id5">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id6><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id6">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id7><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id7">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id8><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id8">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id9><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id9">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+<TD CLASS="dedefault">
+<INPUT TYPE="hidden" NAME="RSTS_IN" VALUE="RW">
+<LABEL for=crn_id10><SPAN class="fieldlabeltextinvisible">CRN</SPAN></LABEL>
+<INPUT TYPE="text" NAME="CRN_IN" SIZE="6" MAXLENGTH="5" ID="crn_id10">
+<INPUT TYPE="hidden" NAME="assoc_term_in" VALUE="">
+<INPUT TYPE="hidden" NAME="start_date_in" VALUE="">
+<INPUT TYPE="hidden" NAME="end_date_in" VALUE="">
+</TD>
+</TABLE>
+<INPUT TYPE="hidden" NAME="regs_row" VALUE="0">
+<INPUT TYPE="hidden" NAME="wait_row" VALUE="0">
+<INPUT TYPE="hidden" NAME="add_row" VALUE="10">
+
+<BR>
+<INPUT TYPE="submit" NAME="REG_BTN" VALUE="Submit Changes">
+</FORM>
+
+
+</BODY>
+</HTML>

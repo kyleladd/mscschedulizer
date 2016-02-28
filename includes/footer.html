@@ -92,6 +92,11 @@
           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
           mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
       });
+      $("#"+mscSchedulizer.html_elements.filters.show_online).click(function(){
+          mscSchedulizer.schedule_filters.ShowOnline = !mscSchedulizer.schedule_filters.ShowOnline;
+          mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
+          mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+      });
     }
     // Load schedules from favorites array
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["favorites.html"])){
@@ -106,7 +111,7 @@
     if(mscSchedulizer.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["schedule-details.html"])){
       try
       {
-       mscSchedulizer.getScheduleDetails(mscSchedulizer.queryData(location.search,true).crn,"#"+mscSchedulizer.html_elements.department_class_list);
+        mscSchedulizer.getScheduleDetails(mscSchedulizer.queryData(location.search,true).crn,"#"+mscSchedulizer.html_elements.department_class_list);
       }
       catch (err)
       {

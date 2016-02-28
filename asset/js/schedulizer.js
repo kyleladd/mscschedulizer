@@ -2,37 +2,56 @@ var mscSchedulizer = mscSchedulizer === undefined ? {} : mscSchedulizer;
 $.extend(mscSchedulizer, {
     classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
-    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false},
+    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true},
     gen_courses :[],
     semester :JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "Unknown", TermStart: "", TermEnd: ""},
     current_semester_list:JSON.parse(localStorage.getItem('current_semester_list')) || [],
     gen_schedules:[],
     num_loaded:0,
+    getTLD:function(url_location){
+        var parts = url_location.hostname.split('.');
+        var sndleveldomain = parts.slice(-2).join('.');
+        return sndleveldomain;
+    },
+    exportSchedule:function(crns){
+        var domain = mscSchedulizer.getTLD(window.location);
+        mscSchedulizer.setCookie("MSCschedulizer",JSON.stringify(crns),1,domain);
+        window.open("webfor.html", '_blank');
+    },
+    setCookie:function(c_name, value, exdays, domain) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        domain = (domain && domain !== 'localhost') ? '; domain=' + '.' + (domain) : '';
+        var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString() + domain + ";");
+        document.cookie = c_name + "=" + c_value;
+    },
+    getCookie:function(c_name) {
+        var i, x, y, ARRcookies = document.cookie.split(";");
+        for (i = 0; i < ARRcookies.length; i++) {
+            x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+            y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+            x = x.replace(/^\s+|\s+$/g, "");
+            if (x == c_name) {
+                return unescape(y);
+            }
+        }
+    },
     setSemesterCurrentList:function(callback){
         try{
             var current_semester_list = JSON.parse(localStorage.getItem('current_semester_list')) || {};
             if(new Date()>current_semester_list[0].expires){
                 mscSchedulizer.getSemestersList(callback);
             }
-            else if(mscSchedulizer.isEmpty(semester)){
+            else if(mscSchedulizer.isEmpty(current_semester_list)){
                 mscSchedulizer.getSemestersList(callback);
             }
             else{
-                callback();
+                callback(current_semester_list);
             }
         }
         catch(err){
             mscSchedulizer.getSemestersList(callback);
         }
-    },
-    getSemesterFromAPI:function(callback){
-        // Get from api
-        $.getJSON(mscSchedulizer.api_host + "/semesters/?current_list=0", function(result){
-            mscSchedulizer.setSemesterVar(result,callback);
-        })
-        .fail(function() {
-            mscSchedulizer.setSemesterVar(null,callback);
-        });
     },
     setCurrentSemesterListVar:function(semesters){
         var expiration = new Date();
@@ -406,6 +425,9 @@ $.extend(mscSchedulizer, {
                     if(mscSchedulizer.searchListDictionaries(terms,section.CourseTerm,true) == -1){
                         terms.push(section.CourseTerm);
                     }
+                    if(section.Credits == null){
+                        section.Credits = "variable";
+                    }
                     output+="<tr><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
             }
@@ -588,6 +610,7 @@ $.extend(mscSchedulizer, {
         result += "<label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer.html_elements.filters.not_full+"\"> Hide Full</label>";
         result += "<label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label>";
         result += "<label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer.html_elements.filters.norwich_campus+"\"> Norwich Campus</label>";
+        result += "<label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer.html_elements.filters.show_online+"\"> Online</label>";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
         return result;
     },
@@ -600,6 +623,7 @@ $.extend(mscSchedulizer, {
         mscSchedulizer.checkboxFilterDisplay(filters.NotFull,mscSchedulizer.html_elements.filters.not_full);
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Morrisville,mscSchedulizer.html_elements.filters.morrisville_campus);
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Norwich,mscSchedulizer.html_elements.filters.norwich_campus);
+        mscSchedulizer.checkboxFilterDisplay(filters.ShowOnline,mscSchedulizer.html_elements.filters.show_online);
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
     },
     timeBlockDisplay:function(filters){
@@ -662,9 +686,19 @@ $.extend(mscSchedulizer, {
           document.getElementById(elementID).checked = false;
       }
     },
+    concurrentEnrollmentFilter:function(section,filters){
+        if(section.SectionAttributes != null){
+            var attributes = section.SectionAttributes.split(";");
+            if(mscSchedulizer.inList("CHS", attributes) || mscSchedulizer.inList("NHS", attributes) || mscSchedulizer.inList("ETC", attributes) || mscSchedulizer.inList("OCBB", attributes)){
+                return true;
+            }
+        }
+        return false;
+    },
     applyFiltersToSection:function(section,filters){
         var filteredOut = false;
-        if(typeof filters.Campuses !== "undefined"){
+        filteredOut = mscSchedulizer.concurrentEnrollmentFilter(section);
+        if(typeof filters.Campuses !== "undefined" && filteredOut === false){
             filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
         }
         if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
@@ -676,9 +710,21 @@ $.extend(mscSchedulizer, {
         if(typeof filters.NotFull !== "undefined" && filters.NotFull !== false && filteredOut === false){
             filteredOut = mscSchedulizer.NotFullFilter(section,filters.NotFull);
         }
+        if(typeof filters.ShowOnline !== "undefined" && filters.ShowOnline === false && filteredOut === false){
+            filteredOut = mscSchedulizer.hideOnlineFilter(section,filters.ShowOnline);
+        }
         return filteredOut;
     },
     professorFilter:function(section,filter){
+        return false;
+    },
+    hideOnlineFilter:function(section,filters){
+        if(section.SectionAttributes != null){
+            var attributes = section.SectionAttributes.split(";");
+            if(mscSchedulizer.inList("ONLN", attributes)){
+                return true;
+            }
+        }
         return false;
     },
     campusFilter:function(section,filter){
