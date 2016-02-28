@@ -54,7 +54,6 @@ module.exports = {
             mscSchedulizer.getSemestersList(callback);
         }
     },
-        $.getJSON(mscSchedulizer_config.api_host + "/semesters/?current_list=0", function(result){
     setCurrentSemesterListVar:function(semesters){
         var expiration = new Date();
         expiration.setDate(expiration.getDate() + 1);
@@ -552,7 +551,7 @@ module.exports = {
         result += "<label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer_config.html_elements.filters.not_full+"\"> Hide Full</label>";
         result += "<label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer_config.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label>";
         result += "<label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label>";
-        result += "<label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer.html_elements.filters.show_online+"\"> Online</label>";
+        result += "<label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label>";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
         return result;
     },
@@ -565,7 +564,7 @@ module.exports = {
         mscSchedulizer.checkboxFilterDisplay(filters.NotFull,mscSchedulizer_config.html_elements.filters.not_full);
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Morrisville,mscSchedulizer_config.html_elements.filters.morrisville_campus);
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Norwich,mscSchedulizer_config.html_elements.filters.norwich_campus);
-        mscSchedulizer.checkboxFilterDisplay(filters.ShowOnline,mscSchedulizer.html_elements.filters.show_online);
+        mscSchedulizer.checkboxFilterDisplay(filters.ShowOnline,mscSchedulizer_config.html_elements.filters.show_online);
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
     },
     timeBlockDisplay:function(filters){
@@ -631,7 +630,7 @@ module.exports = {
     concurrentEnrollmentFilter:function(section,filters){
         if(section.SectionAttributes != null){
             var attributes = section.SectionAttributes.split(";");
-            if(mscSchedulizer.inList("CHS", attributes) || mscSchedulizer.inList("NHS", attributes) || mscSchedulizer.inList("ETC", attributes) || mscSchedulizer.inList("OCBB", attributes)){
+            if(node_generic_functions.inList("CHS", attributes) || node_generic_functions.inList("NHS", attributes) || node_generic_functions.inList("ETC", attributes) || node_generic_functions.inList("OCBB", attributes)){
                 return true;
             }
         }
@@ -663,7 +662,7 @@ module.exports = {
     hideOnlineFilter:function(section,filters){
         if(section.SectionAttributes != null){
             var attributes = section.SectionAttributes.split(";");
-            if(mscSchedulizer.inList("ONLN", attributes)){
+            if(node_generic_functions.inList("ONLN", attributes)){
                 return true;
             }
         }
