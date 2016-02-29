@@ -547,12 +547,15 @@ module.exports = {
         return grouped_sections;
     },
     filtersDisplay:function(){
-        var result = "";
+        var result = "<div id=\""+mscSchedulizer_config.html_elements.checkbox_filters+"\">";
         result += "<label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer_config.html_elements.filters.not_full+"\"> Hide Full</label>";
         result += "<label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer_config.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label>";
         result += "<label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label>";
         result += "<label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label>";
+        result += "</div>";
+        result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
+        result += "</div>";
         return result;
     },
     updateFilters:function(schedule_filters){
@@ -565,10 +568,11 @@ module.exports = {
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Morrisville,mscSchedulizer_config.html_elements.filters.morrisville_campus);
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Norwich,mscSchedulizer_config.html_elements.filters.norwich_campus);
         mscSchedulizer.checkboxFilterDisplay(filters.ShowOnline,mscSchedulizer_config.html_elements.filters.show_online);
+        $("#"+mscSchedulizer_config.html_elements.timeblock_filters).html(mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks));
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
     },
     timeBlockDisplay:function(filters){
-        var result = "<div id=\"time-block-filters\">Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a>";
+        var result = "Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a>";
         for(var i=0; i<filters.length;i++)
         {
             result += "<div id=\"timeOnly_"+i+"\"><span id=\"weekCal_"+i+"\"></span> "
@@ -576,18 +580,15 @@ module.exports = {
                     + "<input type=\"text\" class=\"time end ui-timepicker-input\" autocomplete=\"off\">"
                 + "<a onclick=\"mscSchedulizer.updateDayTimeBlockFilter("+i+")\"> Apply </a> <a onclick=\"mscSchedulizer.removeTimeBlockFilter("+i+")\"> Remove</a></div>";
         }
-        result += "</div>";
         return result;
     },
     addTimeBlockFilter:function(){
         mscSchedulizer.schedule_filters.TimeBlocks[mscSchedulizer.schedule_filters.TimeBlocks.length] = {StartTime:"0000",EndTime:"2330",Days:""};
-        $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
         mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
         mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
     },
     removeTimeBlockFilter:function(index){
         mscSchedulizer.schedule_filters.TimeBlocks.splice(index, 1);
-        $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
         mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
         mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
     },

@@ -8,6 +8,8 @@ module.exports = {
         department_class_list:"dept_class_list",
         schedules_container:"schedules",
         filters_container:"filters",
+        checkbox_filters:"checkbox_filters",
+        timeblock_filters:"timeblock_filters",
         filters:{
             not_full:"notFullFilter",
             morrisville_campus:"morrisville_campus_filter",
