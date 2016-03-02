@@ -63,7 +63,6 @@
     // Generate Page
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html"])){
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
-      // mscSchedulizer.initTimeBlockPickers();
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
       if(mscSchedulizer_config.generateLocation === "Remote"){
@@ -74,7 +73,7 @@
       }
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
-          mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
+          mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
         }
       });
       $("#"+mscSchedulizer_config.html_elements.filters.not_full).click(function(){
@@ -103,7 +102,7 @@
         mscSchedulizer.createSchedules(mscSchedulizer.favorite_schedules);
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
-          mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer.numToLoad);
+          mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
         }
       });
     }

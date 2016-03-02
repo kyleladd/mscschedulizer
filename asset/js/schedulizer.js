@@ -23,7 +23,7 @@ module.exports = {
         var exdate = new Date();
         exdate.setDate(exdate.getDate() + exdays);
         domain = (domain && domain !== 'localhost') ? '; domain=' + '.' + (domain) : '';
-        var c_value = escape(value) + ((exdays == null) ? "" : "; expires=" + exdate.toUTCString() + domain + ";");
+        var c_value = escape(value) + ((exdays === null) ? "" : "; expires=" + exdate.toUTCString() + domain + ";");
         document.cookie = c_name + "=" + c_value;
     },
     getCookie:function(c_name) {
@@ -85,7 +85,7 @@ module.exports = {
       // http://code.stephenmorley.org/javascript/parsing-query-strings-for-get-data/
       var result = {};
       // if a query string wasn't specified, use the query string from the URL
-      if (queryString == undefined){
+      if (queryString === undefined){
         queryString = location.search ? location.search : '';
       }
       // remove the leading question mark from the query string if it is present
@@ -101,9 +101,7 @@ module.exports = {
           // extract this component's key-value pair
           var keyValuePair = queryComponents[index].split('=');
           var key          = decodeURIComponent(keyValuePair[0].replace(/[\[\]]/g, ""));
-          var value        = keyValuePair.length > 1
-                           ? decodeURIComponent(keyValuePair[1])
-                           : '';
+          var value        = keyValuePair.length > 1 ? decodeURIComponent(keyValuePair[1]) : '';
           // check whether duplicates should be preserved
           if (preserveDuplicates){
             // create the value array if necessary and store the value
@@ -249,7 +247,7 @@ module.exports = {
             courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
         }
         courses_list = courses_list.replace('&','?');
-        if(courses_list != ""){
+        if(courses_list !== ""){
             $.getJSON(mscSchedulizer_config.api_host + "/schedule/" + courses_list  + "&semester=" + mscSchedulizer.semester.TermCode, function(schedules){
                 return callback(schedules);
             })
@@ -366,23 +364,23 @@ module.exports = {
                     if(node_generic_functions.searchListDictionaries(terms,section.CourseTerm,true) == -1){
                         terms.push(section.CourseTerm);
                     }
-                    if(section.Credits == null){
+                    if(section.Credits === null){
                         section.Credits = "variable";
                     }
                     output+="<tr><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
             }
             output+="</table>";
-        }          
+        }
         output += "</table>";
 
         // Term Table
-        var term_output = "<table class=\"term_details\">"
-                        + "<thead><tr class=\"field-name\">"
-                        + "<td>Term Code</td><td>Start Date</td><td>End Date</td>"
-                        + "</tr></thead>";
-        for (var i in terms) {
-          var term = terms[i];
+        var term_output = "<table class=\"term_details\">" +
+                        "<thead><tr class=\"field-name\">" +
+                        "<td>Term Code</td><td>Start Date</td><td>End Date</td>" +
+                        "</tr></thead>";
+        for (var t in terms) {
+          var term = terms[t];
           term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
         }
         term_output += "</table>";
@@ -397,7 +395,7 @@ module.exports = {
             courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
         }
         courses_list = courses_list.replace('&','?');
-        if(courses_list != ""){
+        if(courses_list !== ""){
             $.getJSON(mscSchedulizer_config.api_host + "/schedule/" + courses_list + "&generate_schedule=0&semester="+mscSchedulizer.semester.TermCode, function(courses){
                 mscSchedulizer.gen_courses = courses;
                 return callback(courses,callback2);
@@ -461,7 +459,7 @@ module.exports = {
         Object.keys(values).forEach(function(campus) {
             // Only if there is a grouping for the campus (After filters)
             if(values[campus].length>0){
-                var cp = Combinatorics.cartesianProduct.apply(null,values[campus])
+                var cp = Combinatorics.cartesianProduct.apply(null,values[campus]);
                 cp = cp.toArray();
                 all_cp = all_cp.concat(cp);
             }
@@ -490,7 +488,7 @@ module.exports = {
                 return [];
             }
         }
-        var cp = Combinatorics.cartesianProduct.apply(null,section_combinations)
+        var cp = Combinatorics.cartesianProduct.apply(null,section_combinations);
         cp = cp.toArray();
         //filter based on overlapping
         // returns list of schedules containing 
@@ -533,7 +531,7 @@ module.exports = {
           var course_section = course_sections[i];
           var identifier = course_section.Identifier;
           var campus = course_section.Campus;
-          if(identifier == "" || identifier == null){
+          if(identifier === "" || identifier === null){
             identifier = "empty";
           }
           if (!(campus in grouped_sections)){
@@ -575,10 +573,10 @@ module.exports = {
         var result = "Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a>";
         for(var i=0; i<filters.length;i++)
         {
-            result += "<div id=\"timeOnly_"+i+"\"><span id=\"weekCal_"+i+"\"></span> "
-                    + "<input type=\"text\" class=\"time start ui-timepicker-input\" autocomplete=\"off\"> to "
-                    + "<input type=\"text\" class=\"time end ui-timepicker-input\" autocomplete=\"off\">"
-                + "<a onclick=\"mscSchedulizer.updateDayTimeBlockFilter("+i+")\"> Apply </a> <a onclick=\"mscSchedulizer.removeTimeBlockFilter("+i+")\"> Remove</a></div>";
+            result += "<div id=\"timeOnly_"+i+"\"><span id=\"weekCal_"+i+"\"></span> " +
+                    "<input type=\"text\" class=\"time start ui-timepicker-input\" autocomplete=\"off\"> to " +
+                    "<input type=\"text\" class=\"time end ui-timepicker-input\" autocomplete=\"off\">" +
+                "<a onclick=\"mscSchedulizer.updateDayTimeBlockFilter("+i+")\"> Apply </a> <a onclick=\"mscSchedulizer.removeTimeBlockFilter("+i+")\"> Remove</a></div>";
         }
         return result;
     },
@@ -629,7 +627,7 @@ module.exports = {
       }
     },
     concurrentEnrollmentFilter:function(section,filters){
-        if(section.SectionAttributes != null){
+        if(section.SectionAttributes !== null){
             var attributes = section.SectionAttributes.split(";");
             if(node_generic_functions.inList("CHS", attributes) || node_generic_functions.inList("NHS", attributes) || node_generic_functions.inList("ETC", attributes) || node_generic_functions.inList("OCBB", attributes)){
                 return true;
@@ -661,7 +659,7 @@ module.exports = {
         return false;
     },
     hideOnlineFilter:function(section,filters){
-        if(section.SectionAttributes != null){
+        if(section.SectionAttributes !== null){
             var attributes = section.SectionAttributes.split(";");
             if(node_generic_functions.inList("ONLN", attributes)){
                 return true;
@@ -676,7 +674,7 @@ module.exports = {
                 var count = 0;
                 for (var m in section.Meetings) {
                     var meeting = section.Meetings[m];
-                    if(meeting.StartTime == null || meeting.EndTime == null || (meeting.Monday==0 && meeting.Tuesday==0 && meeting.Wednesday==0 && meeting.Thursday==0 && meeting.Friday==0)){
+                    if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
                         count++;
                     }
                 }
@@ -709,7 +707,7 @@ module.exports = {
         // 0 is NOT unlimited, 0 means manual registration
         // if(section.MaxEnrollment!=0){
             if(section.CurrentEnrollment>=section.MaxEnrollment){
-                return true
+                return true;
             }
         // }
         return false;
@@ -810,41 +808,44 @@ module.exports = {
     },
     splitMeetings:function(meeting){
         var meetups = [];
+        var m_date;
+        var st;
+        var et;
         if(meeting.Monday == 1){
-            var m_date = mscSchedulizer.convertDate("M");
-            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+            m_date = mscSchedulizer.convertDate("M");
+            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Tuesday == 1){
-            var m_date = mscSchedulizer.convertDate("T");
-            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+            m_date = mscSchedulizer.convertDate("T");
+            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Wednesday == 1){
-            var m_date = mscSchedulizer.convertDate("W");
-            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+            m_date = mscSchedulizer.convertDate("W");
+            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Thursday == 1){
-            var m_date = mscSchedulizer.convertDate("R");
-            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+            m_date = mscSchedulizer.convertDate("R");
+            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         if(meeting.Friday == 1){
-            var m_date = mscSchedulizer.convertDate("F");
-            var st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            var et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+            m_date = mscSchedulizer.convertDate("F");
+            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
             meetups.push({StartTime: st,EndTime: et});
         }
         return meetups;
     },
     createSchedules:function(schedules){
         mscSchedulizer.num_loaded = 0;
-        if(schedules != null && schedules.length > 0 ){
+        if(schedules !== null && schedules.length > 0 ){
             var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
             if(schedules.length != 1){outputSchedules += "s";}
             outputSchedules +="</span>";
@@ -859,12 +860,12 @@ module.exports = {
                     var allSectionsHaveMeeting = true;
                     for (var s in course.Sections) {
                         var section = course.Sections[s]; 
-                        if(section.Meetings.length == 0){
+                        if(section.Meetings.length === 0){
                             allSectionsHaveMeeting = false;
                         }
                         for (var m in section.Meetings) {
                             var meeting = section.Meetings[m];
-                            if(meeting.StartTime == null || meeting.EndTime == null || (meeting.Monday==0 && meeting.Tuesday==0 && meeting.Wednesday==0 && meeting.Thursday==0 && meeting.Friday==0)){
+                            if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
                                 allSectionsHaveMeeting = false;
                             }    
                             if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
@@ -904,7 +905,7 @@ module.exports = {
         }
     },
     initSchedules:function(schedules,start,count){
-        for (i = 0; i < count ; i++) { 
+        for (var i = 0; i < count ; i++) { 
             var num = start + i;
             if(schedules[num] !== undefined){
                 $('#schedule_' + num).fullCalendar({                
@@ -974,7 +975,7 @@ module.exports = {
                 var course = courses[i];
                 output += course.DepartmentCode + ' ' + course.CourseNumber + ', ';
             }
-            if(output != ""){
+            if(output !== ""){
                 output = output.replace(/,+\s*$/, '');
                 output = "<div class='nomeetings'><h3>Online/TBD</h3>" + output + "</div>";
             }
@@ -996,4 +997,4 @@ module.exports = {
         // && for entire element || for any part of the element
         return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
     }
-}
+};
