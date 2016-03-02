@@ -4,6 +4,9 @@
   "description": "Front end for generating class schedules for MSCschedulizer",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "test": "./node_modules/node-qunit-phantomjs/bin/node-qunit-phantomjs test/index.html"
+  },
   "dependencies": {
     "js-combinatorics": "^0.5.0",
     "node_generic_functions": "git+https://github.com/kyleladd/node_generic_functions.git"
