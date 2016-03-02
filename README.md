@@ -1,4 +1,5 @@
 # MSCschedulizer
+![Travis](https://travis-ci.org/mscweb/mscschedulizer.svg?branch=master)
 ## Installation
 - ```bower install```
 - ```npm install```
