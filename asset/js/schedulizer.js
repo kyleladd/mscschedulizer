@@ -188,7 +188,7 @@ module.exports = {
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(results){
             var output = mscSchedulizer.detailedCoursesOutput(results);
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
-            $('.course_details').basictable();
+            
         })
         .fail(function() {
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
@@ -196,6 +196,7 @@ module.exports = {
         .always(function() {
             $("#"+mscSchedulizer_config.html_elements.department_class_list).removeClass("loader-large");
             $("#"+mscSchedulizer_config.html_elements.department_class_list).removeClass("loader");
+            $('.course_details').basictable();
         });
     },
     getSemestersList:function(callback){
@@ -269,6 +270,7 @@ module.exports = {
         .always(function() {
             $(element).removeClass("loader-large");
             $(element).removeClass("loader");
+            $('.course_details').basictable();
         });
     },
     getLargeSchedule:function(crns,callback){
