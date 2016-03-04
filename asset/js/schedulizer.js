@@ -72,6 +72,9 @@ module.exports = {
             else if(node_generic_functions.isEmpty(semester)){
                 mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
             }
+            else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
+                mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);   
+            }
         }
         catch(err){
             mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
@@ -211,16 +214,16 @@ module.exports = {
     },
     getSemestersSelect:function(semesters_list){
         var output = "";
-            for (var i in semesters_list) {
-                var semester = semesters_list[i];
-                if(semester.TermCode == mscSchedulizer.semester.TermCode){
-                    output += "<option class='a_semester' value='"+JSON.stringify(semester) + "' selected=selected>" + semester.Description + "</option>";
-                }
-                else{
-                    output += "<option class='a_semester' value='"+JSON.stringify(semester) + "'>" + semester.Description + "</option>";
-                }
+        for (var i in semesters_list){
+            var semester = semesters_list[i];
+            if(semester.TermCode == mscSchedulizer.semester.TermCode){
+                output += "<option class='a_semester' value='"+JSON.stringify(semester) + "' selected=selected>" + semester.Description + "</option>";
             }
-            $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
+            else{
+                output += "<option class='a_semester' value='"+JSON.stringify(semester) + "'>" + semester.Description + "</option>";
+            }
+        }
+        $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
     },
     getDepartments:function(callback){
         $.getJSON(mscSchedulizer_config.api_host + "/departments/?semester="+mscSchedulizer.semester.TermCode, function(results){
