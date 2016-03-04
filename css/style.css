@@ -5696,6 +5696,14 @@ ul.footer-nav li a:hover {
 body{
     font-weight:500;
 }
+/*Select Dropdowns*/
+.bootstrap-select .dropdown-menu.inner{
+    /*overflow-x:hidden;*/
+    overflow:hidden !important; /*Using NiceScroll*/
+}
+.bootstrap-select.btn-group .dropdown-menu li a {
+    overflow: hidden;
+}
 
 /*Preloader*/
 .loader.block{

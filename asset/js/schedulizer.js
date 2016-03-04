@@ -240,6 +240,17 @@ module.exports = {
         .always(function() {
             $('.selectpicker').selectpicker({dropupAuto:false});
             $('.selectpicker').selectpicker('refresh');
+            $(".bootstrap-select .dropdown-menu").niceScroll({
+                scrollspeed: 100,
+                mousescrollstep: 38,
+                cursorwidth: 10,
+                cursorborder: 0,
+                cursorcolor: '#333',
+                autohidemode: false,
+                zindex: 999999999,
+                horizrailenabled: false,
+                cursorborderradius: 0,
+            });
             callback();
         });
     },
