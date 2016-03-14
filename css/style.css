@@ -5681,8 +5681,6 @@ ul.footer-nav li a:hover {
   text-align:right; 
 }
 
-
-
 .purchase {
     background: url(../images/parallax/bg-01.jpg) no-repeat;
     background-attachment: fixed;
@@ -5695,6 +5693,10 @@ ul.footer-nav li a:hover {
 /*Custom*/
 body{
     font-weight:500;
+}
+
+.status{
+	display:inline-block;
 }
 
 /*Preloader*/
