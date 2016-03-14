@@ -5681,8 +5681,6 @@ ul.footer-nav li a:hover {
   text-align:right; 
 }
 
-
-
 .purchase {
     background: url(../images/parallax/bg-01.jpg) no-repeat;
     background-attachment: fixed;
@@ -5703,6 +5701,10 @@ body{
 }
 .bootstrap-select.btn-group .dropdown-menu li a {
     overflow: hidden;
+}
+
+.status{
+	display:inline-block;
 }
 
 /*Preloader*/

@@ -80,7 +80,7 @@ module.exports = {
             mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
         }
     },
-    setSemesterVar:function(semester,callback){
+    setSemesterVar:function(semester){
         localStorage.setItem("semester", JSON.stringify(semester));
         mscSchedulizer.semester = semester;
     },
@@ -140,10 +140,6 @@ module.exports = {
         })
         .fail(function() {
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li>Unable to load courses.</li>");
-        })
-        .always(function() {
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).removeClass("loader-large");
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).removeClass("loader");
         });
     },
     daysList: function(meeting, include_empty){
@@ -195,10 +191,6 @@ module.exports = {
         })
         .fail(function() {
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
-        })
-        .always(function() {
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).removeClass("loader-large");
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).removeClass("loader");
             $('.course_details').basictable();
         });
     },
@@ -280,10 +272,6 @@ module.exports = {
         })
         .fail(function() {
             $(element).html(mscSchedulizer.detailedCoursesOutput([],false));
-        })
-        .always(function() {
-            $(element).removeClass("loader-large");
-            $(element).removeClass("loader");
             $('.course_details').basictable();
         });
     },
@@ -946,7 +934,7 @@ module.exports = {
                     additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
                 }
                 additionalOutput += mscSchedulizer.optionsOutput(schedules[num]);
-                $('#schedule_' + num).append(additionalOutput); 
+                $('#schedule_' + num).append(additionalOutput);
                 mscSchedulizer.num_loaded++;
             }
         }
