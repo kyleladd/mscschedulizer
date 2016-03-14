@@ -179,6 +179,9 @@
               localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
               //reload selections area
               mscSchedulizer.loadSelections();
+              if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
+                mscSchedulizer.getDepartmentCoursesDetails();
+              }
           }
       });
     }
