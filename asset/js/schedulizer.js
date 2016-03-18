@@ -40,11 +40,8 @@ module.exports = {
     },
     setSemesterCurrentList:function(callback){
         try{
-            var current_semester_list = JSON.parse(localStorage.getItem('current_semester_list')) || {};
+            var current_semester_list = mscSchedulizer.current_semester_list;
             if(new Date()>current_semester_list[0].expires){
-                mscSchedulizer.getSemestersList(callback);
-            }
-            else if(node_generic_functions.isEmpty(semester)){
                 mscSchedulizer.getSemestersList(callback);
             }
             else{
