@@ -45,6 +45,7 @@
         // Department selected - View Department Courses
         $("#"+mscSchedulizer_config.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
             if($("#"+mscSchedulizer_config.html_elements.departments_select).val() != ""){
+                mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
                 $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li><div class=\"loader\"></div>  <div class=\"status\">Loading Courses...</div></li>");
                 //Get From Endpoint - Department Courses
                 mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer_config.html_elements.departments_select).val());
@@ -119,6 +120,7 @@
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);        // Department selected - View Department Courses
         $("#"+mscSchedulizer_config.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
             if($("#"+mscSchedulizer_config.html_elements.departments_select).val() != ""){
+              mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
                 $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<div class=\"loader\"></div> <div class=\"status\">Loading Courses...</div>");
                 //Get From Endpoint - Department Courses
                 mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer_config.html_elements.departments_select).val());

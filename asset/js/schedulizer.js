@@ -6,6 +6,7 @@ module.exports = {
     schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true},
     gen_courses :[],
     semester :JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "Unknown", TermStart: "", TermEnd: ""},
+    department :JSON.parse(localStorage.getItem('department')) || "",
     current_semester_list:JSON.parse(localStorage.getItem('current_semester_list')) || [],
     gen_schedules:[],
     num_loaded:0,
@@ -83,6 +84,10 @@ module.exports = {
     setSemesterVar:function(semester){
         localStorage.setItem("semester", JSON.stringify(semester));
         mscSchedulizer.semester = semester;
+    },
+    setDepartmentVar:function(department){
+        localStorage.setItem("department", JSON.stringify(department));
+        mscSchedulizer.department = department;
     },
     queryData:function(queryString, preserveDuplicates){
       // http://code.stephenmorley.org/javascript/parsing-query-strings-for-get-data/
@@ -209,7 +214,7 @@ module.exports = {
         for (var i in semesters_list){
             var semester = semesters_list[i];
             if(semester.TermCode == mscSchedulizer.semester.TermCode){
-                output += "<option class='a_semester' value='"+JSON.stringify(semester) + "' selected=selected>" + semester.Description + "</option>";
+                output += "<option class='a_semester' value='"+JSON.stringify(semester) + "' selected=\"selected\">" + semester.Description + "</option>";
             }
             else{
                 output += "<option class='a_semester' value='"+JSON.stringify(semester) + "'>" + semester.Description + "</option>";
@@ -222,7 +227,7 @@ module.exports = {
             var output = "";
             for (var i in results) {
                 var department = results[i];
-                output += "<option class='a_department' value='"+department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
+                output += "<option class='a_department' value='"+department.DepartmentCode + "' " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
             }
             $("#"+mscSchedulizer_config.html_elements.departments_select).html(output);
         })
