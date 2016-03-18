@@ -342,7 +342,27 @@ module.exports = {
                 }
                 icon_str += "</a> ";
             }
-            output+="<h4 class=\"classic-title\"><span>" + icon_str + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></h4>";
+            //Modal
+            output += '';
+            output += '<!-- Modal -->';
+            output += '<div class="modal fade" id="modal_' + i + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">';
+            output += '  <div class="modal-dialog" role="document">';
+            output += '    <div class="modal-content">';
+            output += '      <div class="modal-header">';
+            output += '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+            output += '        <h4 class="modal-title" id="myModalLabel">' + course.Department.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</h4>';
+            output += '      </div>';
+            output += '      <div class="modal-body">';
+            output += '        ' + (course.Description !== null ? course.Description : 'The course description is currently unavailable.');
+            output += '      </div>';
+            output += '      <div class="modal-footer">';
+            output += '        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
+            output += '      </div>';
+            output += '    </div>';
+            output += '  </div>';
+            output += '</div>';
+            //End modal
+            output+="<h4 class=\"classic-title\"><span>" + icon_str + "<span class=\"modal-trigger\"data-toggle=\"modal\" data-target=\"#modal_" + i + "\">" + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></span></h4>";
             output+="<table class=\"course_details\">";
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
             for (var s in course.Sections) {
@@ -383,6 +403,9 @@ module.exports = {
                         "<thead><tr class=\"field-name\">" +
                         "<td>Term Code</td><td>Start Date</td><td>End Date</td>" +
                         "</tr></thead>";
+        terms.sort(function(a, b) { 
+            return a.TermCode - b.TermCode;
+        });
         for (var t in terms) {
           var term = terms[t];
           term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  

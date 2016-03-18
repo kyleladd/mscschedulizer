@@ -382,7 +382,7 @@ header {
 	position: fixed;
 	top: 0;
     width: 100%;
-	z-index: 9999999;
+	z-index: 1039;
 	transition: all 0.4s ease-in-out;
     -moz-transition: all 0.4s ease-in-out;
     -webkit-transition: all 0.4s ease-in-out;
@@ -3943,7 +3943,7 @@ ul.post-meta li, ul.post-meta li a {
 /*------------------------------------------*/
 
 .sidebar {
-    margin-bottom: 30px;
+    margin-bottom: 0;
 }
 
 .sidebar a {
@@ -5848,7 +5848,7 @@ ul.slicknav_nav{
     text-align:center;
 }
 .course_details{
-    margin-bottom: 2em;
+    margin-bottom: 1.5em;
     width:100%;
     overflow-x:auto;
 }
@@ -5892,6 +5892,9 @@ table.term_details{
     border-style: solid !important;
     border-width: 1px !important;
     border-color:#0bb586 !important;
+}
+.modal-trigger{
+    cursor:pointer;
 }
 @media only screen and (max-width: 479px) { 
 	.fc-time-grid-event .fc-time span{
