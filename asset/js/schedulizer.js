@@ -248,26 +248,6 @@ module.exports = {
             callback();
         });
     },
-    getSchedules:function(callback){
-        // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
-        var courses_list = "";
-        for (var i in mscSchedulizer.classes_selected) {
-            var course = mscSchedulizer.classes_selected[i];    
-            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
-        }
-        courses_list = courses_list.replace('&','?');
-        if(courses_list !== ""){
-            $.getJSON(mscSchedulizer_config.api_host + "/schedule/" + courses_list  + "&semester=" + mscSchedulizer.semester.TermCode, function(schedules){
-                return callback(schedules);
-            })
-            .fail(function() {
-                return callback([]);
-            });
-        }
-        else{
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</span></p>");
-        }
-    },
     getScheduleDetails:function(crns,element){
         $.getJSON(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+mscSchedulizer.semester.TermCode, function(schedule){
             $(element).html(mscSchedulizer.detailedCoursesOutput(schedule,false));
@@ -417,7 +397,7 @@ module.exports = {
         return output;
     },
     getCourseInfos:function(callback,callback2){
-        // /v1/schedule/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
+        // /info/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
         for (var i in mscSchedulizer.classes_selected) {
             var course = mscSchedulizer.classes_selected[i];  
@@ -425,13 +405,14 @@ module.exports = {
         }
         courses_list = courses_list.replace('&','?');
         if(courses_list !== ""){
-            $.getJSON(mscSchedulizer_config.api_host + "/schedule/" + courses_list + "&generate_schedule=0&semester="+mscSchedulizer.semester.TermCode, function(courses){
+            $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester="+mscSchedulizer.semester.TermCode, function(courses){
                 mscSchedulizer.gen_courses = courses;
-                return callback(courses,callback2);
+                return callback(mscSchedulizer.gen_courses,callback2);
             })
             .fail(function() {
                 mscSchedulizer.gen_courses = [];
-                return callback([]);
+                $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">Unable to load combinations.</span></p>");
+                // return callback(mscSchedulizer.gen_courses,callback2);
             });
         }
         else{
@@ -512,18 +493,22 @@ module.exports = {
     },
     getScheduleCombinations:function(section_combinations){
         // Make sure each class has at least one available section (After filters)
+        if(section_combinations.length === 0){
+            return [];
+        }
         for (var i = section_combinations.length-1; i >= 0; i--) {
             if(section_combinations[i].length === 0){
                 return [];
             }
         }
+
         var cp = Combinatorics.cartesianProduct.apply(null,section_combinations);
         cp = cp.toArray();
         //filter based on overlapping
         // returns list of schedules containing 
         //  a list of classes containing
         //   a list of sections
-        // http://localhost:8014/v1/schedule/?courses[]=121&courses[]=127
+        // /info/?courses[]=121&courses[]=127
         
         //for each schedule
         for (var h = cp.length-1; h >= 0; h--) {

@@ -64,12 +64,7 @@
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
-      if(mscSchedulizer_config.generateLocation === "Remote"){
-        mscSchedulizer.getSchedules(mscSchedulizer.createSchedules);
-      }
-      else{
-        mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
-      }
+      mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
           mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
