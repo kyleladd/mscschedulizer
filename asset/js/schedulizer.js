@@ -250,10 +250,10 @@ module.exports = {
     },
     getScheduleDetails:function(crns,element){
         $.getJSON(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+mscSchedulizer.semester.TermCode, function(schedule){
-            $(element).html(mscSchedulizer.detailedCoursesOutput(schedule,false));
+            $(element).html(mscSchedulizer.detailedCoursesOutput(schedule,false,false));
         })
         .fail(function() {
-            $(element).html(mscSchedulizer.detailedCoursesOutput([],false));
+            $(element).html(mscSchedulizer.detailedCoursesOutput([],false,false));
             $('.course_details').basictable();
         });
     },
@@ -300,9 +300,12 @@ module.exports = {
         }
         return meeting;
     },
-    detailedCoursesOutput:function(courses,icon){
+    detailedCoursesOutput:function(courses,icon,show_crn_selections){
         if(typeof icon === "undefined"){
             icon = true;
+        }
+        if(typeof show_crn_selections === "undefined"){
+            show_crn_selections = true;
         }
         var output = "";
         var terms = []; //List of term objects used in this department
@@ -374,7 +377,7 @@ module.exports = {
                         section.Credits = "variable";
                     }
 
-                    output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1) ? " selected_section" : "") +"\" data-value='" + JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN}) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+                    output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1 && show_crn_selections === true) ? " selected_section" : "") +"\" data-value='" + JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN}) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
             }
             output+="</table>";
