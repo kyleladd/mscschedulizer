@@ -477,14 +477,14 @@ module.exports = {
         });
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
         if(crnrequirements.length > 0){
-            for (var i = all_cp.length-1; i >= 0; i--) {
-                var combination = all_cp[i];
+            for (var cp = all_cp.length-1; cp >= 0; cp--) {
+                var section_combination = all_cp[cp];
                 // If combination does not have all of the requirements
                 for (var c = crnrequirements.length-1; c >= 0; c--) {
                     // If CRN is not null, it is a crn requirement
                     if(crnrequirements[c].CourseCRN !== null){
-                        if(node_generic_functions.searchListDictionaries(combination,crnrequirements[c],false,true).length===0){
-                            all_cp.splice(i, 1);
+                        if(node_generic_functions.searchListDictionaries(section_combination,crnrequirements[c],false,true).length===0){
+                            all_cp.splice(cp, 1);
                         }
                     }
                 }
