@@ -170,8 +170,8 @@
           event.preventDefault();
           // //Remove Course
           var course = JSON.parse(this.getAttribute('data-value'));
-          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
-          if (index != -1) {
+          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,CourseTitle:course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+          if (index !== -1) {
               mscSchedulizer.classes_selected.splice(index,1);
               localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
               //reload selections area
@@ -189,7 +189,7 @@
           event.preventDefault();
           //Add Course
           var course = JSON.parse(this.getAttribute('data-value'));
-          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
+          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
           if (index === -1) {
             mscSchedulizer.classes_selected.push(course);
             // Store var and reload selections
@@ -205,19 +205,38 @@
           event.preventDefault();
           //Add Course
           var course = JSON.parse(this.getAttribute('data-value'));
-          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true);
+          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
           if (index === -1) {
             mscSchedulizer.classes_selected.push(course);
-            $(this).html("<i class=\"fa fa-minus-circle\"></i>")
+            $(this).html("<i class=\"fa fa-minus-circle\"></i>");
           }
           else{
             // remove selection
               mscSchedulizer.classes_selected.splice(index,1);
-              $(this).html("<i class=\"fa fa-plus-circle\"></i>")
+              $(this).html("<i class=\"fa fa-plus-circle\"></i>");
           }
           // Store var and reload selections
           localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
           //reload selections area
+          mscSchedulizer.loadSelections();
+      });
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "tr.a_course_section", function (event) {
+          event.preventDefault();
+          //Add Course
+          var course = JSON.parse(this.getAttribute('data-value'));
+          var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+          if (index === -1) {
+            mscSchedulizer.classes_selected.push(course);
+            $(this).addClass("selected_section");
+          }
+          else{
+            // remove selection
+              mscSchedulizer.classes_selected.splice(index,1);
+              $(this).removeClass("selected_section");
+          }
+          // Store var and reload selections
+          localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+          // reload selections area
           mscSchedulizer.loadSelections();
       });
     }

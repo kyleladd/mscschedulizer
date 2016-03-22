@@ -5694,6 +5694,9 @@ ul.footer-nav li a:hover {
 body{
     font-weight:500;
 }
+tr.selected_section{
+    background-color:rgba(11,181,134,.2);
+}
 /*Select Dropdowns*/
 .bootstrap-select .dropdown-menu.inner{
     /*overflow-x:hidden;*/

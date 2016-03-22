@@ -124,7 +124,7 @@ module.exports = {
         var output = "";
         for (var i in mscSchedulizer.classes_selected) {
             var course = mscSchedulizer.classes_selected[i];
-            output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + " <i class=\"fa fa-times\"></i></a>";
+            output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + ((course.CourseCRN!==null) ? " - " + course.CourseCRN : "") + "<i class=\"fa fa-times\"></i></a>";
         }
         $("#"+mscSchedulizer_config.html_elements.course_selections_list).html(output);
     },
@@ -136,7 +136,7 @@ module.exports = {
             for (var i in results) {
                 var course = results[i];
                 //Change to just one html output set
-                output += "<li><a class='a_course' data-value='"+JSON.stringify(course)+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
+                output += "<li><a class='a_course' data-value='"+JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null})+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
             }
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
         })
@@ -315,8 +315,8 @@ module.exports = {
             //Table Header
             var icon_str = "";
             if(icon === true){
-                icon_str += "<a class=\"a_course\" data-value='"+JSON.stringify(course)+"'>";
-                if(node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle},true) !== -1){
+                icon_str += "<a class=\"a_course\" data-value='"+JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null})+"'>";
+                if(node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null},true) !== -1){
                     icon_str += "<i class=\"fa fa-minus-circle\"></i>";
                 }
                 else{
@@ -332,7 +332,7 @@ module.exports = {
             output += '    <div class="modal-content">';
             output += '      <div class="modal-header">';
             output += '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-            output += '        <h4 class="modal-title" id="myModalLabel">' + course.Department.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</h4>';
+            output += '        <h4 class="modal-title">' + course.Department.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</h4>';
             output += '      </div>';
             output += '      <div class="modal-body">';
             output += '        ' + (course.Description !== null ? course.Description : 'The course description is currently unavailable.');
@@ -373,7 +373,8 @@ module.exports = {
                     if(section.Credits === null){
                         section.Credits = "variable";
                     }
-                    output+="<tr><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+
+                    output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1) ? " selected_section" : "") +"\" data-value='" + JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN}) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
             }
             output+="</table>";
@@ -474,9 +475,25 @@ module.exports = {
                 all_cp = all_cp.concat(cp);
             }
         });
+        var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
+        if(crnrequirements.length > 0){
+            for (var i = all_cp.length-1; i >= 0; i--) {
+                var combination = all_cp[i];
+                // If combination does not have all of the requirements
+                for (var c = crnrequirements.length-1; c >= 0; c--) {
+                    // If CRN is not null, it is a crn requirement
+                    if(crnrequirements[c].CourseCRN !== null){
+                        if(node_generic_functions.searchListDictionaries(combination,crnrequirements[c],false,true).length===0){
+                            all_cp.splice(i, 1);
+                        }
+                    }
+                }
+            }
+        }
         //For each combination
         for (var i = all_cp.length-1; i >= 0; i--) {
             var combination = all_cp[i];
+            combinationloop:
             for (var s = combination.length-1; s >= 1; s--) {
                 var section1 = combination[s];
                 for (var t = s-1; t >= 0; t--) {
@@ -485,10 +502,12 @@ module.exports = {
                         //If they do overlap, remove combination and break
                         all_cp.splice(i, 1);
                         //break out of section loop
+                        break combinationloop;
                     }
                 }
             }
         }
+
         return all_cp;
     },
     getScheduleCombinations:function(section_combinations){
