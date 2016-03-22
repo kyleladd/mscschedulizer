@@ -124,7 +124,7 @@ module.exports = {
         var output = "";
         for (var i in mscSchedulizer.classes_selected) {
             var course = mscSchedulizer.classes_selected[i];
-            output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + ((course.CourseCRN!==null) ? " - " + course.CourseCRN : "") + "<i class=\"fa fa-times\"></i></a>";
+            output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + ((course.CourseCRN!==null) ? " - " + course.CourseCRN : "") + " <i class=\"fa fa-times\"></i></a>";
         }
         $("#"+mscSchedulizer_config.html_elements.course_selections_list).html(output);
     },
@@ -193,6 +193,8 @@ module.exports = {
         })
         .fail(function() {
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
+        })
+        .always(function() {
             $('.course_details').basictable();
         });
     },
@@ -254,6 +256,8 @@ module.exports = {
         })
         .fail(function() {
             $(element).html(mscSchedulizer.detailedCoursesOutput([],false,false));
+        })
+        .always(function() {
             $('.course_details').basictable();
         });
     },
