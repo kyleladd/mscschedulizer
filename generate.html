@@ -116,6 +116,21 @@
     <div id="footer-container"></div>
 </div>
   <script type="text/javascript" src="js/script.js"></script>
+  <script>
+  $('#modal_courseDescription').on('shown.bs.modal', function () {
+   console.log("TRIGGERED shown");
+});
+    $('#modal_courseDescription').on('show.bs.modal', function (event) {
+      console.log("TRIGGERED");
+  var trigger = $(event.relatedTarget); // Element that triggered the modal
+  var course = JSON.parse(trigger.data('course')); // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this);
+  modal.find('.modal-title').text(course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle);
+  modal.find('.modal-body').text((course.Description !== null ? course.Description : 'The course description is currently unavailable.'));
+})
+  </script>
 </body>
 
 </html>

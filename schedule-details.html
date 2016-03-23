@@ -93,7 +93,9 @@
             
             <!-- Classic Heading -->
             <!-- <h4 class="classic-title"><span>Courses</span></h4> -->
-            <a id="export_schedule" style="display:block;" onClick="mscSchedulizer.exportSchedule(mscSchedulizer.queryData(location.search,true).crn);">Export Schedule - Experimental</a>
+            <div style="display:block;">
+              <a id="export_schedule" onClick="mscSchedulizer.exportSchedule(mscSchedulizer.queryData(location.search,true).crn);">Export Schedule - Beta</a>
+            </div>
             <div id="dept_class_list"><div class="loader"></div> <div class="status">Loading Courses...</div></div>
                         
           </div>
