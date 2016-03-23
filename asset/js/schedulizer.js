@@ -18,7 +18,17 @@ module.exports = {
     exportSchedule:function(crns){
         var domain = mscSchedulizer.getTLD(window.location);
         mscSchedulizer.setCookie("MSCschedulizer",JSON.stringify(crns),1,domain);
-        window.open("webfor.html", '_blank');
+        new PNotify({
+          title: 'Schedule Saved',
+          text: 'Login to <a href="http://webfor.morrisville.edu/webfor/bwskfreg.P_AltPin" target="_blank">Web for Students</a> and import the schedule from the add/drop form.',
+          type: 'success',
+          hide: false,
+          buttons: {
+            closer_hover: false,
+            closer: true,
+            sticker: false
+          }
+      });
     },
     setCookie:function(c_name, value, exdays, domain) {
         var exdate = new Date();
@@ -339,7 +349,7 @@ module.exports = {
             output += '    <div class="modal-content">';
             output += '      <div class="modal-header">';
             output += '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-            output += '        <h4 class="modal-title">' + course.Department.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</h4>';
+            output += '        <h4 class="modal-title">' + course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</h4>';
             output += '      </div>';
             output += '      <div class="modal-body">';
             output += '        ' + (course.Description !== null ? course.Description : 'The course description is currently unavailable.');
@@ -351,7 +361,7 @@ module.exports = {
             output += '  </div>';
             output += '</div>';
             //End modal
-            output+="<h4 class=\"classic-title\"><span>" + icon_str + "<span class=\"modal-trigger\"data-toggle=\"modal\" data-target=\"#modal_" + i + "\">" + course.Department.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></span></h4>";
+            output+="<h4 class=\"classic-title\"><span>" + icon_str + "<span class=\"modal-trigger\"data-toggle=\"modal\" data-target=\"#modal_" + i + "\">" + course.DepartmentCode + " " + course.CourseNumber + " - " + course.CourseTitle + "</span></span></h4>";
             output+="<table class=\"course_details\">";
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
             for (var s in course.Sections) {

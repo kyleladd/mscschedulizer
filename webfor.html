@@ -5,7 +5,7 @@
 </HEAD>
 <BODY>
 <H3>Add Classes Worksheet</H3>
-<a onclick="loadMSCschedulizerCRNs()">Import from MSCschedulizer</a>
+<input onclick="loadMSCschedulizerCRNs()" value="Import from MSCschedulizer" type="button"/>&nbsp;<a href="http://schedulizer.morrisville.edu/">Go to the MSCschedulizer</a>
 
 <script>
   function loadMSCschedulizerCRNs(){
@@ -15,6 +15,11 @@
     }
     catch(err){
       crns = [];
+    }
+    if(crns.length === 0){
+      alert("Unable to import crns or no crns found to be imported. The schedulizer is located: http://schedulizer.morrisville.edu/");
+      // Stop execution of this function
+      return false;
     }
     var elementList = document.querySelectorAll("[name=CRN_IN][type=text]");
     // Clear existing values
