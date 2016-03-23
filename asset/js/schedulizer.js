@@ -198,7 +198,6 @@ module.exports = {
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(results){
             var output = mscSchedulizer.detailedCoursesOutput(results);
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
-            
         })
         .fail(function() {
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
@@ -265,25 +264,6 @@ module.exports = {
                 cursorborderradius: 0,
             });
             callback();
-        });
-    },
-    getScheduleDetails:function(crns,element){
-        $.getJSON(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+mscSchedulizer.semester.TermCode, function(schedule){
-            $(element).html(mscSchedulizer.detailedCoursesOutput(schedule,false,false));
-        })
-        .fail(function() {
-            $(element).html(mscSchedulizer.detailedCoursesOutput([],false,false));
-        })
-        .always(function() {
-            $('.course_details').basictable();
-            $('#modal_courseDescription').modal({show:false});
-            $('#modal_courseDescription').on('show.bs.modal', function (event) {
-                var trigger = $(event.relatedTarget); // Element that triggered the modal
-                var course = trigger.data('course'); // Extract info from data-* attributes
-                var modal = $(this);
-                modal.find('.modal-title').text(course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle);
-                modal.find('.modal-body').text((course.Description !== null ? course.Description : 'The course description is currently unavailable.'));
-            });
         });
     },
     getLargeSchedule:function(crns,callback){
@@ -356,24 +336,7 @@ module.exports = {
                 }
                 icon_str += "</a> ";
             }
-            //Modal
-            output += '<!-- Modal -->';
-            output += '<div class="modal fade" id="modal_courseDescription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">';
-            output += '  <div class="modal-dialog" role="document">';
-            output += '    <div class="modal-content">';
-            output += '      <div class="modal-header">';
-            output += '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-            output += '        <h4 class="modal-title"></h4>';
-            output += '      </div>';
-            output += '      <div class="modal-body">';
-            output += '      </div>';
-            output += '      <div class="modal-footer">';
-            output += '        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
-            output += '      </div>';
-            output += '    </div>';
-            output += '  </div>';
-            output += '</div>';
-            //End modal
+            output+=mscSchedulizer.modalTemplate('modal_courseDescription');
             output+='<h4 class=\'classic-title\'><span>' + icon_str + '<span class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDescription\' data-course=\''+JSON.stringify(course)+'\'>' + course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</span></span></h4>';
             output+="<table class=\"course_details\">";
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
@@ -912,6 +875,7 @@ module.exports = {
             var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
             if(schedules.length != 1){outputSchedules += "s";}
             outputSchedules +="</span>";
+            outputSchedules += mscSchedulizer.modalTemplate("modal_courseDetails","modal-lg");
             for (var i in schedules) {
                 var schedule = schedules[i];  
                 var events = [];
@@ -961,6 +925,16 @@ module.exports = {
                 outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
             }
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html(outputSchedules);
+
+            $('#modal_courseDetails').modal({show:false});
+            $('#modal_courseDetails').on('show.bs.modal', function (event) {
+                var trigger = $(event.relatedTarget); // Element that triggered the modal
+                var schedule = trigger.data('schedule'); // Extract info from data-* attributes
+                var modal = $(this);
+                modal.find('.modal-title').text("Schedule Details");
+                modal.find('.modal-body').html(mscSchedulizer.exportLink(schedule) + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
+                $('.course_details').basictable();
+            });
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
         }
         else{
@@ -1014,13 +988,7 @@ module.exports = {
         return "<a class=\"favorite_schedule favoriting\" data-value='" + JSON.stringify(schedule) + "'>Favorite</a>";
     },
     detailsLinkOutput:function(schedule){
-        var crns = [];
-        for(var i = 0; i < schedule.length; i++){
-            for(var s = 0; s < schedule[i].Sections.length; s++){
-                crns.push(schedule[i].Sections[s].CourseCRN);
-            }
-        }
-       return "<a target=\"_blank\"href=\"schedule-details.html?crn[]="+crns.join("&crn[]=")+"\">Details</a>";
+       return '<a class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDetails\' data-schedule=\''+JSON.stringify(schedule)+'\'>Details</a>';
     },
     previewLinkOutput:function(schedule){
         var crns = [];
@@ -1059,5 +1027,44 @@ module.exports = {
         var elemBottom = elemTop + $elem.height();
         // && for entire element || for any part of the element
         return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+    },
+    modalTemplate:function(id,classes){
+        classes = typeof classes !== 'undefined' ? classes : "";
+        var output = "";
+        //Modal
+        output += '<!-- Modal -->';
+        output += '<div class="modal fade" id="' + id + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">';
+        output += '  <div class="modal-dialog ' + classes + '" role="document">';
+        output += '    <div class="modal-content">';
+        output += '      <div class="modal-header">';
+        output += '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+        output += '        <h4 class="modal-title"></h4>';
+        output += '      </div>';
+        output += '      <div class="modal-body">';
+        output += '      </div>';
+        output += '      <div class="modal-footer">';
+        output += '        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>';
+        output += '      </div>';
+        output += '    </div>';
+        output += '  </div>';
+        output += '</div>';
+        //End modal
+        return output;
+    },
+    exportLink:function(schedule){
+        var output = '';
+        output += '<div style=\'display:block;\'>';
+        output +=   '<a id=\'export_schedule\' onClick=\'mscSchedulizer.exportSchedule(mscSchedulizer.getScheduleCRNs(' + JSON.stringify(schedule) + '));\'>Export Schedule - Beta</a>';
+        output += '</div>';
+        return output;
+    },
+    getScheduleCRNs:function(schedule){
+        var crns = [];
+        for(var i = 0; i < schedule.length; i++){
+            for(var s = 0; s < schedule[i].Sections.length; s++){
+                crns.push(schedule[i].Sections[s].CourseCRN);
+            }
+        }
+       return crns;
     }
 };
