@@ -6,8 +6,14 @@
 - Copy ```/asset/js/config.example.js``` to ```/asset/js/config.js```
 
 - ```./node_modules/browserify/bin/cmd.js asset/js/bundleme.js -o asset/js/schedulizer_bundle.js```
+
 -- OR --
+
  ```./node_modules/watchify/bin/cmd.js asset/js/bundleme.js -o asset/js/schedulizer_bundle.js -v```
+ 
+-- OR --
+
+```watchify -t -v browserify-shader -d -p [minifyify --no-map] asset/js/bundleme.js -o asset/js/schedulizer_bundle.js```
 
 - ```node-qunit-phantomjs test/index.html```
 - Or browse to ```/test/index.html``` within your browser

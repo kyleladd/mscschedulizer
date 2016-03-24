@@ -700,7 +700,7 @@ module.exports = {
         return false;
     },
     hideInternationalFilter:function(section,filters){
-        if(section.SectionNumber.startsWith("OL") || section.SectionNumber.startsWith("OC")){
+        if(section.SectionNumber.indexOf("OL") === 0 || section.SectionNumber.indexOf("OC") === 0){
             return true;
         }
 
