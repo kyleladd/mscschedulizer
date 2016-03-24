@@ -3,7 +3,7 @@ var mscSchedulizer_config = require('./config.js');
 module.exports = {
     classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
-    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true},
+    schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true,ShowInternational:false},
     gen_courses :[],
     semester :JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "Unknown", TermStart: "", TermEnd: ""},
     department :JSON.parse(localStorage.getItem('department')) || "",
@@ -133,7 +133,7 @@ module.exports = {
         var output = "";
         for (var i in mscSchedulizer.classes_selected) {
             var course = mscSchedulizer.classes_selected[i];
-            output += "<a href=\"#\" data-value='"+JSON.stringify(course)+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + ((course.CourseCRN!==null) ? " - " + course.CourseCRN : "") + " <i class=\"fa fa-times\"></i></a>";
+            output += "<a href=\"#\" data-value='"+escape(JSON.stringify(course))+"' class=\"a_selection\">"+course.DepartmentCode+" " + course.CourseNumber + ((course.CourseCRN!==null) ? " - " + course.CourseCRN : "") + " <i class=\"fa fa-times\"></i></a>";
         }
         $("#"+mscSchedulizer_config.html_elements.course_selections_list).html(output);
     },
@@ -145,7 +145,7 @@ module.exports = {
             for (var i in results) {
                 var course = results[i];
                 //Change to just one html output set
-                output += "<li><a class='a_course' data-value='"+JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null})+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
+                output += "<li><a class='a_course' data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
             }
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
         })
@@ -207,7 +207,7 @@ module.exports = {
             $('#modal_courseDescription').modal({show:false});
             $('#modal_courseDescription').on('show.bs.modal', function (event) {
                 var trigger = $(event.relatedTarget); // Element that triggered the modal
-                var course = trigger.data('course'); // Extract info from data-* attributes
+                var course = JSON.parse(unescape(trigger.data('course'))); // Extract info from data-* attributes
                 var modal = $(this);
                 modal.find('.modal-title').text(course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle);
                 modal.find('.modal-body').text((course.Description !== null ? course.Description : 'The course description is currently unavailable.'));
@@ -229,10 +229,10 @@ module.exports = {
         for (var i in semesters_list){
             var semester = semesters_list[i];
             if(semester.TermCode == mscSchedulizer.semester.TermCode){
-                output += "<option class='a_semester' value='"+JSON.stringify(semester) + "' selected=\"selected\">" + semester.Description + "</option>";
+                output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' selected=\"selected\">" + semester.Description + "</option>";
             }
             else{
-                output += "<option class='a_semester' value='"+JSON.stringify(semester) + "'>" + semester.Description + "</option>";
+                output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "'>" + semester.Description + "</option>";
             }
         }
         $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
@@ -327,7 +327,7 @@ module.exports = {
             //Table Header
             var icon_str = "";
             if(icon === true){
-                icon_str += "<a class=\"a_course\" data-value='"+JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null})+"'>";
+                icon_str += "<a class=\"a_course\" data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>";
                 if(node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null},true) !== -1){
                     icon_str += "<i class=\"fa fa-minus-circle\"></i>";
                 }
@@ -337,7 +337,7 @@ module.exports = {
                 icon_str += "</a> ";
             }
             output+=mscSchedulizer.modalTemplate('modal_courseDescription');
-            output+='<h4 class=\'classic-title\'><span>' + icon_str + '<span class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDescription\' data-course=\''+JSON.stringify(course)+'\'>' + course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</span></span></h4>';
+            output+='<h4 class=\'classic-title\'><span>' + icon_str + '<span class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDescription\' data-course=\''+escape(JSON.stringify(course))+'\'>' + course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</span></span></h4>';
             output+="<table class=\"course_details\">";
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
             for (var s in course.Sections) {
@@ -367,7 +367,7 @@ module.exports = {
                         section.Credits = "variable";
                     }
 
-                    output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1 && show_crn_selections === true) ? " selected_section" : "") +"\" data-value='" + JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN}) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+                    output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1 && show_crn_selections === true) ? " selected_section" : "") +"\" data-value='" + escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN})) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
             }
             output+="</table>";
@@ -558,7 +558,8 @@ module.exports = {
           var identifier = course_section.Identifier;
           var campus = course_section.Campus;
           if(identifier === "" || identifier === null){
-            identifier = "empty";
+            // identifier = "";
+            identifier = "A1";
           }
           if (!(campus in grouped_sections)){
             grouped_sections[campus] = [];
@@ -576,6 +577,7 @@ module.exports = {
         result += "<label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer_config.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label>";
         result += "<label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label>";
         result += "<label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label>";
+        result += "<label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label>";
         result += "</div>";
         result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
@@ -592,6 +594,7 @@ module.exports = {
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Morrisville,mscSchedulizer_config.html_elements.filters.morrisville_campus);
         mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Norwich,mscSchedulizer_config.html_elements.filters.norwich_campus);
         mscSchedulizer.checkboxFilterDisplay(filters.ShowOnline,mscSchedulizer_config.html_elements.filters.show_online);
+        mscSchedulizer.checkboxFilterDisplay(filters.ShowInternational,mscSchedulizer_config.html_elements.filters.show_international);
         $("#"+mscSchedulizer_config.html_elements.timeblock_filters).html(mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks));
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
     },
@@ -667,17 +670,20 @@ module.exports = {
         if(typeof filters.Campuses !== "undefined" && filteredOut === false){
             filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
         }
-        if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
-            filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
-        }
+        // if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
+        //     filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
+        // }
         if(typeof filters.TimeBlocks !== "undefined" && filters.TimeBlocks != [] && filteredOut === false){
             filteredOut = mscSchedulizer.timeBlockFilter(section,filters.TimeBlocks);
         }
         if(typeof filters.NotFull !== "undefined" && filters.NotFull !== false && filteredOut === false){
             filteredOut = mscSchedulizer.notFullFilter(section,filters.NotFull);
         }
-        if(typeof filters.ShowOnline !== "undefined" && filters.ShowOnline === false && filteredOut === false){
+        if((typeof filters.ShowOnline == "undefined" || filters.ShowOnline === false) && filteredOut === false){
             filteredOut = mscSchedulizer.hideOnlineFilter(section,filters.ShowOnline);
+        }
+        if((typeof filters.ShowInternational === "undefined" || filters.ShowInternational === false) && filteredOut === false){
+            filteredOut = mscSchedulizer.hideInternationalFilter(section,filters.ShowInternational);
         }
         return filteredOut;
     },
@@ -691,6 +697,13 @@ module.exports = {
                 return true;
             }
         }
+        return false;
+    },
+    hideInternationalFilter:function(section,filters){
+        if(section.SectionNumber.startsWith("OL") || section.SectionNumber.startsWith("OC")){
+            return true;
+        }
+
         return false;
     },
     campusFilter:function(section,filter){
@@ -929,7 +942,8 @@ module.exports = {
             $('#modal_courseDetails').modal({show:false});
             $('#modal_courseDetails').on('show.bs.modal', function (event) {
                 var trigger = $(event.relatedTarget); // Element that triggered the modal
-                var schedule = trigger.data('schedule'); // Extract info from data-* attributes
+                // var schedule = trigger.data('schedule'); // Extract info from data-* attributes
+                var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
                 var modal = $(this);
                 modal.find('.modal-title').text("Schedule Details");
                 modal.find('.modal-body').html(mscSchedulizer.exportLink(schedule) + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
@@ -983,12 +997,12 @@ module.exports = {
     favoriteLinkOutput:function(schedule){
         // If a favorite
         if(node_generic_functions.searchListObjects(mscSchedulizer.favorite_schedules,schedule) !== -1){
-            return "<a class=\"unfavorite_schedule favoriting\" data-value='" + JSON.stringify(schedule) + "'>Unfavorite</a>";
+            return "<a class=\"unfavorite_schedule favoriting\" data-value='" + escape(JSON.stringify(schedule)) + "'>Unfavorite</a>";
         }
-        return "<a class=\"favorite_schedule favoriting\" data-value='" + JSON.stringify(schedule) + "'>Favorite</a>";
+        return "<a class=\"favorite_schedule favoriting\" data-value='" + escape(JSON.stringify(schedule)) + "'>Favorite</a>";
     },
     detailsLinkOutput:function(schedule){
-       return '<a class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDetails\' data-schedule=\''+JSON.stringify(schedule)+'\'>Details</a>';
+       return '<a class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDetails\' data-schedule=\''+escape(JSON.stringify(schedule))+'\'>Details</a>';
     },
     previewLinkOutput:function(schedule){
         var crns = [];
@@ -1054,12 +1068,15 @@ module.exports = {
     exportLink:function(schedule){
         var output = '';
         output += '<div style=\'display:block;\'>';
-        output +=   '<a id=\'export_schedule\' onClick=\'mscSchedulizer.exportSchedule(mscSchedulizer.getScheduleCRNs(' + JSON.stringify(schedule) + '));\'>Export Schedule - Beta</a>';
+        output +=   '<a id=\'export_schedule\' onClick=\'mscSchedulizer.exportSchedule(mscSchedulizer.getScheduleCRNs("' + escape(JSON.stringify(schedule)) + '"));\'>Export Schedule - Beta</a>';
         output += '</div>';
         return output;
     },
     getScheduleCRNs:function(schedule){
         var crns = [];
+        if(typeof schedule === 'string'){
+            schedule = JSON.parse(unescape(schedule));
+        }
         for(var i = 0; i < schedule.length; i++){
             for(var s = 0; s < schedule[i].Sections.length; s++){
                 crns.push(schedule[i].Sections[s].CourseCRN);
