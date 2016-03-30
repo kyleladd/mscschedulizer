@@ -339,7 +339,7 @@ module.exports = {
             output+=mscSchedulizer.modalTemplate('modal_courseDescription');
             output+='<h4 class=\'classic-title\'><span>' + icon_str + '<span class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDescription\' data-course=\''+escape(JSON.stringify(course))+'\'>' + course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</span></span></h4>';
             output+="<table class=\"course_details\">";
-            output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>";
+            output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead><tbody>";
             for (var s in course.Sections) {
                 var section = course.Sections[s];
                 var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
@@ -370,9 +370,8 @@ module.exports = {
                     output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1 && show_crn_selections === true) ? " selected_section" : "") +"\" data-value='" + escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN})) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
                 }
             }
-            output+="</table>";
+            output+="</tbody></table>";
         }
-        output += "</table>";
 
         // Term Table
         var term_output = "<table class=\"term_details\">" +
