@@ -219,16 +219,34 @@
       $("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "tr.a_course_section", function (event) {
           event.preventDefault();
           //Add Course
+          var selected_row = $(this);
+          var i = selected_row.parent('tbody');
           var course = JSON.parse(unescape(this.getAttribute('data-value')));
+          var courseList = [course];
+          // courseList.push(course);
           var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
           if (index === -1) {
             mscSchedulizer.classes_selected.push(course);
-            $(this).addClass("selected_section");
+            $(i).find('tr').each(function(){
+              var aRow = $(this);
+              var rowCourse = JSON.parse(unescape(aRow.data("value")));
+              var rowIndex = node_generic_functions.searchListDictionaries(courseList,{'DepartmentCode':rowCourse.DepartmentCode,'CourseNumber':rowCourse.CourseNumber,'CourseTitle':rowCourse.CourseTitle,'CourseCRN':rowCourse.CourseCRN},true);
+              if(rowIndex!==-1){
+                aRow.addClass("selected_section");
+              }
+            });
           }
           else{
             // remove selection
-              mscSchedulizer.classes_selected.splice(index,1);
-              $(this).removeClass("selected_section");
+            mscSchedulizer.classes_selected.splice(index,1);
+            $(i).find('tr').each(function(){
+              var aRow = $(this);
+              var rowCourse = JSON.parse(unescape(aRow.data("value")));
+              var rowIndex = node_generic_functions.searchListDictionaries(courseList,{'DepartmentCode':rowCourse.DepartmentCode,'CourseNumber':rowCourse.CourseNumber,'CourseTitle':rowCourse.CourseTitle,'CourseCRN':rowCourse.CourseCRN},true);
+              if(rowIndex!==-1){
+                aRow.removeClass("selected_section");
+              }
+            });
           }
           // Store var and reload selections
           localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
