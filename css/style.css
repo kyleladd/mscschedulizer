@@ -5900,6 +5900,9 @@ table.term_details{
 .modal-trigger{
     cursor:pointer;
 }
+@media only screen and (max-width: 585px) {
+    table.course_details tr { border-bottom: 1px solid #ccc;border-top: 1px solid #ccc; }
+}
 @media only screen and (max-width: 479px) { 
 	.fc-time-grid-event .fc-time span{
 		font-size:xx-small !important;
@@ -5915,5 +5918,4 @@ table.term_details{
     .classic-title{
         border-bottom-color: #0BB586;
     }
-	table.course_details tr { border-bottom: 1px solid #ccc;border-top: 1px solid #ccc; }
 }
