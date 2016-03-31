@@ -578,11 +578,11 @@ module.exports = {
     },
     filtersDisplay:function(){
         var result = "<div id=\""+mscSchedulizer_config.html_elements.checkbox_filters+"\">";
-        result += "<label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer_config.html_elements.filters.not_full+"\"> Hide Full</label>";
-        result += "<label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer_config.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label>";
-        result += "<label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label>";
-        result += "<label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label>";
-        result += "<label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, only schedule combinations where all sections are not full (current enrollment is less than max enrollment) will be shown.\"><label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer_config.html_elements.filters.not_full+"\"> Hide Full</label></span>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Morrisville Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer_config.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label></span>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Norwich Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label></span>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations that include online sections will be shown.\"><label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label></span>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown.\"><label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label></span>";
         result += "</div>";
         result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
@@ -602,9 +602,11 @@ module.exports = {
         mscSchedulizer.checkboxFilterDisplay(filters.ShowInternational,mscSchedulizer_config.html_elements.filters.show_international);
         $("#"+mscSchedulizer_config.html_elements.timeblock_filters).html(mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks));
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
+        // Initialize the tooltips for filters
+        $('.filtertooltiptrigger').tooltipster({ theme: 'tooltipster-punk',maxWidth:250,delay:750,iconTouch:true});
     },
     timeBlockDisplay:function(filters){
-        var result = "Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a>";
+        var result = "<span class=\"filtertooltiptrigger\" title=\"By adding time blocks filters, you can block out times that you do not want to have classes.\">Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a></span>";
         for(var i=0; i<filters.length;i++)
         {
             result += "<div id=\"timeOnly_"+i+"\"><span id=\"weekCal_"+i+"\"></span> " +
