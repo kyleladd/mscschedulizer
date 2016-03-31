@@ -321,9 +321,7 @@ module.exports = {
         for (var i in courses) {
             var course = courses[i];
             //Order by Section Number
-            course.Sections.sort(function(a, b) { 
-                return a.SectionNumber - b.SectionNumber;
-            });
+            course.Sections.sort(mscSchedulizer.sortSections);
             //Table Header
             var icon_str = "";
             if(icon === true){
@@ -343,6 +341,7 @@ module.exports = {
             for (var s in course.Sections) {
                 var section = course.Sections[s];
                 var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
+                groupedmeetings.sort(mscSchedulizer.sortMeetings);
                 for (var m in groupedmeetings) {
                     var meeting = groupedmeetings[m];
                     try
@@ -1089,5 +1088,14 @@ module.exports = {
             }
         }
        return crns;
+    },
+    sortSections:function(a,b){
+        return node_generic_functions.alphaNumericSort(a.SectionNumber,b.SectionNumber);
+    },
+    sortMeetings:function(a, b) { 
+        if(moment(a.StartTime,"Hmm").isValid() && moment(b.StartTime,"Hmm").isValid()){
+            return moment(a.StartTime,"Hmm") - moment(b.StartTime,"Hmm");
+        }
+        return 0;
     }
 };
