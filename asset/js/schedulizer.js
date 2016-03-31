@@ -439,34 +439,39 @@ module.exports = {
     },
     getSectionCombinations:function(course_sections){
         var grouped_sections = mscSchedulizer.groupSections(course_sections);
-        var values = [];
+        // Use Identifiers to generate combinations
+        var all_cp = [];
         Object.keys(grouped_sections).forEach(function(campus) {
-            values[campus] = [];
+            var identifiers_run = [];
             Object.keys(grouped_sections[campus]).forEach(function(key) {
-              var val = grouped_sections[campus][key];
-              for (var s = grouped_sections[campus][key].length-1; s >= 0; s--) {
-                if(mscSchedulizer.applyFiltersToSection(grouped_sections[campus][key][s],mscSchedulizer.schedule_filters)){
-                    // If it gets filtered out
-                    grouped_sections[campus][key].splice(s, 1);
+                for (var s = grouped_sections[campus][key].length-1; s >= 0; s--) {
+                    var section = grouped_sections[campus][key][s];
+                    var cp_list = [];
+                    if(identifiers_run.indexOf(section.Identifier) === -1 || identifiers_run.indexOf(section.Identifier) === identifiers_run.length - 1){
+                        if(identifiers_run.indexOf(section.Identifier) === -1){
+                          identifiers_run.push(section.Identifier);  
+                        }
+                        if(section.RequiredIdentifiers !== null && typeof section.RequiredIdentifiers === 'string'){
+                            var identifierRequirements = section.RequiredIdentifiers.split(";");
+                            // for each requirement
+                            for(var r in identifierRequirements){
+                                var requirement = identifierRequirements[r];
+                                identifiers_run.unshift(requirement);
+                                // if key in object
+                                if((requirement in grouped_sections[campus])){
+                                    cp_list.push(grouped_sections[campus][requirement]);
+                                }
+                            }
+                        }
+                        cp_list.push([section]);
+                        var cp = Combinatorics.cartesianProduct.apply(null,cp_list);
+                        cp = cp.toArray();
+                        all_cp = all_cp.concat(cp);
+                    }
                 }
-              }
-              // ByRef to the Rescue: note what the filters are being applied to
-              // Only push if there is a valid grouping (after filters)
-              if(val.length>0){
-                values[campus].push(val);
-              }
-
             });
         });
-        var all_cp = [];
-        Object.keys(values).forEach(function(campus) {
-            // Only if there is a grouping for the campus (After filters)
-            if(values[campus].length>0){
-                var cp = Combinatorics.cartesianProduct.apply(null,values[campus]);
-                cp = cp.toArray();
-                all_cp = all_cp.concat(cp);
-            }
-        });
+        // Checking the CRN requirements within each combination
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
         if(crnrequirements.length > 0){
             for (var cp = all_cp.length-1; cp >= 0; cp--) {
@@ -482,6 +487,7 @@ module.exports = {
                 }
             }
         }
+        // Check to see if the combination has sections that overlap
         //For each combination
         for (var i = all_cp.length-1; i >= 0; i--) {
             var combination = all_cp[i];
@@ -499,7 +505,6 @@ module.exports = {
                 }
             }
         }
-
         return all_cp;
     },
     getScheduleCombinations:function(section_combinations){
@@ -556,17 +561,19 @@ module.exports = {
           var course_section = course_sections[i];
           var identifier = course_section.Identifier;
           var campus = course_section.Campus;
-          if(identifier === "" || identifier === null){
-            // identifier = "";
-            identifier = "A1";
+          // Apply Filters To SECTION
+          if(!mscSchedulizer.applyFiltersToSection(course_section,mscSchedulizer.schedule_filters)){
+              if(identifier === "" || identifier === null){
+                identifier = "empty";
+              }
+              if (!(campus in grouped_sections)){
+                grouped_sections[campus] = [];
+              }
+              if (!(identifier in grouped_sections[campus])){
+                grouped_sections[campus][identifier] = [];
+              }
+              grouped_sections[campus][identifier].push(course_section);
           }
-          if (!(campus in grouped_sections)){
-            grouped_sections[campus] = [];
-          }
-          if (!(identifier in grouped_sections[campus])){
-            grouped_sections[campus][identifier] = [];
-          }
-          grouped_sections[campus][identifier].push(course_section);
         }
         return grouped_sections;
     },
