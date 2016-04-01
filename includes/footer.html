@@ -155,6 +155,12 @@
               $(this).addClass("favorite_schedule");
               $(this).removeClass("unfavorite_schedule");
               $(this).text("Favorite");
+              if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["favorites.html"])){
+                $(this).parents(".schedule_combination").fadeOut(500, function(){ $(this).remove();});
+                var outputSchedules = mscSchedulizer.favorite_schedules.length + " schedule";
+                if(mscSchedulizer.favorite_schedules.length != 1){outputSchedules += "s";}
+                $("#schedules span.notice").text(outputSchedules);
+              }
           }
       });
     }

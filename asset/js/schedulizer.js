@@ -942,7 +942,7 @@ module.exports = {
                 schedule.lateEndTime = lateEndTime;
                 schedule.events = events;
                 schedule.courseWithoutMeeting = noMeetings;
-                outputSchedules += "<div id=\"schedule_" + i + "\"></div>";
+                outputSchedules += "<div id=\"schedule_" + i + "\" class=\"schedule_combination\"></div>";
             }
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html(outputSchedules);
 
