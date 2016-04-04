@@ -28,7 +28,14 @@
   <!-- Bootstrap Select -->
   <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css">
 
+  <!-- Timepicker -->
+  <link rel="stylesheet" type="text/css" href="css/jquery.timepicker.css" />
+  <link rel="stylesheet" type="text/css" href="css/jquery.ptTimeSelect.css" />
+  <link rel="stylesheet" type="text/css" href="css/jquery.weekLine.css" />
+
   <link rel="stylesheet" href="bower_components/basictable/basictable.css">
+
+  <link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
 
   <!-- Margo CSS Styles  -->
   <link rel="stylesheet" type="text/css" href="css/style.css" media="screen">
@@ -58,13 +65,17 @@
   <script type="text/javascript" src="js/jquery.lettering.js"></script>
   <script type="text/javascript" src="js/jquery.easypiechart.min.js"></script>
   <script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
-
   <script type="text/javascript" src="js/jquery.parallax.js"></script>
   <script type="text/javascript" src="js/mediaelement-and-player.js"></script>
   <script type="text/javascript" src="js/jquery.slicknav.js"></script>
+  <script src="js/jquery.timepicker.js"></script>
+  <script src="js/jquery.ptTimeSelect.js"></script>
+  <script src="js/jquery.weekLine.min.js"></script>
   <script type="text/javascript" src='bower_components/moment/min/moment.min.js'></script>
+  <script src="js/datepair.min.js"></script>
+  <script src="js/jquery.datepair.min.js"></script>
   <script type="text/javascript" src='bower_components/basictable/jquery.basictable.min.js'></script>
-  
+  <script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
 
   <!--[if IE 8]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -116,7 +127,7 @@
             
             <!-- Classic Heading -->
             <!-- <h4 class="classic-title"><span>Courses</span></h4> -->
-            
+            <div id="filters"></div>
             <div id="dept_class_list"><div class="loader"></div> <div class="status">Loading Courses...</div></div>
                         
           </div>

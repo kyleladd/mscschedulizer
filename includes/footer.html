@@ -108,6 +108,9 @@
 
     // Course Listings page
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
+      $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+
+        mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);        // Department selected - View Department Courses
         $("#"+mscSchedulizer_config.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
             if($("#"+mscSchedulizer_config.html_elements.departments_select).val() != ""){
@@ -116,6 +119,36 @@
                 //Get From Endpoint - Department Courses
                 mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer_config.html_elements.departments_select).val());
             }
+        });
+        $("#"+mscSchedulizer_config.html_elements.filters.not_full).click(function(){
+          mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
+          mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+          $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+          $('.course_details').basictable();
+        });
+        $("#"+mscSchedulizer_config.html_elements.filters.morrisville_campus).click(function(){
+            mscSchedulizer.schedule_filters.Campuses.Morrisville = !mscSchedulizer.schedule_filters.Campuses.Morrisville;
+            mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+            $('.course_details').basictable();
+        });
+        $("#"+mscSchedulizer_config.html_elements.filters.norwich_campus).click(function(){
+            mscSchedulizer.schedule_filters.Campuses.Norwich = !mscSchedulizer.schedule_filters.Campuses.Norwich;
+            mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+            $('.course_details').basictable();
+        });
+        $("#"+mscSchedulizer_config.html_elements.filters.show_online).click(function(){
+            mscSchedulizer.schedule_filters.ShowOnline = !mscSchedulizer.schedule_filters.ShowOnline;
+            mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+            $('.course_details').basictable();
+        });
+        $("#"+mscSchedulizer_config.html_elements.filters.show_international).click(function(){
+            mscSchedulizer.schedule_filters.ShowInternational = !mscSchedulizer.schedule_filters.ShowInternational;
+            mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+            $('.course_details').basictable();
         });
         //Semester select
         $("#"+mscSchedulizer_config.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
