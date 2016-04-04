@@ -154,6 +154,12 @@
                 $(this).addClass("favorite_schedule");
                 $(this).removeClass("unfavorite_schedule");
                 $(this).text("Favorite");
+              if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["favorites.html"])){
+                $(this).parents(".schedule_combination").fadeOut(500, function(){ $(this).remove();});
+                var outputSchedules = mscSchedulizer.favorite_schedules.length + " schedule";
+                if(mscSchedulizer.favorite_schedules.length != 1){outputSchedules += "s";}
+                $("#schedules span.notice").text(outputSchedules);
+              }
             }
         });
       }
@@ -177,7 +183,7 @@
                 // Google Analytics Track Course Removed
                 ga('send', {
                   hitType: 'event',
-                  eventCategory: 'Test',//'Course Removed',
+                  eventCategory: 'Course Removed',
                   eventAction: course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle,
                   eventLabel: mscSchedulizer.semester.TermCode,
                   eventValue: 1
@@ -202,7 +208,7 @@
               // Google Analytics Track Course Added
               ga('send', {
                 hitType: 'event',
-                eventCategory: 'Test',//'Course Added',
+                eventCategory: 'Course Added',
                 eventAction: course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle,
                 eventLabel: mscSchedulizer.semester.TermCode,
                 eventValue: 1
@@ -223,7 +229,7 @@
               // Google Analytics Track Course Added
               ga('send', {
                 hitType: 'event',
-                eventCategory: 'Test',//'Course Added',
+                eventCategory: 'Course Added',
                 eventAction: course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle,
                 eventLabel: mscSchedulizer.semester.TermCode,
                 eventValue: 1
@@ -236,7 +242,7 @@
                 // Google Analytics Track Course Removed
                 ga('send', {
                   hitType: 'event',
-                  eventCategory: 'Test',//'Course Removed',
+                  eventCategory: 'Course Removed',
                   eventAction: course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle,
                   eventLabel: mscSchedulizer.semester.TermCode,
                   eventValue: 1
@@ -250,31 +256,51 @@
         $("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "tr.a_course_section", function (event) {
             event.preventDefault();
             //Add Course
+          var selected_row = $(this);
+          var i = selected_row.parent('tbody');
             var course = JSON.parse(unescape(this.getAttribute('data-value')));
+          var courseList = [course];
+          // courseList.push(course);
             var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
             if (index === -1) {
               mscSchedulizer.classes_selected.push(course);
-              $(this).addClass("selected_section");
-              // Google Analytics Track Course Added (Leave off CRN)
+            $(i).find('tr').each(function(){
+              var aRow = $(this);
+              var rowCourse = JSON.parse(unescape(aRow.data("value")));
+              var rowIndex = node_generic_functions.searchListDictionaries(courseList,{'DepartmentCode':rowCourse.DepartmentCode,'CourseNumber':rowCourse.CourseNumber,'CourseTitle':rowCourse.CourseTitle,'CourseCRN':rowCourse.CourseCRN},true);
+              if(rowIndex!==-1){
+                aRow.addClass("selected_section");
+                // Google Analytics Track Course Added (Leave off CRN)
               ga('send', {
                 hitType: 'event',
-                eventCategory: 'Test',//'Course Added',
+                eventCategory: 'Course Added',
                 eventAction: course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle,
                 eventLabel: mscSchedulizer.semester.TermCode,
                 eventValue: 1
               });
+              }
+            });
+              });
             }
             else{
               // remove selection
-                mscSchedulizer.classes_selected.splice(index,1);
-                $(this).removeClass("selected_section");
+            mscSchedulizer.classes_selected.splice(index,1);
+            $(i).find('tr').each(function(){
+              var aRow = $(this);
+              var rowCourse = JSON.parse(unescape(aRow.data("value")));
+              var rowIndex = node_generic_functions.searchListDictionaries(courseList,{'DepartmentCode':rowCourse.DepartmentCode,'CourseNumber':rowCourse.CourseNumber,'CourseTitle':rowCourse.CourseTitle,'CourseCRN':rowCourse.CourseCRN},true);
+              if(rowIndex!==-1){
+                aRow.removeClass("selected_section");
                 // Google Analytics Track Course Removed (Leave off CRN)
                 ga('send', {
                   hitType: 'event',
-                  eventCategory: 'Test',//'Course Removed',
+                  eventCategory: 'Course Removed',
                   eventAction: course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle,
                   eventLabel: mscSchedulizer.semester.TermCode,
                   eventValue: 1
+                });
+              }
+            });
                 });
             }
             // Store var and reload selections
@@ -292,14 +318,14 @@
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-18283846-29', 'auto');
+    ga('create', mscSchedulizer_config.google_analytics_key, 'auto');
     ga('send', 'pageview');
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["generate.html"])){
       for(var index in mscSchedulizer.classes_selected){
         var course = mscSchedulizer.classes_selected[index];
         ga('send', {
           hitType: 'event',
-          eventCategory: 'Test',//'GeneratedWithCourse',
+          eventCategory: 'GeneratedWithCourse',
           eventAction: course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle,
           eventLabel: mscSchedulizer.semester.TermCode,
           eventValue: 1

@@ -1,5 +1,6 @@
 module.exports = {
     api_host:"http://schedulizer-api.morrisville.edu",
+    google_analytics_key:"UA-",
     html_elements:{
         // All elements are By ID
         course_selections_list:"course_selections",
