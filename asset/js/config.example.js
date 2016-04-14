@@ -18,6 +18,7 @@ module.exports = {
             show_international:"showInternationalFilter"
         }
     },
+    msc_special_messages:false,
     colors: ["#22B548","#2293B5","#3222B5","#B58122","#B52222","#B522B0","#686967","#433050","#B3B522"],
     numToLoad:10
 }

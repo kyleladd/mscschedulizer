@@ -385,7 +385,26 @@ module.exports = {
           term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
         }
         term_output += "</table>";
-        output = term_output + output;
+        var special_msc_message = "";
+        // If it is a summer term
+        if(mscSchedulizer_config.msc_special_messages === true && node_generic_functions.endsWith("06",mscSchedulizer.semester.TermCode)){
+            var d_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"D"}) ;
+            var e_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"E"});
+            // Make this a function
+            if(d_poterm !== null){
+                special_msc_message += "<strong>Part of Term D Classes meeting:</strong><br/>";
+                special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
+                special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
+
+            }
+            if(e_poterm !== null){
+                special_msc_message += "<strong>Part of Term E Classes meeting:</strong><br/>";
+                special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
+                special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
+            }
+            special_msc_message += "<br/>";
+        }
+        output = term_output + special_msc_message + output;
         return output;
     },
     getCourseInfos:function(callback,callback2){
