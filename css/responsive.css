@@ -295,6 +295,10 @@
 	ul.social-list li a.skype:hover {
 		color: #36C4F3 !important;
 	}
+
+	ul.social-list li a.share:hover {
+	    color: #0bb586 !important;
+	}
 	
 	.navbar-default .navbar-toggle {
 		margin-top: 15px;

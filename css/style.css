@@ -550,6 +550,10 @@ ul.social-list li a.skype:hover {
 	background-color: #36C4F3
 }
 
+ul.social-list li a.share:hover {
+    background-color: #0bb586;
+}
+
 ul.social-list li a i {
 	font-size: 1em;
 	display: block;
@@ -4239,6 +4243,10 @@ footer a:hover {
 
 .social-widget ul.social-icons li a.skype:hover i {
 	background-color: #36C4F3
+}
+
+.social-widget ul.social-icons li a.share:hover i {
+    background-color: #0bb586;
 }
 
 .contact-widget {

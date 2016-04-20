@@ -29,6 +29,9 @@ module.exports = {
           }
       });
     },
+    exportURL:function(url,semester,department){
+        return url + (url.indexOf("?") === -1 ? "?" : "&") + "semester=" + semester + "&department=" + department;
+    },
     setCookie:function(c_name, value, exdays, domain) {
         var exdate = new Date();
         exdate.setDate(exdate.getDate() + exdays);
@@ -70,17 +73,26 @@ module.exports = {
         localStorage.setItem("current_semester_list", JSON.stringify(semesters));
         mscSchedulizer.current_semester_list = semesters;
     },
-    setSemester:function(){
+    setSemester:function(semester){
         try{
-            var semester = JSON.parse(localStorage.getItem('semester')) || {};
-            if(new Date()>semester.expires){
-                mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+            if(typeof semester !== 'undefined'){
+                var expiration = new Date();
+                expiration.setDate(expiration.getDate() + 1);
+                mscSchedulizer.semester.TermCode = semester;
+                mscSchedulizer.semester.expires = expiration;
+                mscSchedulizer.setSemesterVar(mscSchedulizer.semester);
             }
-            else if(node_generic_functions.isEmpty(semester)){
-                mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
-            }
-            else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
-                mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);   
+            else{
+                semester = JSON.parse(localStorage.getItem('semester')) || {};
+                if(new Date()>semester.expires){
+                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+                }
+                else if(node_generic_functions.isEmpty(semester)){
+                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+                }
+                else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
+                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);   
+                }
             }
         }
         catch(err){
@@ -245,6 +257,7 @@ module.exports = {
                 output += "<option class='a_department' value='"+department.DepartmentCode + "' " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
             }
             $("#"+mscSchedulizer_config.html_elements.departments_select).html(output);
+            mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
         })
         .fail(function() {
             $("#"+mscSchedulizer_config.html_elements.departments_select).html("<option>Unable to load departments.</option>");

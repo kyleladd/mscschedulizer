@@ -35,7 +35,15 @@
   <script>
   $(function(){ 
     mscSchedulizer.setSemesterCurrentList(function(semesters_list){
-      mscSchedulizer.setSemester();
+      if(typeof mscSchedulizer.queryData(location.search,true).semester !== "undefined"){
+        mscSchedulizer.setSemester(mscSchedulizer.queryData(location.search,true).semester[0]);
+      }
+      else{
+        mscSchedulizer.setSemester();
+      }
+      if(typeof mscSchedulizer.queryData(location.search,true).department !== "undefined"){
+        mscSchedulizer.setDepartmentVar(mscSchedulizer.queryData(location.search,true).department[0]);
+      }
       mscSchedulizer.getSemestersSelect(semesters_list);
     
     mscSchedulizer.loadSelections();
@@ -260,6 +268,23 @@
           mscSchedulizer.loadSelections();
       });
     }
+    $(".share").click(function(event){
+      event.preventDefault();
+      // window.location.protocol + "//" + window.location.hostname + window.location.pathname
+      // window.location.href.split("#")[0].split("?")[0]
+      // window.location.href.split("#")[0]
+      var url = mscSchedulizer.exportURL(window.location.href.split("#")[0].split("?")[0],mscSchedulizer.semester.TermCode,mscSchedulizer.department);
+      new PNotify({
+          title: 'Schedule Saved',
+          text: 'URL to be shared: <a href="' + url + '">' + url + '</a>',
+          type: 'success',
+          buttons: {
+            closer_hover: false,
+            closer: true,
+            sticker: false
+          }
+      });
+    });
   });
 });
     
