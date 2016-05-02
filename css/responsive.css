@@ -299,6 +299,9 @@
 	ul.social-list li a.share:hover {
 	    color: #0bb586 !important;
 	}
+	ul.social-list li a.android:hover {
+	    color: #A4C639 !important;
+	}
 	
 	.navbar-default .navbar-toggle {
 		margin-top: 15px;
