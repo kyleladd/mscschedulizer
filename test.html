@@ -22,11 +22,11 @@
   <!-- Font Awesome CSS -->
   <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" media="screen">
 
+  <!-- FullCalendar -->
+  <link rel='stylesheet' type="text/css" href='bower_components/fullcalendar/dist/fullcalendar.css' />
+
   <!-- Slicknav -->
   <link rel="stylesheet" type="text/css" href="css/slicknav.css" media="screen">
-  
-  <!-- Bootstrap Select -->
-  <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css">
 
   <!-- Timepicker -->
   <link rel="stylesheet" type="text/css" href="css/jquery.timepicker.css" />
@@ -34,9 +34,10 @@
   <link rel="stylesheet" type="text/css" href="css/jquery.weekLine.css" />
 
   <link rel="stylesheet" href="bower_components/basictable/basictable.css">
-  
-  <link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+
   <link href="css/pnotify.custom.min.css" media="all" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+
 
   <!-- Margo CSS Styles  -->
   <link rel="stylesheet" type="text/css" href="css/style.css" media="screen">
@@ -55,7 +56,6 @@
   <script type="text/javascript" src="js/jquery.migrate.js"></script>
   <script type="text/javascript" src="js/modernizrr.js"></script>
   <script type="text/javascript" src="asset/js/bootstrap.min.js"></script>
-  <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
   <script type="text/javascript" src="js/jquery.fitvids.js"></script>
   <script type="text/javascript" src="js/owl.carousel.min.js"></script>
   <script type="text/javascript" src="js/nivo-lightbox.min.js"></script>
@@ -75,26 +75,15 @@
   <script type="text/javascript" src='bower_components/moment/min/moment.min.js'></script>
   <script src="js/datepair.min.js"></script>
   <script src="js/jquery.datepair.min.js"></script>
+  <script type="text/javascript" src='bower_components/fullcalendar/dist/fullcalendar.js'></script>
   <script type="text/javascript" src='bower_components/basictable/jquery.basictable.min.js'></script>
-  <script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
   <script type="text/javascript" src="js/pnotify.custom.min.js"></script>
+  <script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+  
 
   <!--[if IE 8]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <style>
-    /*Stripe*/
-    .term_details>tbody>tr:nth-of-type(even){background-color:#f9f9f9}
-    /*Hover*/
-    /*.term_details>tbody>tr:hover{background-color:#f5f5f5}*/
-    /*Condensed*/
-    .term_details>tbody>tr>td,.term_details>tbody>tr>th,.term_details>tfoot>tr>td,.term_details>tfoot>tr>th,.term_details>thead>tr>td,.term_details>thead>tr>th{padding:5px}
-    /*Stripe*/
-    /*.course_details>tbody>tr:nth-of-type(even){background-color:#f9f9f9}*/
-    /*Hover*/
-    .course_details>tbody>tr:hover{background-color:#f5f5f5}
-    /*Condensed*/
-    .course_details>tbody>tr>td,.course_details>tbody>tr>th,.course_details>tfoot>tr>td,.course_details>tfoot>tr>th,.course_details>thead>tr>td,.course_details>thead>tr>th{padding:5px}
-  </style>
+
 </head>
 
 <body>
@@ -112,44 +101,15 @@
     <div id="content">
       <div class="container">
         <div class="page-content">
+          <div class="row">
 
-          <div class="row sidebar-page">
-          
-                    <!--Sidebar-->
-          <div class="col-sm-3 col-xs-12 sidebar left-sidebar">
-
-            <div class="widget widget-categories">
-              <h4>Semesters <span class="head-line"></span></h4>
-              <select id="semesters" class="selectpicker col-xs-12"><!-- Data loaded from api --></select>
+            <div class="col-md-12">
+              <!-- Classic Heading -->
+              <h4 class="classic-title"><span>Schedules</span></h4>
+              <div id="filters"></div>
+              <div id="schedules"><div class="loader loader-large"></div> <div class="status">Loading Schedules...</div></div>
             </div>
-            
-            <!-- Tags Widget -->
-            <div class="widget widget-tags">
-              <h4>Selections <span class="head-line"></span></h4>
-              <div class="tagcloud" id="course_selections">
-              </div>
-            </div>
-            <!-- Categories Widget -->
-            <div class="widget widget-categories">
-              <h4>Departments <span class="head-line"></span></h4>
-              <select id="departments" class="selectpicker col-xs-12" data-live-search="true"><!-- Data loaded from api --></select>
-            </div>
-
           </div>
-          <!--End sidebar-->
-          <!-- Page Content -->
-          <div class="col-sm-9 col-xs-12 page-content">
-            
-            <!-- Classic Heading -->
-            <!-- <h4 class="classic-title"><span>Courses</span></h4> -->
-            <div id="filters"></div>
-            <div id="dept_class_list"><div class="loader"></div> <div class="status">Loading Courses...</div></div>
-                        
-          </div>
-          <!-- End Page Content-->
-                 
-          
-        </div>
       </div>
     </div>
     </div>
@@ -158,9 +118,37 @@
 
 
     <div id="footer-container"></div>
-  </div>
+</div>
   <script type="text/javascript" src="js/script.js"></script>
+  <script>
+  // Moment the term start
+  console.log("START DATE: 2016-05-16T00:00:00");
+  console.log("D: M/W");
+  //Moment Term: D - M/W classes
+  console.log("this friday:",moment("2016-05-16T00:00:00").day(5).format("MMMM D"));
+  console.log("next next friday:",moment("2016-05-16T00:00:00").day(19).format("MMMM D"));
+  console.log("next next next next friday:",moment("2016-05-16T00:00:00").day(33).format("MMMM D"));
 
+console.log("D: T/R");
+    //Moment Term: D - T/R classes
+  console.log("this friday:",moment("2016-05-16T00:00:00").day(12).format("MMMM D"));
+  console.log("next next friday:",moment("2016-05-16T00:00:00").day(26).format("MMMM D"));
+  console.log("next next next next friday:",moment("2016-05-16T00:00:00").day(40).format("MMMM D"));
+
+console.log("START DATE: 2016-06-27T00:00:00");
+  console.log("E: M/W");
+  //Moment Term: E - M/W classes
+  console.log("this friday:",moment("2016-06-27T00:00:00").day(5).format("MMMM D"));
+  console.log("next next friday:",moment("2016-06-27T00:00:00").day(19).format("MMMM D"));
+  console.log("next next next next friday:",moment("2016-06-27T00:00:00").day(33).format("MMMM D"));
+
+console.log("E: T/R");
+    //Moment Term: E - T/R classes
+  console.log("this friday:",moment("2016-06-27T00:00:00").day(12).format("MMMM D"));
+  console.log("next next friday:",moment("2016-06-27T00:00:00").day(26).format("MMMM D"));
+  console.log("next next next next friday:",moment("2016-06-27T00:00:00").day(40).format("MMMM D"));
+
+  </script>
 </body>
 
 </html>
