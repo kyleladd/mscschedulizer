@@ -368,7 +368,7 @@ module.exports = {
             }
             output+=mscSchedulizer.modalTemplate('modal_courseDescription');
             output+='<h4 class=\'classic-title\'><span>' + icon_str + '<span class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDescription\' data-course=\''+escape(JSON.stringify(course))+'\'>' + course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</span></span></h4>';
-            output+="<table class=\"course_details\">";
+            output+="<table class=\"course_details table\">";
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead><tbody>";
             for (var s in course.Sections) {
                 var section = course.Sections[s];
@@ -405,7 +405,7 @@ module.exports = {
         }
 
         // Term Table
-        var term_output = "<table class=\"term_details\">" +
+        var term_output = "<table class=\"term_details table\">" +
                         "<thead><tr class=\"field-name\">" +
                         "<td>Term Code</td><td>Start Date</td><td>End Date</td>" +
                         "</tr></thead>";
