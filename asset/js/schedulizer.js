@@ -30,6 +30,9 @@ module.exports = {
           }
       });
     },
+    exportURL:function(url,semester,department){
+        return url + (url.indexOf("?") === -1 ? "?" : "&") + "semester=" + semester + "&department=" + department;
+    },
     setCookie:function(c_name, value, exdays, domain) {
         var exdate = new Date();
         exdate.setDate(exdate.getDate() + exdays);
@@ -71,17 +74,26 @@ module.exports = {
         localStorage.setItem("current_semester_list", JSON.stringify(semesters));
         mscSchedulizer.current_semester_list = semesters;
     },
-    setSemester:function(){
+    setSemester:function(semester){
         try{
-            var semester = JSON.parse(localStorage.getItem('semester')) || {};
-            if(new Date()>semester.expires){
-                mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+            if(typeof semester !== 'undefined'){
+                var expiration = new Date();
+                expiration.setDate(expiration.getDate() + 1);
+                mscSchedulizer.semester.TermCode = semester;
+                mscSchedulizer.semester.expires = expiration;
+                mscSchedulizer.setSemesterVar(mscSchedulizer.semester);
             }
-            else if(node_generic_functions.isEmpty(semester)){
-                mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
-            }
-            else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
-                mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);   
+            else{
+                semester = JSON.parse(localStorage.getItem('semester')) || {};
+                if(new Date()>semester.expires){
+                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+                }
+                else if(node_generic_functions.isEmpty(semester)){
+                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+                }
+                else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
+                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);   
+                }
             }
         }
         catch(err){
@@ -264,6 +276,7 @@ module.exports = {
                 output += "<option class='a_department' value='"+department.DepartmentCode + "' " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
             }
             $("#"+mscSchedulizer_config.html_elements.departments_select).html(output);
+            mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
         })
         .fail(function() {
             $("#"+mscSchedulizer_config.html_elements.departments_select).html("<option>Unable to load departments.</option>");
@@ -404,7 +417,26 @@ module.exports = {
           term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
         }
         term_output += "</table>";
-        output = term_output + output;
+        var special_msc_message = "";
+        // If it is a summer term
+        if(mscSchedulizer_config.msc_special_messages === true && node_generic_functions.endsWith("06",mscSchedulizer.semester.TermCode)){
+            var d_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"D"}) ;
+            var e_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"E"});
+            // Make this a function
+            if(d_poterm !== null){
+                special_msc_message += "<strong>Part of Term D Classes meeting:</strong><br/>";
+                special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
+                special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
+
+            }
+            if(e_poterm !== null){
+                special_msc_message += "<strong>Part of Term E Classes meeting:</strong><br/>";
+                special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
+                special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
+            }
+            special_msc_message += "<br/>";
+        }
+        output = term_output + special_msc_message + output;
         return output;
     },
     getCourseInfos:function(callback,callback2){
