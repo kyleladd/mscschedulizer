@@ -10,7 +10,7 @@
 -- OR --
 
  ```./node_modules/watchify/bin/cmd.js asset/js/bundleme.js -o asset/js/schedulizer_bundle.js -v```
- 
+
 -- OR --
 
 ```watchify -t -v browserify-shader -d -p [minifyify --no-map] asset/js/bundleme.js -o asset/js/schedulizer_bundle.js```
@@ -22,7 +22,7 @@
 - ``` npm test```
 
 ## Android App
-- Using Cordova (Official Release coming soon) - In Beta
+- [https://play.google.com/store/apps/details?id=us.kyleladd.mscschedulizer](https://play.google.com/store/apps/details?id=us.kyleladd.mscschedulizer)
 
 ## Windows Desktop App
 - Using Electron (Official Release coming soon) - In Beta

@@ -92,7 +92,7 @@ module.exports = {
                     mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
                 }
                 else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
-                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);   
+                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
                 }
             }
         }
@@ -155,6 +155,8 @@ module.exports = {
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(results){
             //remove this later
             var output = "";
+            // Remove sections that are administrative entry
+            results = mscSchedulizer.removeAdministrativeSections(results);
             for (var i in results) {
                 var course = results[i];
                 //Change to just one html output set
@@ -209,6 +211,8 @@ module.exports = {
     getDepartmentCoursesDetails: function(department){
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(results){
+            // Remove sections that are administrative entry
+            results = mscSchedulizer.removeAdministrativeSections(results);
             // Save results to mscschedulizer variable in localstorage
             localStorage.setItem("department_courses", JSON.stringify(results));
             mscSchedulizer.department_courses = results;
@@ -370,6 +374,9 @@ module.exports = {
             output+='<h4 class=\'classic-title\'><span>' + icon_str + '<span class=\'modal-trigger\'data-toggle=\'modal\' data-target=\'#modal_courseDescription\' data-course=\''+escape(JSON.stringify(course))+'\'>' + course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle + '</span></span></h4>';
             output+="<table class=\"course_details\">";
             output+="<thead><tr class=\"field-name\"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead><tbody>";
+            if(course.Sections.length === 0){
+              output += "<tr><td colspan=\"9\">All sections have been filtered out.</td></tr>";
+            }
             for (var s in course.Sections) {
                 var section = course.Sections[s];
                 var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
@@ -398,7 +405,7 @@ module.exports = {
                         section.Credits = "variable";
                     }
 
-                    output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1 && show_crn_selections === true) ? " selected_section" : "") +"\" data-value='" + escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN})) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";           
+                    output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1 && show_crn_selections === true) ? " selected_section" : "") +"\" data-value='" + escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN})) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";
                 }
             }
             output+="</tbody></table>";
@@ -409,12 +416,12 @@ module.exports = {
                         "<thead><tr class=\"field-name\">" +
                         "<td>Term Code</td><td>Start Date</td><td>End Date</td>" +
                         "</tr></thead>";
-        terms.sort(function(a, b) { 
+        terms.sort(function(a, b) {
             return a.TermCode - b.TermCode;
         });
         for (var t in terms) {
           var term = terms[t];
-          term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";  
+          term_output+= "<tr><td>" + term.TermCode + "</td><td>" + moment(term.TermStart).format("M/D/YY") + "</td><td>" + moment(term.TermEnd).format("M/D/YY") + "</td></tr>";
         }
         term_output += "</table>";
         var special_msc_message = "";
@@ -443,7 +450,7 @@ module.exports = {
         // /info/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
         var courses_list = "";
         for (var i in mscSchedulizer.classes_selected) {
-            var course = mscSchedulizer.classes_selected[i];  
+            var course = mscSchedulizer.classes_selected[i];
             courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
         }
         courses_list = courses_list.replace('&','?');
@@ -499,7 +506,7 @@ module.exports = {
                     var cp_list = [];
                     if(identifiers_run.indexOf(section.Identifier) === -1 || identifiers_run.indexOf(section.Identifier) === identifiers_run.length - 1){
                         if(identifiers_run.indexOf(section.Identifier) === -1){
-                          identifiers_run.push(section.Identifier);  
+                          identifiers_run.push(section.Identifier);
                         }
                         if(section.RequiredIdentifiers !== null && typeof section.RequiredIdentifiers === 'string'){
                             var identifierRequirements = section.RequiredIdentifiers.split(";");
@@ -571,11 +578,11 @@ module.exports = {
         var cp = Combinatorics.cartesianProduct.apply(null,section_combinations);
         cp = cp.toArray();
         //filter based on overlapping
-        // returns list of schedules containing 
+        // returns list of schedules containing
         //  a list of classes containing
         //   a list of sections
         // /info/?courses[]=121&courses[]=127
-        
+
         //for each schedule
         for (var h = cp.length-1; h >= 0; h--) {
             //for each class in the schedule
@@ -704,11 +711,11 @@ module.exports = {
                 $("#weekCal_"+i).weekLine("setSelected", filters[i].Days);
         }
     },
-    checkboxFilterDisplay:function(filter,elementID){       
-      if (filter) 
+    checkboxFilterDisplay:function(filter,elementID){
+      if (filter)
       {
           document.getElementById(elementID).checked = true;
-      } 
+      }
       else
       {
           document.getElementById(elementID).checked = false;
@@ -723,9 +730,30 @@ module.exports = {
         }
         return false;
     },
+    removeAdministrativeSections:function(courses){
+      for (var c = courses.length-1; c >= 0; c--) {
+          if(typeof courses[c].Sections !== "undefined" && courses[c].Sections !== null){
+              for (var s = courses[c].Sections.length-1; s >= 0; s--) {
+                  // Apply filters to section function
+                  if(mscSchedulizer.requiredFilters(courses[c].Sections[s])){
+                      courses[c].Sections.splice(s, 1);
+                  }
+              }
+              if(courses[c].Sections.length === 0){
+                  courses.splice(c, 1);
+              }
+          }
+      }
+      return courses;
+    },
+    requiredFilters:function(section){
+      var filteredOut = false;
+      filteredOut = mscSchedulizer.concurrentEnrollmentFilter(section);
+      return filteredOut;
+    },
     applyFiltersToSection:function(section,filters){
         var filteredOut = false;
-        filteredOut = mscSchedulizer.concurrentEnrollmentFilter(section);
+        filteredOut = mscSchedulizer.requiredFilters(section);
         if(typeof filters.Campuses !== "undefined" && filteredOut === false){
             filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
         }
@@ -949,16 +977,16 @@ module.exports = {
             outputSchedules +="</span>";
             outputSchedules += mscSchedulizer.modalTemplate("modal_courseDetails","modal-lg");
             for (var i in schedules) {
-                var schedule = schedules[i];  
+                var schedule = schedules[i];
                 var events = [];
                 var noMeetings = [];
                 var earlyStartTime = 2400;
                 var lateEndTime = 0;
                 for (var c in schedule) {
-                    var course = schedule[c]; 
+                    var course = schedule[c];
                     var allSectionsHaveMeeting = true;
                     for (var s in course.Sections) {
-                        var section = course.Sections[s]; 
+                        var section = course.Sections[s];
                         if(section.Meetings.length === 0){
                             allSectionsHaveMeeting = false;
                         }
@@ -966,7 +994,7 @@ module.exports = {
                             var meeting = section.Meetings[m];
                             if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
                                 allSectionsHaveMeeting = false;
-                            }    
+                            }
                             if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
                                 earlyStartTime = meeting.StartTime;
                             }
@@ -976,7 +1004,7 @@ module.exports = {
                             //Meeting could be on multiple days, needs to be split into separate events
                             var meetups = mscSchedulizer.splitMeetings(meeting);
                             for (var u in meetups) {
-                                var meetup = meetups[u]; 
+                                var meetup = meetups[u];
                                 events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer_config.colors[c]});
                             }
                         }
@@ -1015,10 +1043,10 @@ module.exports = {
         }
     },
     initSchedules:function(schedules,start,count){
-        for (var i = 0; i < count ; i++) { 
+        for (var i = 0; i < count ; i++) {
             var num = start + i;
             if(schedules[num] !== undefined){
-                $('#schedule_' + num).fullCalendar({                
+                $('#schedule_' + num).fullCalendar({
                     editable: false,
                     handleWindowResize: true,
                     weekends: false, // Hide weekends
@@ -1146,7 +1174,7 @@ module.exports = {
     sortSections:function(a,b){
         return node_generic_functions.alphaNumericSort(a.SectionNumber,b.SectionNumber);
     },
-    sortMeetings:function(a, b) { 
+    sortMeetings:function(a, b) {
         if(moment(a.StartTime,"Hmm").isValid() && moment(b.StartTime,"Hmm").isValid()){
             return moment(a.StartTime,"Hmm") - moment(b.StartTime,"Hmm");
         }
