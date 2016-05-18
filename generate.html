@@ -120,6 +120,74 @@
     <div id="footer-container"></div>
 </div>
   <script type="text/javascript" src="js/script.js"></script>
+  <script type="text/javascript" src="asset/js/schedulizer_bundle.js"></script>
+  <script>
+    $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+
+    mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+    mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
+    $(window).scroll(function(){
+      if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
+        mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
+      }
+    });
+    $("#"+mscSchedulizer_config.html_elements.filters.not_full).click(function(){
+        mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
+        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
+        mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+    });
+    $("#"+mscSchedulizer_config.html_elements.filters.morrisville_campus).click(function(){
+        mscSchedulizer.schedule_filters.Campuses.Morrisville = !mscSchedulizer.schedule_filters.Campuses.Morrisville;
+        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
+        mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+    });
+    $("#"+mscSchedulizer_config.html_elements.filters.norwich_campus).click(function(){
+        mscSchedulizer.schedule_filters.Campuses.Norwich = !mscSchedulizer.schedule_filters.Campuses.Norwich;
+        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
+        mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+    });
+    $("#"+mscSchedulizer_config.html_elements.filters.show_online).click(function(){
+        mscSchedulizer.schedule_filters.ShowOnline = !mscSchedulizer.schedule_filters.ShowOnline;
+        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
+        mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+    });
+    $("#"+mscSchedulizer_config.html_elements.filters.show_international).click(function(){
+        mscSchedulizer.schedule_filters.ShowInternational = !mscSchedulizer.schedule_filters.ShowInternational;
+        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
+        mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+    });
+
+    // Add Favorite
+    $("#"+mscSchedulizer_config.html_elements.schedules_container).on("click", "a.favorite_schedule", function (event) {
+          event.preventDefault();
+          //Add Course
+          var schedule = JSON.parse(unescape(this.getAttribute('data-value')));
+          if (node_generic_functions.searchListObjects(mscSchedulizer.favorite_schedules,schedule) === -1) {
+              mscSchedulizer.favorite_schedules.push(schedule);
+              localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
+              // Update Element so it can be unfavorited
+              $(this).addClass("unfavorite_schedule");
+              $(this).removeClass("favorite_schedule");
+              $(this).text("Unfavorite");
+          }
+      });
+      // Remove Favorite
+      $("#"+mscSchedulizer_config.html_elements.schedules_container).on("click", "a.unfavorite_schedule", function (event) {
+          event.preventDefault();
+          //Add Course
+          var schedule = JSON.parse(unescape(this.getAttribute('data-value')));
+          var index = node_generic_functions.searchListObjects(mscSchedulizer.favorite_schedules,schedule);
+          if (index !== -1) {
+              mscSchedulizer.favorite_schedules.splice(index, 1);
+              localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
+              // Update Element so it can be favorited
+              $(this).addClass("favorite_schedule");
+              $(this).removeClass("unfavorite_schedule");
+              $(this).text("Favorite");
+          }
+      });
+  </script>
 </body>
+
 
 </html>
