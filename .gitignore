@@ -2,6 +2,7 @@
 
 # Generated
 asset/js/schedulizer_bundle.js
+asset/js/schedulizer_bundle.min.js
 
 # Dependencies
 bower_components/*
@@ -13,3 +14,5 @@ npm-debug.log
 # Config Files
 asset/js/config.js
 Web.config
+
+styles/*

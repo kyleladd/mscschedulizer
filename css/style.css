@@ -5708,6 +5708,9 @@ ul.footer-nav li a:hover {
 body{
     font-weight:500;
 }
+.sidebar .tagcloud {
+    min-height:66px;
+}
 tr.selected_section{
     /*background-color:rgba(11,181,134,.2);*/
     border:2px solid rgba(11,181,134,.2);

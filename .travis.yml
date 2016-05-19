@@ -3,6 +3,4 @@ node_js:
   - "4.1"
 before_script:
   - "npm install -g bower"
-  - "bower install"
-  - "cp asset/js/config.example.js asset/js/config.js"
-  - "./node_modules/browserify/bin/cmd.js asset/js/bundleme.js -o asset/js/schedulizer_bundle.js"
+  - "npm run-script build"

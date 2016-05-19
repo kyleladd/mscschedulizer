@@ -271,6 +271,57 @@ QUnit.module("doTermsOverlap");
         assert.equal(result, true, "should return true"); 
     });
 
+QUnit.module("doMeetingDatesOverlap");
+    QUnit.test("should return false if meeting start date and end date do not overlap", function(assert) {
+        var meeting1 = {StartDate:'2015-08-12T00:00:00',EndDate:'2016-08-11T00:00:00'};
+        var meeting2 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-08-15T00:00:00'};
+        var result = mscSchedulizer.doMeetingDatesOverlap(meeting1, meeting2);
+
+        assert.equal(result, false, "should return false"); 
+    });
+    QUnit.test("should return false if meeting start date and end date do not overlap", function(assert) {
+        var meeting1 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-08-12T00:00:00'};
+        var meeting2 = {StartDate:'2015-08-12T00:00:00',EndDate:'2016-07-15T00:00:00'};
+        var result = mscSchedulizer.doMeetingDatesOverlap(meeting1, meeting2);
+
+        assert.equal(result, false, "should return false"); 
+    });
+    QUnit.test("should return true if meeting start date and end date overlap", function(assert) {
+        var meeting1 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-12-12T00:00:00'};
+        var meeting2 = {StartDate:'2016-10-12T00:00:00',EndDate:'2016-12-12T00:00:00'};
+        var result = mscSchedulizer.doMeetingDatesOverlap(meeting1, meeting2);
+
+        assert.equal(result, true, "should return true"); 
+    });
+    QUnit.test("should return true if meeting start date and end date overlap", function(assert) {
+        var meeting1 = {StartDate:'2016-10-12T00:00:00',EndDate:'2016-12-12T00:00:00'};
+        var meeting2 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-12-12T00:00:00'};
+        var result = mscSchedulizer.doMeetingDatesOverlap(meeting1, meeting2);
+
+        assert.equal(result, true, "should return true"); 
+    });
+    QUnit.test("should return true if meeting start date and end date overlap", function(assert) {
+        var meeting1 = {StartDate:'2014-08-12T00:00:00',EndDate:'2017-08-12T00:00:00'};
+        var meeting2 = {StartDate:'2015-08-12T00:00:00',EndDate:'2016-08-12T00:00:00'};
+        var result = mscSchedulizer.doMeetingDatesOverlap(meeting1, meeting2);
+
+        assert.equal(result, true, "should return true"); 
+    });
+    QUnit.test("should return true if meeting start date and end date for meetings are the same", function(assert) {
+        var meeting1 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-08-22T00:00:00'};
+        var meeting2 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-08-22T00:00:00'};
+        var result = mscSchedulizer.doMeetingDatesOverlap(meeting1, meeting2);
+
+        assert.equal(result, true, "should return true"); 
+    });
+    QUnit.test("should return true if meeting start date and end date for meetings are the same (singular day)", function(assert) {
+        var meeting1 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-08-12T00:00:00'};
+        var meeting2 = {StartDate:'2016-08-12T00:00:00',EndDate:'2016-08-12T00:00:00'};
+        var result = mscSchedulizer.doMeetingDatesOverlap(meeting1, meeting2);
+
+        assert.equal(result, true, "should return true"); 
+    });
+
 QUnit.module("doMeetingsOverlap", {
   beforeEach: function() {
     // prepare something for all following tests
@@ -314,11 +365,13 @@ QUnit.module("doMeetingsOverlap", {
 
         assert.equal(result, false, "should return false"); 
     });
-    QUnit.test("should return true if meedays overlap and times overlap", function(assert) {
+    QUnit.test("should return true if meetdays overlap and times overlap and meeting dates overlap", function(assert) {
         var stub = sandbox.stub(mscSchedulizer,"doTimesOverlap");
         stub.returns(true);
         var stub2 = sandbox.stub(mscSchedulizer,"doDaysOverlap");
         stub2.returns(true);
+        var stub3 = sandbox.stub(mscSchedulizer,"doMeetingDatesOverlap");
+        stub3.returns(true);
         var section1meetings = [{StartTime:'1000',EndTime:'1200'}];
         var section2meetings = [{StartTime:'1000',EndTime:'1200'}];
         var result = mscSchedulizer.doMeetingsOverlap(section1meetings, section2meetings);
@@ -336,38 +389,16 @@ QUnit.module( "doSectionsOverlap", {
     sandbox.restore();
   }
 });
-    QUnit.test("should return false when meetings do not overlap and terms do not overlap", function(assert) {
+    QUnit.test("should return false when meetings do not overlap", function(assert) {
         var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
         stub.returns(false);
-        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
-        stub2.returns(false);
         var result = mscSchedulizer.doSectionsOverlap({}, {});
 
         assert.equal(result, false, "should return false"); 
     });
-    QUnit.test("should return false when meetings overlap and terms do not overlap", function(assert) {
+    QUnit.test("should return true when meetings overlap", function(assert) {
         var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
         stub.returns(true);
-        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
-        stub2.returns(false);
-        var result = mscSchedulizer.doSectionsOverlap({}, {});
-
-        assert.equal(result, false, "should return false"); 
-    });
-    QUnit.test("should return false when meetings do not overlap and terms overlap", function(assert) {
-        var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
-        stub.returns(false);
-        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
-        stub2.returns(true);
-        var result = mscSchedulizer.doSectionsOverlap({}, {});
-
-        assert.equal(result, false, "should return false"); 
-    });
-    QUnit.test("should return true when both meetings and terms overlap", function(assert) {
-        var stub = sandbox.stub(mscSchedulizer,"doMeetingsOverlap");
-        stub.returns(true);
-        var stub2 = sandbox.stub(mscSchedulizer,"doTermsOverlap");
-        stub2.returns(true);
         var result = mscSchedulizer.doSectionsOverlap({}, {});
 
         assert.equal(result, true, "should return true"); 
