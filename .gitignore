@@ -13,3 +13,5 @@ npm-debug.log
 # Config Files
 asset/js/config.js
 Web.config
+
+styles/*
