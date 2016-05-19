@@ -887,8 +887,9 @@ module.exports = {
         return false;
     },
     doMeetingDatesOverlap:function(meeting1,meeting2){
+        // One-day meetings have the same start and end date, in which case they should overlap
         if(meeting1.StartDate !== null && meeting1.EndDate !== null && meeting2.StartDate !== null && meeting2.EndDate !== null){
-          if((meeting1.StartDate <= meeting2.StartDate && meeting1.EndDate > meeting2.StartDate)||((meeting2.StartDate <= meeting1.StartDate && meeting2.EndDate > meeting1.StartDate))){
+          if((meeting1.StartDate <= meeting2.StartDate && meeting1.EndDate >= meeting2.StartDate)||((meeting2.StartDate <= meeting1.StartDate && meeting2.EndDate >= meeting1.StartDate))){
               return true;
           }
         }
@@ -916,9 +917,7 @@ module.exports = {
     },
     doSectionsOverlap:function(section1,section2){
         if(mscSchedulizer.doMeetingsOverlap(section1.Meetings,section2.Meetings)){
-            if(mscSchedulizer.doTermsOverlap(section1.CourseTerm,section2.CourseTerm)){
-                return true;
-            }
+            return true;
         }
         return false;
     },
