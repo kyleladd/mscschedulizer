@@ -2,6 +2,7 @@
 
 # Generated
 asset/js/schedulizer_bundle.js
+asset/js/schedulizer_bundle.min.js
 
 # Dependencies
 bower_components/*
