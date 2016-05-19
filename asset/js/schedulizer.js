@@ -886,6 +886,15 @@ module.exports = {
         }
         return false;
     },
+    doMeetingDatesOverlap:function(meeting1,meeting2){
+        // One-day meetings have the same start and end date, in which case they should overlap
+        if(meeting1.StartDate !== null && meeting1.EndDate !== null && meeting2.StartDate !== null && meeting2.EndDate !== null){
+          if((meeting1.StartDate <= meeting2.StartDate && meeting1.EndDate >= meeting2.StartDate)||((meeting2.StartDate <= meeting1.StartDate && meeting2.EndDate >= meeting1.StartDate))){
+              return true;
+          }
+        }
+        return false;
+    },
     doMeetingsOverlap:function(section1meetings,section2meetings){
         //for each meeting in section1
         if(typeof section1meetings !== 'undefined' && typeof section2meetings !== 'undefined'){
@@ -896,7 +905,9 @@ module.exports = {
                     var s2meeting = section2meetings[m];
                     if(mscSchedulizer.doTimesOverlap({StartTime:s1meeting.StartTime,EndTime:s1meeting.EndTime},{StartTime:s2meeting.StartTime,EndTime:s2meeting.EndTime})){
                         if(mscSchedulizer.doDaysOverlap(s1meeting,s2meeting)){
-                            return true;
+                            if(mscSchedulizer.doMeetingDatesOverlap(s1meeting,s2meeting)){
+                                return true;
+                            }
                         }
                     }
                 }
@@ -906,9 +917,7 @@ module.exports = {
     },
     doSectionsOverlap:function(section1,section2){
         if(mscSchedulizer.doMeetingsOverlap(section1.Meetings,section2.Meetings)){
-            if(mscSchedulizer.doTermsOverlap(section1.CourseTerm,section2.CourseTerm)){
-                return true;
-            }
+            return true;
         }
         return false;
     },
