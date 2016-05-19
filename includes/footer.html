@@ -31,7 +31,6 @@
 
   <!-- Go To Top Link -->
   <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
-  <script type="text/javascript" src="asset/js/schedulizer_bundle.min.js"></script>
   <script>
   $(function(){ 
     mscSchedulizer.setSemesterCurrentList(function(semesters_list){
@@ -46,28 +45,28 @@
       }
       mscSchedulizer.getSemestersSelect(semesters_list);
     
-    mscSchedulizer.loadSelections();
+      mscSchedulizer.loadSelections();
 
-    $(".share").click(function(event){
-      event.preventDefault();
-      // window.location.protocol + "//" + window.location.hostname + window.location.pathname
-      // window.location.href.split("#")[0].split("?")[0]
-      // window.location.href.split("#")[0]
-      var url = mscSchedulizer.exportURL(window.location.href.split("#")[0].split("?")[0],mscSchedulizer.semester.TermCode,mscSchedulizer.department);
-      new PNotify({
-          title: 'Schedule Saved',
-          text: 'URL to be shared: <a href="' + url + '">' + url + '</a>',
-          type: 'success',
-          buttons: {
-            closer_hover: false,
-            closer: true,
-            sticker: false
-          }
+      $(".share").click(function(event){
+        event.preventDefault();
+        // window.location.protocol + "//" + window.location.hostname + window.location.pathname
+        // window.location.href.split("#")[0].split("?")[0]
+        // window.location.href.split("#")[0]
+        var url = mscSchedulizer.exportURL(window.location.href.split("#")[0].split("?")[0],mscSchedulizer.semester.TermCode,mscSchedulizer.department);
+        new PNotify({
+            title: 'Schedule Saved',
+            text: 'URL to be shared: <a href="' + url + '">' + url + '</a>',
+            type: 'success',
+            buttons: {
+              closer_hover: false,
+              closer: true,
+              sticker: false
+            }
+        });
       });
     });
   });
-});
-    
+
   </script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
