@@ -156,37 +156,8 @@
         mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters)
         mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
     });
-
-    // Add Favorite
-    $("#"+mscSchedulizer_config.html_elements.schedules_container).on("click", "a.favorite_schedule", function (event) {
-          event.preventDefault();
-          //Add Course
-          var schedule = JSON.parse(unescape(this.getAttribute('data-value')));
-          if (node_generic_functions.searchListObjects(mscSchedulizer.favorite_schedules,schedule) === -1) {
-              mscSchedulizer.favorite_schedules.push(schedule);
-              localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
-              // Update Element so it can be unfavorited
-              $(this).addClass("unfavorite_schedule");
-              $(this).removeClass("favorite_schedule");
-              $(this).text("Unfavorite");
-          }
-      });
-      // Remove Favorite
-      $("#"+mscSchedulizer_config.html_elements.schedules_container).on("click", "a.unfavorite_schedule", function (event) {
-          event.preventDefault();
-          //Add Course
-          var schedule = JSON.parse(unescape(this.getAttribute('data-value')));
-          var index = node_generic_functions.searchListObjects(mscSchedulizer.favorite_schedules,schedule);
-          if (index !== -1) {
-              mscSchedulizer.favorite_schedules.splice(index, 1);
-              localStorage.setItem('favorite_schedules', JSON.stringify(mscSchedulizer.favorite_schedules));
-              // Update Element so it can be favorited
-              $(this).addClass("favorite_schedule");
-              $(this).removeClass("unfavorite_schedule");
-              $(this).text("Favorite");
-          }
-      });
   </script>
+  <script type="text/javascript" src="includes/addRemoveFavourites.js"></script>
 </body>
 
 
