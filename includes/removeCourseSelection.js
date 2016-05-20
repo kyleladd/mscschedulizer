@@ -11,7 +11,7 @@ $("#"+mscSchedulizer_config.html_elements.course_selections_list).on("click", "a
         //reload selections area
         mscSchedulizer.loadSelections();
         if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1), ["course-listings.html"])){
-          mscSchedulizer.getDepartmentCoursesDetails();
+            mscSchedulizer.refreshDepartmentCoursesDetails(course);
         }
     }
 });

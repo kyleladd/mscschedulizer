@@ -208,7 +208,7 @@ module.exports = {
         }
         return result;
     },
-    getDepartmentCoursesDetails: function(department){
+    getDepartmentCoursesDetails: function(department){ 
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(results){
             // Remove sections that are administrative entry
@@ -233,6 +233,18 @@ module.exports = {
                 modal.find('.modal-body').text((course.Description !== null ? course.Description : 'The course description is currently unavailable.'));
             });
         });
+    },
+    refreshDepartmentCoursesDetails: function(course){ 
+      if(course.CourseCRN === null)
+      {
+        var changedCourse = $(".a_course[data-value *= '" + escape(JSON.stringify(course)) + "']");
+        changedCourse.html("<i class=\"fa fa-plus-circle\"></i>");
+      }
+      else
+      {
+        var changedSection = $(".a_course_section[data-value *= " + course.CourseCRN + "]");
+        changedSection.removeClass('selected_section');
+      }
     },
     getDepartmentCoursesOutput: function(courses){
         var department_courses = JSON.parse(JSON.stringify(courses));
