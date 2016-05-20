@@ -159,7 +159,122 @@
 
     <div id="footer-container"></div>
   </div>
+  <script type="text/javascript" src="asset/js/schedulizer_bundle.min.js"></script>
   <script type="text/javascript" src="js/script.js"></script>
+<script>
+  $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+
+  mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+  mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);        // Department selected - View Department Courses
+  $("#"+mscSchedulizer_config.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+      if($("#"+mscSchedulizer_config.html_elements.departments_select).val() != ""){
+        mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
+          $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<div class=\"loader\"></div> <div class=\"status\">Loading Courses...</div>");
+          //Get From Endpoint - Department Courses
+          mscSchedulizer.getDepartmentCoursesDetails($("#"+mscSchedulizer_config.html_elements.departments_select).val());
+      }
+  });
+  $("#"+mscSchedulizer_config.html_elements.filters.not_full).click(function(){
+    mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
+    mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+    $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+    $('.course_details').basictable();
+  });
+  $("#"+mscSchedulizer_config.html_elements.filters.morrisville_campus).click(function(){
+      mscSchedulizer.schedule_filters.Campuses.Morrisville = !mscSchedulizer.schedule_filters.Campuses.Morrisville;
+      mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+      $('.course_details').basictable();
+  });
+  $("#"+mscSchedulizer_config.html_elements.filters.norwich_campus).click(function(){
+      mscSchedulizer.schedule_filters.Campuses.Norwich = !mscSchedulizer.schedule_filters.Campuses.Norwich;
+      mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+      $('.course_details').basictable();
+  });
+  $("#"+mscSchedulizer_config.html_elements.filters.show_online).click(function(){
+      mscSchedulizer.schedule_filters.ShowOnline = !mscSchedulizer.schedule_filters.ShowOnline;
+      mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+      $('.course_details').basictable();
+  });
+  $("#"+mscSchedulizer_config.html_elements.filters.show_international).click(function(){
+      mscSchedulizer.schedule_filters.ShowInternational = !mscSchedulizer.schedule_filters.ShowInternational;
+      mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+      $('.course_details').basictable();
+  });
+  //Semester select
+  $("#"+mscSchedulizer_config.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
+      mscSchedulizer.setSemesterVar(JSON.parse(unescape($("#"+mscSchedulizer_config.html_elements.semesters_select).val())));
+      $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<div class=\"loader\"></div> <div class=\"status\">Loading Courses...</div>");
+      //Get From Endpoint - Department Courses
+      mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);
+  });
+
+</script>
+<script type="text/javascript" src="includes/removeCourseSelection.js"></script>
+<script>
+
+    // Course selected - Add Course
+  $("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "a.a_course", function (event) {
+      event.preventDefault();
+      //Add Course
+      var course = JSON.parse(unescape(this.getAttribute('data-value')));
+      var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+      if (index === -1) {
+        mscSchedulizer.classes_selected.push(course);
+        $(this).html("<i class=\"fa fa-minus-circle\"></i>");
+      }
+      else{
+        // remove selection
+          mscSchedulizer.classes_selected.splice(index,1);
+          $(this).html("<i class=\"fa fa-plus-circle\"></i>");
+      }
+      // Store var and reload selections
+      localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+      //reload selections area
+      mscSchedulizer.loadSelections();
+  });
+  $("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "tr.a_course_section", function (event) {
+      event.preventDefault();
+      //Add Course
+      var selected_row = $(this);
+      var i = selected_row.parent('tbody');
+      var course = JSON.parse(unescape(this.getAttribute('data-value')));
+      var courseList = [course];
+      // courseList.push(course);
+      var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+      if (index === -1) {
+        mscSchedulizer.classes_selected.push(course);
+        $(i).find('tr').each(function(){
+          var aRow = $(this);
+          var rowCourse = JSON.parse(unescape(aRow.data("value")));
+          var rowIndex = node_generic_functions.searchListDictionaries(courseList,{'DepartmentCode':rowCourse.DepartmentCode,'CourseNumber':rowCourse.CourseNumber,'CourseTitle':rowCourse.CourseTitle,'CourseCRN':rowCourse.CourseCRN},true);
+          if(rowIndex!==-1){
+            aRow.addClass("selected_section");
+          }
+        });
+      }
+      else{
+        // remove selection
+        mscSchedulizer.classes_selected.splice(index,1);
+        $(i).find('tr').each(function(){
+          var aRow = $(this);
+          var rowCourse = JSON.parse(unescape(aRow.data("value")));
+          var rowIndex = node_generic_functions.searchListDictionaries(courseList,{'DepartmentCode':rowCourse.DepartmentCode,'CourseNumber':rowCourse.CourseNumber,'CourseTitle':rowCourse.CourseTitle,'CourseCRN':rowCourse.CourseCRN},true);
+          if(rowIndex!==-1){
+            aRow.removeClass("selected_section");
+          }
+        });
+      }
+      // Store var and reload selections
+      localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
+      // reload selections area
+      mscSchedulizer.loadSelections();
+  });
+
+</script>
 
 </body>
 
