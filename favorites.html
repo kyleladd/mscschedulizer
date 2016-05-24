@@ -107,21 +107,8 @@
 
     <div id="footer-container"></div>
 
-  
+  <script type="text/javascript" src="js/script.js"></script>
 </div>
-<script type="text/javascript" src="asset/js/schedulizer_bundle.min.js"></script>
-<script type="text/javascript" src="js/script.js"></script>
-
-<script>
-  //Load schedules from favorites array
-  mscSchedulizer.createSchedules(mscSchedulizer.favorite_schedules);
-  $(window).scroll(function(){
-    if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
-      mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
-    }
-  });
-</script>
-<script type="text/javascript" src="includes/addRemovefavorites.js"></script>
-
 </body>
+
 </html>

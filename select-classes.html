@@ -140,51 +140,8 @@
 
     <div id="footer-container"></div>
   </div>
-  <script type="text/javascript" src="asset/js/schedulizer_bundle.min.js"></script>
   <script type="text/javascript" src="js/script.js"></script>
 
-
-<script>
-  
-  mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCourses);
-  // Department selected - View Department Courses
-  $("#"+mscSchedulizer_config.html_elements.departments_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-      if($("#"+mscSchedulizer_config.html_elements.departments_select).val() != ""){
-          mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
-          $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li><div class=\"loader\"></div>  <div class=\"status\">Loading Courses...</div></li>");
-          //Get From Endpoint - Department Courses
-          mscSchedulizer.getDepartmentCourses($("#"+mscSchedulizer_config.html_elements.departments_select).val());
-      }
-  });
-
-  //Semester select
-  $("#"+mscSchedulizer_config.html_elements.semesters_select).on('changed.bs.select', function (e, clickedIndex, newValue, oldValue) {
-    mscSchedulizer.setSemesterVar(JSON.parse(unescape($("#"+mscSchedulizer_config.html_elements.semesters_select).val())));
-    $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li><div class=\"loader\"></div>  <div class=\"status\">Loading Courses...</div></li>");
-    //Get From Endpoint - Department Courses
-    mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCourses);
-  });
-
-</script>
-<script type="text/javascript" src="includes/removeCourseSelection.js"></script>
-<script>
-
-// Course selected - Add Course
-$("#"+mscSchedulizer_config.html_elements.department_class_list).on("click", "a.a_course", function (event) {
-  event.preventDefault();
-  //Add Course
-  var course = JSON.parse(unescape(this.getAttribute('data-value')));
-  var index = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
-  if (index === -1) {
-    mscSchedulizer.classes_selected.push(course);
-    // Store var and reload selections
-    localStorage.setItem('classes_selected', JSON.stringify(mscSchedulizer.classes_selected));
-    //reload selections area
-    mscSchedulizer.loadSelections();
-  }
-});
-    
-</script>
-
 </body>
+
 </html>
