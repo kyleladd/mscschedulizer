@@ -1070,6 +1070,7 @@ module.exports = {
                 $('#schedule_' + num).fullCalendar({
                     editable: false,
                     handleWindowResize: true,
+                    slotEventOverlap:false,
                     weekends: false, // Hide weekends
                     defaultView: 'agendaWeek', // Only show week view
                     header: false, // Hide buttons/titles
