@@ -1054,7 +1054,7 @@ module.exports = {
                 var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
                 var modal = $(this);
                 modal.find('.modal-title').text("Schedule Details");
-                modal.find('.modal-body').html(mscSchedulizer.exportLink(schedule) + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
+                modal.find('.modal-body').html('<div style=\'display:block;\'>' + mscSchedulizer.exportLink(schedule) + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
                 $('.course_details').basictable();
             });
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
@@ -1100,6 +1100,7 @@ module.exports = {
         result += mscSchedulizer.favoriteLinkOutput(schedule);
         result += mscSchedulizer.detailsLinkOutput(schedule);
         result += mscSchedulizer.previewLinkOutput(schedule);
+        result += mscSchedulizer.exportLink(schedule);
         result+="</div>";
         return result;
     },
@@ -1175,11 +1176,7 @@ module.exports = {
         return output;
     },
     exportLink:function(schedule){
-        var output = '';
-        output += '<div style=\'display:block;\'>';
-        output +=   '<a id=\'export_schedule\' onClick=\'mscSchedulizer.exportSchedule(mscSchedulizer.getScheduleCRNs("' + escape(JSON.stringify(schedule)) + '"));\'>Export Schedule - Beta</a>';
-        output += '</div>';
-        return output;
+        return '<a class=\'export_schedule\' onClick=\'mscSchedulizer.exportSchedule(mscSchedulizer.getScheduleCRNs("' + escape(JSON.stringify(schedule)) + '"));\'>Export Schedule</a>';
     },
     getScheduleCRNs:function(schedule){
         var crns = [];
