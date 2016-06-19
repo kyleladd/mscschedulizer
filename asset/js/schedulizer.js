@@ -7,5 +7,6 @@ var Semester = require('./models/semester.js').Semester;
 // var Term = require('./models/term.js').Term;
 // var Meeting = require('./models/meeting.js').Meeting;
 module.exports = {
-  Course: Course
+  Course: Course,
+  Semester: Semester
 };

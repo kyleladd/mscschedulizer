@@ -48,8 +48,8 @@ module.exports = function(grunt) {
         },
       },
       scripts: {
-        files: 'asset/js/*',
-        tasks: ['browserify','uglify'],
+        files: ['asset/js/**/*.js'],
+        tasks: ['browserify'],
         options: {
           spawn:false,
           event:['all']
