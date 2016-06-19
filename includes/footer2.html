@@ -1,0 +1,42 @@
+    <footer id="footer">
+      <div class="container">
+        <!-- Start Copyright -->
+        <div class="copyright-section">
+          <div class="row">
+            <div class="col-md-6">
+              <p>&copy; <span class="copy-year"></span> <a href="http://www.morrisville.edu">Morrisville State College</a> - All Rights Reserved</p>
+            </div>
+            <!-- .col-md-6 -->
+            <div class="col-md-6">
+              <ul class="footer-nav">
+                <li><a href="https://github.com/mscweb/mscschedulizer">GitHub</a>
+                </li>
+                <li><a href="mailto:web@morrisville.edu">Contact</a>
+                </li>
+              </ul>
+            </div>
+            <!-- .col-md-6 -->
+          </div>
+          <!-- .row -->
+        </div>
+        <!-- End Copyright -->
+
+      </div>
+    </footer>
+    <!-- End Footer Section -->
+
+
+  </div>
+  <!-- End Full Body Container -->
+
+  <!-- Go To Top Link -->
+  <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
+  <script type="text/javascript" src="asset/js/schedulizer_bundle.min.js"></script>
+  <script>
+  $(function(){
+    $.getJSON("http://schedulizer-api.morrisville.edu/courses/?include_objects=1&semester=201608",function(data){
+      var aCourse = new mscSchedulizer.msc_Course(data[0]);
+      console.log(aCourse);
+    });
+  });
+  </script>
