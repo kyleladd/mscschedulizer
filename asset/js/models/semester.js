@@ -5,55 +5,59 @@ var mscSchedulizer_config = require('../config.js');
 
 var Semester = function(api_obj){
   var obj = Object.create(Semester.prototype);
-  // obj.
-  // obj.DepartmentCode = api_obj.DepartmentCode;
-  // obj.SemesterNumber = api_obj.SemesterNumber;
-  // obj.SemesterTitle = api_obj.SemesterTitle;
-  // obj.Description = api_obj.Description;
-  // obj.Semester = api_obj.Semester;
-  // obj.DepartmentCode = api_obj.DepartmentCode;
-  // obj.DepartmentCode = api_obj.DepartmentCode;
+  try{
+    obj.TermCode = api_obj.TermCode;
+    obj.Description = api_obj.Description;
+    obj.TermStart = api_obj.TermStart;
+    obj.TermEnd = api_obj.TermEnd;
+  }
+  catch(err){
+      return null;
+  }
   return obj;
 };
-Semester.getCurrentList= function(){
+
+Semester.semestersFactory= function(list_json){
+  var list_obj = [];
+  if(list_json === null){
+    return null;
+  }
+    for(var i in list_json){
+      var obj = new Semester(list_json[i]);
+      if(obj != null){
+        list_obj.push(obj);
+      }
+    }
+  return list_obj;
+};
+
+Semester.getCurrentList = function(){
   return new Promise(function(resolve, reject) {
     var json = lscache.get("semesters");
-    console.log("semesters in cache",json);
-    console.log("semesters in cache type",typeof json);
     if (typeof json !== 'undefined' && json !== null) {
-      console.log("FROM CACHE", json);
-      resolve(json);
+      resolve(Semester.semestersFactory(json));
     } else {
-      // var semesters = Semester.fetchCurrentList();
       Semester.fetchCurrentList().then(function(response) {
-        // console.log("Success!", response);
-        console.log("SEMESTERS FROM API", response);
-        lscache.set("semesters", response, 10);
-        resolve(response);
+        //Cache semesters for 1 day
+        lscache.set("semesters", response, 1440);
+        resolve(Semester.semestersFactory(response));
       }, function(error) {
         console.error("Failed!", error);
+        // resolve(null);
       });
-      // console.log("SEMESTERS FROM API", semesters);
-      // lscache.set("semesters", semesters, 10);
-      // resolve(semesters);
-      // resolve(Semester.fetchCurrentList());
     }
   });
-}
+};
 Semester.fetchCurrentList= function(){
   return new Promise(function(resolve, reject) {
     request({
       uri: mscSchedulizer_config.api_host + "/semesters/",
       method: "GET"
     }, function(error, response, body) {
-      console.log("error",error);
-      console.log("response",response);
-      console.log("body",body);
-      resolve(body);
-      // return body;
+      resolve(JSON.parse(body));
     });
   });
-}
+};
 module.exports = {
   Semester: Semester
 };
