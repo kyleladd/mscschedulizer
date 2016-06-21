@@ -1,6 +1,7 @@
 var lscache = require('lscache');
 var request = require("request");
 
+var Semester = require('./semester.js').Semester;
 var mscSchedulizer_config = require('../config.js');
 
 var Department = function(api_obj){
@@ -9,7 +10,10 @@ var Department = function(api_obj){
     obj.DepartmentCode = api_obj.DepartmentCode;
     obj.Name = api_obj.Name;
     obj.Semester = api_obj.Semester;
-    obj.SemesterObject = api_obj.SemesterObject;
+    obj.SemesterObject = null;
+    if(api_obj.SemesterObject !== null){
+      obj.SemesterObject = new Semester(api_obj.SemesterObject);
+    }
   }
   catch(err){
       return null;
@@ -31,7 +35,7 @@ Department.departmentsFactory= function(list_json){
   return list_obj;
 };
 
-Department.fetchDepartments= function(semester){
+Department.getDepartments= function(semester){
   return new Promise(function(resolve, reject) {
     request({
       uri: mscSchedulizer_config.api_host + "/departments/?semester="+semester,

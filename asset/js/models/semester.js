@@ -35,6 +35,7 @@ Semester.getCurrentList = function(){
   return new Promise(function(resolve, reject) {
     var json = lscache.get("semesters");
     if (typeof json !== 'undefined' && json !== null) {
+      console.log("Fetching semesters from Cache");
       resolve(Semester.semestersFactory(json));
     } else {
       Semester.fetchCurrentList().then(function(response) {
@@ -49,6 +50,7 @@ Semester.getCurrentList = function(){
   });
 };
 Semester.fetchCurrentList= function(){
+  console.log("Fetching semesters from API");
   return new Promise(function(resolve, reject) {
     request({
       uri: mscSchedulizer_config.api_host + "/semesters/",
