@@ -1,5 +1,6 @@
 var lscache = require('lscache');
 var request = require("request");
+var RSVP = require('rsvp');
 
 var Semester = require('./semester.js').Semester;
 var mscSchedulizer_config = require('../config.js');
@@ -21,7 +22,7 @@ var Department = function(api_obj){
   return obj;
 };
 
-Department.departmentsFactory= function(list_json){
+Department.departmentsFactory = function(list_json){
   var list_obj = [];
   if(list_json === null){
     return null;
@@ -35,8 +36,8 @@ Department.departmentsFactory= function(list_json){
   return list_obj;
 };
 
-Department.getDepartments= function(semester){
-  return new Promise(function(resolve, reject) {
+Department.getDepartments = function(semester){
+  return new RSVP.Promise(function(resolve, reject) {
     request({
       uri: mscSchedulizer_config.api_host + "/departments/?semester="+semester,
       method: "GET"
@@ -45,6 +46,15 @@ Department.getDepartments= function(semester){
     });
   });
 };
+Department.departmentsSelect = function(departments){
+  var output = "";
+  for (var i in departments) {
+      var department = departments[i];
+      //  " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + "
+      output += "<option class='a_department' value='"+ department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
+  }
+  return output;
+}
 module.exports = {
   Department: Department
 };

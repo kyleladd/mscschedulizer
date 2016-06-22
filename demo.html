@@ -172,12 +172,12 @@
   $(function(){
     // Get semesters list
     // lscache.flush();
-    mscSchedulizer.Semester.getCurrentList().then(function(response) {
-      console.log("Success!", response);
-      return response;
-    }).then(function(response){
-      mscSchedulizer.Department.getDepartments(response[1].TermCode).then(function(response){
-        console.log("Success!", response);
+    mscSchedulizer.Semester.getCurrentList().then(function(semesters) {
+      console.log("Success!", semesters);
+      return semesters;
+    }).then(function(semesters){
+      mscSchedulizer.Department.getDepartments(semesters[1].TermCode).then(function(departments){
+        console.log("Success!", departments);
       });
     });
     //

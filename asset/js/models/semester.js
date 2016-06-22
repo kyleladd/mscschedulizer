@@ -1,5 +1,6 @@
 var lscache = require('lscache');
 var request = require("request");
+var RSVP = require('rsvp');
 
 var mscSchedulizer_config = require('../config.js');
 
@@ -32,7 +33,7 @@ Semester.semestersFactory= function(list_json){
 };
 
 Semester.getCurrentList = function(){
-  return new Promise(function(resolve, reject) {
+  return new RSVP.Promise(function(resolve, reject) {
     var json = lscache.get("semesters");
     if (typeof json !== 'undefined' && json !== null) {
       console.log("Fetching semesters from Cache");
@@ -49,9 +50,10 @@ Semester.getCurrentList = function(){
     }
   });
 };
+
 Semester.fetchCurrentList= function(){
   console.log("Fetching semesters from API");
-  return new Promise(function(resolve, reject) {
+  return new RSVP.Promise(function(resolve, reject) {
     request({
       uri: mscSchedulizer_config.api_host + "/semesters/",
       method: "GET"
@@ -60,6 +62,22 @@ Semester.fetchCurrentList= function(){
     });
   });
 };
+
+Semester.semestersSelect = function(semesters_list){
+    var output = "";
+    for (var i in semesters_list){
+        var semester = semesters_list[i];
+        // if(semester.TermCode ==  lscache.get("semester").TermCode){
+        //     output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' selected=\"selected\">" + semester.Description + "</option>";
+        // }
+        // else{
+            output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "'>" + semester.Description + "</option>";
+        // }
+    }
+    // $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
+    return output;
+};
+
 module.exports = {
   Semester: Semester
 };
