@@ -54,7 +54,26 @@ Department.departmentsSelect = function(departments){
       output += "<option class='a_department' value='"+ department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
   }
   return output;
-}
+};
+// getDetpartmentCourses
+Department.prototype.getCourses: function(){
+//     department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
+//     $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(results){
+//         //remove this later
+//         var output = "";
+//         // Remove sections that are administrative entry
+//         results = mscSchedulizer.removeAdministrativeSections(results);
+//         for (var i in results) {
+//             var course = results[i];
+//             //Change to just one html output set
+//             output += "<li><a class='a_course' data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
+//         }
+//         $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
+//     })
+//     .fail(function() {
+//         $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li>Unable to load courses.</li>");
+//     });
+};
 module.exports = {
   Department: Department
 };
