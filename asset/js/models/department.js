@@ -25,11 +25,11 @@ var Department = function(api_obj){
 Department.departmentsFactory = function(list_json){
   var list_obj = [];
   if(list_json === null){
-    return null;
+    return list_obj;
   }
   for(var i in list_json){
     var obj = new Department(list_json[i]);
-    if(obj != null){
+    if(obj !== null){
       list_obj.push(obj);
     }
   }

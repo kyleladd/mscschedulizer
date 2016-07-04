@@ -8,13 +8,24 @@ var mscSchedulizer_config = require('../config.js');
 var Section = function(api_obj){
   var obj = Object.create(Section.prototype);
   try{
-    // obj.DepartmentCode = api_obj.DepartmentCode;
-    // obj.Name = api_obj.Name;
-    // obj.Semester = api_obj.Semester;
-    // obj.SemesterObject = null;
-    // if(api_obj.SemesterObject !== null){
-    //   obj.SemesterObject = new Semester(api_obj.SemesterObject);
-    // }
+    obj.CourseCRN = api_obj.CourseCRN;
+    obj.DepartmentCode = api_obj.DepartmentCode;
+    obj.CourseNumber = api_obj.CourseNumber;
+    obj.CourseTitle = api_obj.CourseTitle;
+    obj.SectionNumber = api_obj.SectionNumber;
+    obj.Credits = api_obj.Credits;
+    obj.CurrentEnrollment = api_obj.CurrentEnrollment;
+    obj.MaxEnrollment = api_obj.MaxEnrollment;
+    obj.Campus = api_obj.Campus;
+    obj.Identifier = api_obj.Identifier;
+    obj.Term = api_obj.Term;
+    obj.Instructor = api_obj.Instructor;
+    obj.SectionAttributes = api_obj.SectionAttributes;
+    obj.RequiredIdentifiers = api_obj.RequiredIdentifiers;
+    obj.Meetings = Meeting.meetingsFactory(api_obj.Meetings);
+    obj.CourseTerm = new CourseTerm(api_obj.CourseTerm);
+    obj.Semester = api_obj.Semester;
+    obj.SemesterObject = new Semester(api_obj.SemesterObject);
   }
   catch(err){
       return null;
@@ -25,11 +36,11 @@ var Section = function(api_obj){
 Section.sectionsFactory = function(list_json){
   var list_obj = [];
   if(list_json === null){
-    return null;
+    return list_obj;
   }
   for(var i in list_json){
     var obj = new Section(list_json[i]);
-    if(obj != null){
+    if(obj !== null){
       list_obj.push(obj);
     }
   }

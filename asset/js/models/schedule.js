@@ -6,19 +6,14 @@ var Semester = require('./semester.js').Semester;
 var mscSchedulizer_config = require('../config.js');
 
 var Schedule = function(api_obj){
-  var obj = Object.create(Department.prototype);
-  try{
-    return obj;
-    // obj.DepartmentCode = api_obj.DepartmentCode;
-    // obj.Name = api_obj.Name;
-    // obj.Semester = api_obj.Semester;
-    // obj.SemesterObject = null;
-    // if(api_obj.SemesterObject !== null){
-    //   obj.SemesterObject = new Semester(api_obj.SemesterObject);
-    // }
+  var obj = Object.create(Schedule.prototype);
+  try
+  {
+    // Schedules just contain lists of courses and do not come directly from the api, but are combination generated
+    obj.Courses = Course.coursesFactory(api_obj);
   }
   catch(err){
-      return null;
+    return null;
   }
   return obj;
 };
@@ -26,11 +21,11 @@ var Schedule = function(api_obj){
 Schedule.schedulesFactory = function(list_json){
   var list_obj = [];
   if(list_json === null){
-    return null;
+    return list_obj;
   }
   for(var i in list_json){
     var obj = new Schedule(list_json[i]);
-    if(obj != null){
+    if(obj !== null){
       list_obj.push(obj);
     }
   }

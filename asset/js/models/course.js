@@ -1,14 +1,34 @@
 var Course = function(api_obj){
   var obj = Object.create(Course.prototype);
-  // obj.
-  obj.DepartmentCode = api_obj.DepartmentCode;
-  obj.CourseNumber = api_obj.CourseNumber;
-  obj.CourseTitle = api_obj.CourseTitle;
-  obj.Description = api_obj.Description;
-  obj.Semester = api_obj.Semester;
-  // obj.DepartmentCode = api_obj.DepartmentCode;
-  // obj.DepartmentCode = api_obj.DepartmentCode;
+  try
+  {
+    obj.DepartmentCode = api_obj.DepartmentCode;
+    obj.CourseNumber = api_obj.CourseNumber;
+    obj.CourseTitle = api_obj.CourseTitle;
+    obj.Description = api_obj.Description;
+    obj.Semester = api_obj.Semester;
+    obj.Sections = Sections.sectionsFactory(api_obj.Sections);
+    obj.Department = new Department(api_obj.Department);
+    obj.SemesterObject = new Semester(api_obj.SemesterObject);
+  }
+  catch(err){
+    return null;
+  }
   return obj;
+};
+
+Course.coursesFactory = function(list_json){
+  var list_obj = [];
+  if(list_json === null){
+    return list_obj;
+  }
+  for(var i in list_json){
+    var obj = new Course(list_json[i]);
+    if(obj !== null){
+      list_obj.push(obj);
+    }
+  }
+  return list_obj;
 };
 
 Course.prototype.groupSections = function(){

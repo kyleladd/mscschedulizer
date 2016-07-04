@@ -5,19 +5,23 @@ var RSVP = require('rsvp');
 var Semester = require('./semester.js').Semester;
 var mscSchedulizer_config = require('../config.js');
 
-var Department = function(api_obj){
+var Meeting = function(api_obj){
   var obj = Object.create(Meeting.prototype);
-  try{
-    // obj.DepartmentCode = api_obj.DepartmentCode;
-    // obj.Name = api_obj.Name;
-    // obj.Semester = api_obj.Semester;
-    // obj.SemesterObject = null;
-    // if(api_obj.SemesterObject !== null){
-    //   obj.SemesterObject = new Semester(api_obj.SemesterObject);
-    // }
+  try
+  {
+    obj.Id = api_obj.Id;
+    obj.CourseCRN = api_obj.CourseCRN;
+    obj.Monday = api_obj.Monday;
+    obj.Tuesday = api_obj.Tuesday;
+    obj.Wednesday = api_obj.Wednesday;
+    obj.Thursday = api_obj.Thursday;
+    obj.Friday = api_obj.Friday;
+    obj.StartTime = api_obj.StartTime;
+    obj.EdnTime = api_obj.EdnTime;
+    obj.Semester = api_obj.Semester;
   }
   catch(err){
-      return null;
+    return null;
   }
   return obj;
 };
@@ -25,11 +29,11 @@ var Department = function(api_obj){
 Meeting.meetingsFactory = function(list_json){
   var list_obj = [];
   if(list_json === null){
-    return null;
+    return list_obj;
   }
   for(var i in list_json){
     var obj = new Meeting(list_json[i]);
-    if(obj != null){
+    if(obj !== null){
       list_obj.push(obj);
     }
   }
