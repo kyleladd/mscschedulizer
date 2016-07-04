@@ -36,7 +36,7 @@ Meeting.meetingsFactory = function(list_json){
   return list_obj;
 };
 
-Meeting.mergeDays=function(meeting1,meeting2){
+Meeting.mergeDays = function(meeting1,meeting2){
     var meeting = meeting1;
     if(!Boolean(meeting.Monday) && Boolean(meeting2.Monday)){
         meeting.Monday = 1;

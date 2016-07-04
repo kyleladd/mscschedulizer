@@ -71,7 +71,7 @@ Schedule.exportSchedule = function(crns){
         sticker: false
       }
   });
-},
+};
 module.exports = {
   Schedule: Schedule
 };

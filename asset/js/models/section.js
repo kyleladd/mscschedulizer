@@ -36,7 +36,7 @@ Section.sectionsFactory = function(list_json){
   return list_obj;
 };
 
-Section.prototype.groupMeetings=function(){
+Section.prototype.groupMeetings = function(){
     groupedMeetings = [];
     for (var m in meetings) {
         var meeting = meetings[m];
@@ -52,7 +52,7 @@ Section.prototype.groupMeetings=function(){
 };
 // This might need some work because days list is somethimes merged if a section has more than one meeting
 // Perhaps this will go within the section.js?
-Section.prototype.daysList= function(include_empty){
+Section.prototype.daysList = function(include_empty){
     include_empty = typeof include_empty !== 'undefined' ? include_empty : true;
     var result = [];
     if(Boolean(meeting.Monday)){

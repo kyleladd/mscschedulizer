@@ -56,7 +56,7 @@ Department.departmentsSelect = function(departments){
   return output;
 };
 // getDetpartmentCourses
-Department.prototype.getCourses: function(){
+Department.prototype.getCourses = function(){
 //     department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
 //     $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(results){
 //         //remove this later

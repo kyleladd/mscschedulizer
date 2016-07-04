@@ -51,7 +51,7 @@ Semester.getCurrentList = function(){
   });
 };
 
-Semester.fetchCurrentList= function(){
+Semester.fetchCurrentList = function(){
   console.log("Fetching semesters from API");
   return new RSVP.Promise(function(resolve, reject) {
     request({

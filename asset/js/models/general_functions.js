@@ -47,7 +47,7 @@ General.getCookie = function(c_name) {
         }
     }
 };
-General.queryData:function(queryString, preserveDuplicates){
+General.queryData = function(queryString, preserveDuplicates){
   // http://code.stephenmorley.org/javascript/parsing-query-strings-for-get-data/
   var result = {};
   // if a query string wasn't specified, use the query string from the URL
@@ -80,6 +80,18 @@ General.queryData:function(queryString, preserveDuplicates){
     }
   }
   return result;
+};
+General.isScrolledIntoView = function(elem) {
+    var $elem = $(elem);
+    var $window = $(window);
+
+    var docViewTop = $window.scrollTop();
+    var docViewBottom = docViewTop + $window.height();
+
+    var elemTop = $elem.offset().top;
+    var elemBottom = elemTop + $elem.height();
+    // && for entire element || for any part of the element
+    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
 module.exports = {
   General: General
