@@ -92,7 +92,9 @@ Section.prototype.daysList = function(include_empty){
     }
     return result;
 };
-
+Section.sort = function(a,b){
+    return node_generic_functions.alphaNumericSort(a.SectionNumber,b.SectionNumber);
+};
 
 module.exports = {
   Section: Section

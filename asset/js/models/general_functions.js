@@ -7,7 +7,7 @@ var mscSchedulizer_config = require('../config.js');
 
 var General = {};
 
-General.getTLD:function(url_location){
+General.getTLD =function(url_location){
     var parts = url_location.hostname.split('.');
     var sndleveldomain = parts.slice(-2).join('.');
     return sndleveldomain;

@@ -54,7 +54,13 @@ Meeting.mergeDays = function(meeting1,meeting2){
         meeting.Friday = 1;
     }
     return meeting;
-},
+};
+Meeting.sort = function(a, b) {
+    if(moment(a.StartTime,"Hmm").isValid() && moment(b.StartTime,"Hmm").isValid()){
+        return moment(a.StartTime,"Hmm") - moment(b.StartTime,"Hmm");
+    }
+    return 0;
+};
 
 
 module.exports = {
