@@ -1,9 +1,9 @@
-// var lscache = require('lscache');
-// // var request = require("request");
-// var Promise = require("bluebird");
-//
-// var Semester = require('./semester.js').Semester;
-// var mscSchedulizer_config = require('../config.js');
+var lscache = require('lscache');
+var httpplease = require("httpplease");
+var Promise = require('rsvp').Promise;
+
+var Semester = require('./semester.js').Semester;
+var mscSchedulizer_config = require('../config.js');
 
 var Schedule = function(api_obj){
   var obj = Object.create(Schedule.prototype);
@@ -33,22 +33,18 @@ Schedule.schedulesFactory = function(list_json){
 };
 
 Schedule.getSchedule = function(crns,semester){
-  return new RSVP.Promise(function(resolve, reject) {
-    request({
-      uri: mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+semester;
-      method: "GET"
-    }, function(error, response, body) {
-      resolve(new Schedule(JSON.parse(body)));
+  return new Promise(function(resolve, reject) {
+    httpplease.get(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+semester, function (err, res) {
+      resolve(new Schedule(JSON.parse(res.ody)));
+      // If error, reject
     });
   });
 };
 Schedule.getSchedules = function(selections,semester){
-  return new RSVP.Promise(function(resolve, reject) {
-    request({
-      uri: mscSchedulizer_config.api_host + "/departments/?semester="+semester,
-      method: "GET"
-    }, function(error, response, body) {
-      resolve(Schedule.schedulesFactory(JSON.parse(body)));
+  return new Promise(function(resolve, reject) {
+    httpplease.get(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+semester, function (err, res) {
+      resolve(Schedule.schedulesFactory(JSON.parse(res.ody)));
+      // If error, reject
     });
   });
 };

@@ -1,9 +1,5 @@
-// var lscache = require('lscache');
-// // var request = require("request");
-// var Promise = require("bluebird");
-//
-// var Semester = require('./semester.js').Semester;
-// var mscSchedulizer_config = require('../config.js');
+var Combinatorics = require('js-combinatorics');
+var node_generic_functions = require('node_generic_functions');
 
 var Generate = function(api_obj){
   var obj = Object.create(Generate.prototype);

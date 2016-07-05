@@ -1,9 +1,4 @@
-// var lscache = require('lscache');
-// // var request = require("request");
-// var Promise = require("bluebird");
-//
-// var Semester = require('./semester.js').Semester;
-// var mscSchedulizer_config = require('../config.js');
+var moment = require('moment');
 
 var Meeting = function(api_obj){
   var obj = Object.create(Meeting.prototype);

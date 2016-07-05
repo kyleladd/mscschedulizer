@@ -1,10 +1,9 @@
 var lscache = require('lscache');
 var httpplease = require("httpplease");
-// var Promise = require("bluebird");
 var Promise = require('rsvp').Promise;
-//
+
 var Semester = require('./semester.js').Semester;
-// var mscSchedulizer_config = require('../config.js');
+var mscSchedulizer_config = require('../config.js');
 
 var Department = function(api_obj){
   var obj = Object.create(Department.prototype);
@@ -37,11 +36,11 @@ Department.departmentsFactory = function(list_json){
 
 Department.getDepartments = function(semester){
   return new Promise(function(resolve, reject) {
-        httpplease.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function (err, res) {
-          // Do something with the result.
-          resolve(Department.departmentsFactory(JSON.parse(res.body)));
-      });
+    httpplease.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function (err, res) {
+      resolve(Department.departmentsFactory(JSON.parse(res.body)));
+      // If error, reject
     });
+  });
 };
 Department.departmentsSelect = function(departments){
   var output = "";

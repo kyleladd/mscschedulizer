@@ -1,11 +1,7 @@
-// var lscache = require('lscache');
-// // var request = require("request");
-// var needle = require('needle');
-// var Promise = require("bluebird");
-// var node_generic_functions = require('node_generic_functions');
-//
-// var Semester = require('./semester.js').Semester;
-// var mscSchedulizer_config = require('../config.js');
+var node_generic_functions = require('node_generic_functions');
+
+var CourseTerm = require('./courseTerm.js').CourseTerm;
+var Semester = require('./semester.js').Semester;
 
 var Section = function(api_obj){
   var obj = Object.create(Section.prototype);
