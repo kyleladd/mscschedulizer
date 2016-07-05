@@ -34,8 +34,8 @@ Course.coursesFactory = function(list_json){
 Course.prototype.groupSections = function(){
     // Sections are to be grouped by Campus and by identifier
     var grouped_sections = {};
-    for (var i in course_sections) {
-      var course_section = course_sections[i];
+    for (var i in this.Sections) {
+      var course_section = this.Sections[i];
       var identifier = course_section.Identifier;
       var campus = course_section.Campus;
       // Apply Filters To SECTION

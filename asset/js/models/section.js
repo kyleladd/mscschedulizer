@@ -1,6 +1,8 @@
 var lscache = require('lscache');
-var request = require("request");
-var RSVP = require('rsvp');
+// var request = require("request");
+var needle = require('needle');
+var Promise = require("bluebird");
+var node_generic_functions = require('node_generic_functions');
 
 var Semester = require('./semester.js').Semester;
 var mscSchedulizer_config = require('../config.js');
@@ -60,6 +62,30 @@ Section.prototype.groupMeetings = function(){
         }
     }
     return groupedMeetings;
+};
+Section.prototype.applyFilters = function(filters){
+    var section = this;
+    var filteredOut = false;
+    filteredOut = mscSchedulizer.requiredFilters(section);
+    if(typeof filters.Campuses !== "undefined" && filteredOut === false){
+        filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
+    }
+    // if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
+    //     filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
+    // }
+    if(typeof filters.TimeBlocks !== "undefined" && filters.TimeBlocks != [] && filteredOut === false){
+        filteredOut = mscSchedulizer.timeBlockFilter(section,filters.TimeBlocks);
+    }
+    if(typeof filters.NotFull !== "undefined" && filters.NotFull !== false && filteredOut === false){
+        filteredOut = mscSchedulizer.notFullFilter(section,filters.NotFull);
+    }
+    if((typeof filters.ShowOnline == "undefined" || filters.ShowOnline === false) && filteredOut === false){
+        filteredOut = mscSchedulizer.hideOnlineFilter(section,filters.ShowOnline);
+    }
+    if((typeof filters.ShowInternational === "undefined" || filters.ShowInternational === false) && filteredOut === false){
+        filteredOut = mscSchedulizer.hideInternationalFilter(section,filters.ShowInternational);
+    }
+    return filteredOut;
 };
 // This might need some work because days list is somethimes merged if a section has more than one meeting
 // Perhaps this will go within the section.js?

@@ -49,7 +49,7 @@ module.exports = function(grunt) {
       },
       scripts: {
         files: ['asset/js/**/*.js'],
-        tasks: ['browserify'],
+        tasks: ['browserify','uglify'],
         options: {
           spawn:false,
           event:['all']

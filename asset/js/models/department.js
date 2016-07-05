@@ -1,6 +1,7 @@
 var lscache = require('lscache');
-var request = require("request");
-var RSVP = require('rsvp');
+// var request = require("request");
+var needle = require('needle');
+var Promise = require("bluebird");
 
 var Semester = require('./semester.js').Semester;
 var mscSchedulizer_config = require('../config.js');
@@ -12,9 +13,7 @@ var Department = function(api_obj){
     obj.Name = api_obj.Name;
     obj.Semester = api_obj.Semester;
     obj.SemesterObject = null;
-    if(api_obj.SemesterObject !== null){
-      obj.SemesterObject = new Semester(api_obj.SemesterObject);
-    }
+    obj.SemesterObject = new Semester(api_obj.SemesterObject);
   }
   catch(err){
       return null;
@@ -37,12 +36,21 @@ Department.departmentsFactory = function(list_json){
 };
 
 Department.getDepartments = function(semester){
-  return new RSVP.Promise(function(resolve, reject) {
-    request({
-      uri: mscSchedulizer_config.api_host + "/departments/?semester="+semester,
-      method: "GET"
-    }, function(error, response, body) {
-      resolve(Department.departmentsFactory(JSON.parse(body)));
+  return new Promise(function(resolve, reject) {
+    needle.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function(error, response) {
+      if (!error && response.statusCode == 200){
+        console.log(response.body);
+        resolve(Department.departmentsFactory(JSON.parse(body)));
+      }
+      else{
+        reject("Something went wrong fetching departments");
+      }
+    // request({
+    //   uri: mscSchedulizer_config.api_host + "/departments/?semester="+semester,
+    //   method: "GET"
+    // }, function(error, response, body) {
+    //   resolve(Department.departmentsFactory(JSON.parse(body)));
+    // });
     });
   });
 };

@@ -1,6 +1,6 @@
 var lscache = require('lscache');
-var request = require("request");
-var RSVP = require('rsvp');
+// var request = require("request");
+var Promise = require("bluebird");
 
 var mscSchedulizer_config = require('../config.js');
 
@@ -135,29 +135,6 @@ Filter.requiredFilters = function(section){
   filteredOut = mscSchedulizer.concurrentEnrollmentFilter(section);
   return filteredOut;
 };
-// applyFiltersToSection = function(section,filters){
-//     var filteredOut = false;
-//     filteredOut = mscSchedulizer.requiredFilters(section);
-//     if(typeof filters.Campuses !== "undefined" && filteredOut === false){
-//         filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
-//     }
-//     // if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
-//     //     filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
-//     // }
-//     if(typeof filters.TimeBlocks !== "undefined" && filters.TimeBlocks != [] && filteredOut === false){
-//         filteredOut = mscSchedulizer.timeBlockFilter(section,filters.TimeBlocks);
-//     }
-//     if(typeof filters.NotFull !== "undefined" && filters.NotFull !== false && filteredOut === false){
-//         filteredOut = mscSchedulizer.notFullFilter(section,filters.NotFull);
-//     }
-//     if((typeof filters.ShowOnline == "undefined" || filters.ShowOnline === false) && filteredOut === false){
-//         filteredOut = mscSchedulizer.hideOnlineFilter(section,filters.ShowOnline);
-//     }
-//     if((typeof filters.ShowInternational === "undefined" || filters.ShowInternational === false) && filteredOut === false){
-//         filteredOut = mscSchedulizer.hideInternationalFilter(section,filters.ShowInternational);
-//     }
-//     return filteredOut;
-// },
 Filter.professor = function(section,filter){
     return false;
 };
