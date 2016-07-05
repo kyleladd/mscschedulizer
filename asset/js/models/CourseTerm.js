@@ -1,9 +1,9 @@
-var lscache = require('lscache');
-// var request = require("request");
-var Promise = require("bluebird");
-
-var Semester = require('./semester.js').Semester;
-var mscSchedulizer_config = require('../config.js');
+// var lscache = require('lscache');
+// // var request = require("request");
+// var Promise = require("bluebird");
+//
+// var Semester = require('./semester.js').Semester;
+// var mscSchedulizer_config = require('../config.js');
 
 var CourseTerm = function(api_obj){
   var obj = Object.create(CourseTerm.prototype);
@@ -32,4 +32,7 @@ CourseTerm.courseTermsFactory = function(list_json){
     }
   }
   return list_obj;
+};
+module.exports = {
+  CourseTerm: CourseTerm
 };

@@ -1,9 +1,9 @@
-var lscache = require('lscache');
-// var request = require("request");
-var Promise = require("bluebird");
-
-var Semester = require('./semester.js').Semester;
-var mscSchedulizer_config = require('../config.js');
+// var lscache = require('lscache');
+// // var request = require("request");
+// var Promise = require("bluebird");
+//
+// var Semester = require('./semester.js').Semester;
+// var mscSchedulizer_config = require('../config.js');
 
 var Meeting = function(api_obj){
   var obj = Object.create(Meeting.prototype);
@@ -68,5 +68,5 @@ Meeting.sort = function(a, b) {
 
 
 module.exports = {
-  Department: Department
+  Meeting: Meeting
 };

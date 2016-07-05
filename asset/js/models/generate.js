@@ -1,9 +1,9 @@
-var lscache = require('lscache');
-// var request = require("request");
-var Promise = require("bluebird");
-
-var Semester = require('./semester.js').Semester;
-var mscSchedulizer_config = require('../config.js');
+// var lscache = require('lscache');
+// // var request = require("request");
+// var Promise = require("bluebird");
+//
+// var Semester = require('./semester.js').Semester;
+// var mscSchedulizer_config = require('../config.js');
 
 var Generate = function(api_obj){
   var obj = Object.create(Generate.prototype);
@@ -246,4 +246,7 @@ Generate.doSectionsOverlap = function(section1,section2){
         return true;
     }
     return false;
+};
+module.exports = {
+  Generate: Generate
 };

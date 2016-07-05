@@ -1,9 +1,9 @@
-var lscache = require('lscache');
-// var request = require("request");
-var needle = require('needle');
-var Promise = require("bluebird");
-
-var mscSchedulizer_config = require('../config.js');
+// var lscache = require('lscache');
+// // var request = require("request");
+// var needle = require('needle');
+// var Promise = require("bluebird");
+//
+// var mscSchedulizer_config = require('../config.js');
 
 var Semester = function(api_obj){
   var obj = Object.create(Semester.prototype);

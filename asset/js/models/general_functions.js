@@ -1,9 +1,9 @@
-var lscache = require('lscache');
-// var request = require("request");
-var Promise = require("bluebird");
-
-// var Semester = require('./semester.js').Semester;
-var mscSchedulizer_config = require('../config.js');
+// var lscache = require('lscache');
+// // var request = require("request");
+// var Promise = require("bluebird");
+//
+// // var Semester = require('./semester.js').Semester;
+// var mscSchedulizer_config = require('../config.js');
 
 var General = {};
 

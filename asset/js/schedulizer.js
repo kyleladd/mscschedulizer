@@ -1,5 +1,10 @@
-var node_generic_functions = require('node_generic_functions');
-var mscSchedulizer_config = require('./config.js');
+// var lscache = require('lscache');
+// // var request = require("request");
+// var needle = require('needle');
+// // var Promise = require("bluebird");
+//
+// // var node_generic_functions = require('node_generic_functions');
+// var mscSchedulizer_config = require('./config.js');
 var Course = require('./models/course.js').Course;
 var Department = require('./models/department.js').Department;
 // var Section = require('./models/coursesection.js').Section;
