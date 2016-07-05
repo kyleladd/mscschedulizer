@@ -1,6 +1,7 @@
 var lscache = require('lscache');
 // var request = require("request");
-var Promise = require("bluebird");
+// var Promise = require("bluebird");
+var Promise = require('rsvp').Promise;
 
 var mscSchedulizer_config = require('../config.js');
 
