@@ -1,6 +1,10 @@
 var lscache = require('lscache');
 // // var request = require("request");
-var needle = require('needle');
+// var needle = require('needle');
+// var got = require('got');
+// var request = require('httpify')
+var httpplease = require("httpplease");
+
 var Promise = require("bluebird");
 //
 var Semester = require('./semester.js').Semester;
@@ -37,22 +41,40 @@ Department.departmentsFactory = function(list_json){
 
 Department.getDepartments = function(semester){
   return new Promise(function(resolve, reject) {
-    needle.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function(error, response) {
-      if (!error && response.statusCode == 200){
-        console.log(response.body);
-        resolve(Department.departmentsFactory(JSON.parse(body)));
-      }
-      else{
-        reject("Something went wrong fetching departments");
-      }
+  //   needle.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function(error, response) {
+  //     if (!error && response.statusCode == 200){
+  //       console.log(response.body);
+  //       resolve(Department.departmentsFactory(JSON.parse(body)));
+  //     }
+  //     else{
+  //       reject("Something went wrong fetching departments");
+  //     }
     // request({
     //   uri: mscSchedulizer_config.api_host + "/departments/?semester="+semester,
     //   method: "GET"
     // }, function(error, response, body) {
     //   resolve(Department.departmentsFactory(JSON.parse(body)));
     // });
+  httpplease.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function (err, res) {
+    // Do something with the result.
+    resolve(Department.departmentsFactory(JSON.parse(res.body)));
+});
     });
-  });
+  // });
+// got(mscSchedulizer_config.api_host + "/departments/?semester="+semester)
+//     .then(function(semesters) {
+//         console.log(response.body);
+//         //=> '<!doctype html> ...'
+//         return Department.departmentsFactory(JSON.parse(response.body));
+//     })
+//     .catch(function(e) {
+//     // fallback with "recover from failure"
+//      return [];
+//   });
+    //     console.log(error.response.body);
+    //     //=> 'Internal server error ...'
+    //     reject("ERROR getting departments");
+    // });
 };
 Department.departmentsSelect = function(departments){
   var output = "";
