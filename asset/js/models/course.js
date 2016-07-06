@@ -1,5 +1,6 @@
 var Department = require('./department.js').Department;
 var Semester = require('./semester.js').Semester;
+var Section = require('./section.js').Section;
 // var mscSchedulizer_config = require('../config.js');
 
 var Course = function(api_obj){
@@ -11,11 +12,12 @@ var Course = function(api_obj){
     obj.CourseTitle = api_obj.CourseTitle;
     obj.Description = api_obj.Description;
     obj.Semester = api_obj.Semester;
-    obj.Sections = Sections.sectionsFactory(api_obj.Sections);
+    obj.Sections = Section.sectionsFactory(api_obj.Sections);
     obj.Department = new Department(api_obj.Department);
     obj.SemesterObject = new Semester(api_obj.SemesterObject);
   }
   catch(err){
+    console.log("COURSE ERR", err);
     return null;
   }
   return obj;

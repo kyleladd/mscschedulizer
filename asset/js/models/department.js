@@ -36,8 +36,11 @@ Department.departmentsFactory = function(list_json){
 
 Department.getDepartments = function(semester){
   return new Promise(function(resolve, reject) {
-    httpplease.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function (err, res) {
-      resolve(Department.departmentsFactory(JSON.parse(res.body)));
+    httpplease.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function (err, response) {
+      if(err){
+        reject("Something went wrong fetching departments");
+      }
+      resolve(Department.departmentsFactory(JSON.parse(response.body)));
       // If error, reject
     });
   });

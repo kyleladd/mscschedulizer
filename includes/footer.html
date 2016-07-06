@@ -32,7 +32,7 @@
   <!-- Go To Top Link -->
   <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a>
   <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
-  <script type="text/javascript" src="asset/js/schedulizer_bundle.min.js"></script>
+  <script type="text/javascript" src="asset/js/schedulizer_bundle.js"></script>
   <script>
   $(function(){
     // Get semesters list
@@ -41,17 +41,17 @@
       // console.log("Success!", semesters);
       // mscSchedulizer.Semester.updateSemestersSelect(semesters);
       // Make the semesters select dropdown
-      $("#"+mscSchedulizer_config.html_elements.semesters_select).html(mscSchedulizer.Semester.semestersSelect(semesters));
+      $("#"+mscSchedulizer.Config.html_elements.semesters_select).html(mscSchedulizer.Semester.semestersSelect(semesters));
       return semesters;
     }).then(function(semesters){
       // Set the selected semester variable
       lscache.set("semester", semesters[1].TermCode);
       mscSchedulizer.Department.getDepartments(lscache.get("semester")).then(function(departments){
         console.log("Success!", departments);
-        // console.log(mscSchedulizer_config.html_elements.departments_select);
+        // console.log(mscSchedulizer.Config.html_elements.departments_select);
         // console.log(mscSchedulizer.Department.departmentsSelect(departments));
-        $("#"+mscSchedulizer_config.html_elements.departments_select).html(mscSchedulizer.Department.departmentsSelect(departments));
-        // console.log($("#"+mscSchedulizer_config.html_elements.departments_select).html());
+        $("#"+mscSchedulizer.Config.html_elements.departments_select).html(mscSchedulizer.Department.departmentsSelect(departments));
+        // console.log($("#"+mscSchedulizer.Config.html_elements.departments_select).html());
         $('.selectpicker').selectpicker({dropupAuto:false});
         $('.selectpicker').selectpicker('refresh');
         $(".bootstrap-select .dropdown-menu").niceScroll({
@@ -70,6 +70,7 @@
     //
 
     $.getJSON("http://schedulizer-api.morrisville.edu/courses/?include_objects=1&semester=201608",function(data){
+      console.log(data);
       var aCourse = new mscSchedulizer.Course(data[0]);
       console.log(aCourse);
     });
