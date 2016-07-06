@@ -4,15 +4,25 @@
 // // var Promise = require("bluebird");
 //
 // // var node_generic_functions = require('node_generic_functions');
-// var mscSchedulizer_config = require('./config.js');
+var Config = require('./config.js');
 var Course = require('./models/course.js').Course;
+var CourseTerm = require('./models/courseTerm.js').CourseTerm;
+var Helpers = require('./models/helpers.js').Helpers;
+var Generate = require('./models/generate.js').Generate;
+var Filter = require('./filter.js').Filter;
 var Department = require('./models/department.js').Department;
-// var Section = require('./models/coursesection.js').Section;
+var Section = require('./models/section.js').Section;
 var Semester = require('./models/semester.js').Semester;
-// var Term = require('./models/term.js').Term;
-// var Meeting = require('./models/meeting.js').Meeting;
+var Meeting = require('./models/meeting.js').Meeting;
 module.exports = {
+  Config:Config,
   Course: Course,
+  CourseTerm: CourseTerm,
+  Helpers: Helpers,
+  Generate: Generate,
+  Filter: Filter,
   Department: Department,
-  Semester: Semester
+  Section: Section,
+  Semester: Semester,
+  Meeting: Meeting
 };

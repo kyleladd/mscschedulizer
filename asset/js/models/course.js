@@ -1,6 +1,6 @@
 var Department = require('./department.js').Department;
 var Semester = require('./semester.js').Semester;
-var mscSchedulizer_config = require('../config.js');
+// var mscSchedulizer_config = require('../config.js');
 
 var Course = function(api_obj){
   var obj = Object.create(Course.prototype);

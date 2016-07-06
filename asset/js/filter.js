@@ -3,7 +3,7 @@ var lscache = require('lscache');
 // var Promise = require("bluebird");
 var Promise = require('rsvp').Promise;
 
-var mscSchedulizer_config = require('../config.js');
+var mscSchedulizer_config = require('./config.js');
 
 var Filter = function(api_obj){
   var obj = Object.create(Filter.prototype);

@@ -5,14 +5,14 @@
 // // var Semester = require('./semester.js').Semester;
 // var mscSchedulizer_config = require('../config.js');
 
-var General = {};
+var Helpers = {};
 
-General.getTLD =function(url_location){
+Helpers.getTLD =function(url_location){
     var parts = url_location.hostname.split('.');
     var sndleveldomain = parts.slice(-2).join('.');
     return sndleveldomain;
 };
-// General.exportSchedule = function(crns){
+// Helpers.exportSchedule = function(crns){
 //     var domain = mscSchedulizer.getTLD(window.location);
 //     mscSchedulizer.setCookie("MSCschedulizer",JSON.stringify(crns),1,domain);
 //     new PNotify({
@@ -26,17 +26,17 @@ General.getTLD =function(url_location){
 //       }
 //   });
 // },
-General.exportURL = function(url,semester,department){
+Helpers.exportURL = function(url,semester,department){
     return url + (url.indexOf("?") === -1 ? "?" : "&") + "semester=" + semester + "&department=" + department;
 };
-General.setCookie = function(c_name, value, exdays, domain) {
+Helpers.setCookie = function(c_name, value, exdays, domain) {
     var exdate = new Date();
     exdate.setDate(exdate.getDate() + exdays);
     domain = (domain && domain !== 'localhost') ? '; domain=' + '.' + (domain) : '';
     var c_value = escape(value) + ((exdays === null) ? "" : "; expires=" + exdate.toUTCString() + domain + ";");
     document.cookie = c_name + "=" + c_value;
 };
-General.getCookie = function(c_name) {
+Helpers.getCookie = function(c_name) {
     var i, x, y, ARRcookies = document.cookie.split(";");
     for (i = 0; i < ARRcookies.length; i++) {
         x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
@@ -47,7 +47,7 @@ General.getCookie = function(c_name) {
         }
     }
 };
-General.queryData = function(queryString, preserveDuplicates){
+Helpers.queryData = function(queryString, preserveDuplicates){
   // http://code.stephenmorley.org/javascript/parsing-query-strings-for-get-data/
   var result = {};
   // if a query string wasn't specified, use the query string from the URL
@@ -81,7 +81,7 @@ General.queryData = function(queryString, preserveDuplicates){
   }
   return result;
 };
-General.isScrolledIntoView = function(elem) {
+Helpers.isScrolledIntoView = function(elem) {
     var $elem = $(elem);
     var $window = $(window);
 
@@ -94,5 +94,5 @@ General.isScrolledIntoView = function(elem) {
     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
 module.exports = {
-  General: General
+  Helpers: Helpers
 };
