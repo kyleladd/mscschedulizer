@@ -47,16 +47,18 @@
       // Set the selected semester variable
       // lscache.set("semester", semesters[1].TermCode);
       // console.log("SEMESTERS",semesters);
-      mscSchedulizer.Storage.SetSemester($("#"+mscSchedulizer.Config.html_elements.semesters_select).val());
+      mscSchedulizer.Storage.SetSemester(JSON.parse(unescape($("#"+mscSchedulizer.Config.html_elements.semesters_select).val())));
       // mscSchedulizer.Storage.SetSemester(semesters[1].TermCode);
-      // console.log("LOCALSTORAGE SEMESTER",mscSchedulizer.Storage.Semester());
-      return mscSchedulizer.Department.getDepartments(mscSchedulizer.Storage.Semester())
+      console.log("LOCALSTORAGE SEMESTER",mscSchedulizer.Storage.Semester());
+      return mscSchedulizer.Department.getDepartments(mscSchedulizer.Storage.Semester().TermCode)
     }).then(function(departments){
-        // console.log("Success!", departments);
+        console.log("Success!", departments);
         // console.log(mscSchedulizer.Config.html_elements.departments_select);
         // console.log(mscSchedulizer.Department.departmentsSelect(departments));
         $("#"+mscSchedulizer.Config.html_elements.departments_select).html(mscSchedulizer.Department.departmentsSelect(departments));
-        mscSchedulizer.Storage.SetDepartment($("#"+mscSchedulizer.Config.html_elements.departments_select).val());
+        console.log($("#"+mscSchedulizer.Config.html_elements.departments_select).val());
+        mscSchedulizer.Storage.SetDepartment(JSON.parse(unescape($("#"+mscSchedulizer.Config.html_elements.departments_select).val())));
+        console.log("STORED DEPT",mscSchedulizer.Storage.Department());
         // console.log($("#"+mscSchedulizer.Config.html_elements.departments_select).html());
         $('.selectpicker').selectpicker({dropupAuto:false});
         $('.selectpicker').selectpicker('refresh');
@@ -73,7 +75,7 @@
         });
         // mscSchedulizer.Storage.SetSemester(semesters[1].TermCode);
         // mscSchedulizer.Storage.SetDepartment(semesters[1].TermCode);
-        
+
     });
     //
 

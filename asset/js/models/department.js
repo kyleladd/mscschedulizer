@@ -37,6 +37,7 @@ Department.departmentsFactory = function(list_json){
 
 Department.getDepartments = function(semester){
   return new Promise(function(resolve, reject) {
+    // console.log("GETTING dept for semester",semester);
     httpplease.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function (err, response) {
       if(err){
         reject("Something went wrong fetching departments");
@@ -55,7 +56,7 @@ Department.departmentsSelect = function(departments){
       // console.log("departmentcode",department.DepartmentCode);
        // " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + "
       // output += "<option class='a_department' value='"+ department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
-      output += "<option class='a_department' value='"+ department.DepartmentCode + "' " + (department.DepartmentCode === Storage.Department() ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
+      output += "<option class='a_department' value='" + escape(JSON.stringify(department)) + "' " + (Storage.Department() !== null && department.DepartmentCode === Storage.Department().DepartmentCode ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
   }
   return output;
 };

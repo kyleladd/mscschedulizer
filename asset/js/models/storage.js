@@ -10,13 +10,8 @@ Storage.NumLoaded = 0;
 
 // Getters
 Storage.Department = function(){
-    var value = lscache.get("department");
-    if(value === null){
-      value = "";
-    }
-    return value;
+    return lscache.get("department");
 };
-
 // Storage.Departments = function(){
 //     return lscache.get("departments");
 // };
@@ -26,11 +21,7 @@ Storage.Department = function(){
 // };
 
 Storage.Semester = function(){
-    var value = lscache.get("semester");
-    if(value === null){
-      value = "";
-    }
-    return value;
+    return lscache.get("semester");
 };
 
 Storage.Semesters = function(){

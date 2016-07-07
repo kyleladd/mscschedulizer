@@ -82,15 +82,15 @@ Semester.fetchCurrentList = function(){
 
 Semester.semestersSelect = function(semesters_list){
     var output = "";
+    console.log("Stored SEMESTER", Storage.Semester());
     for (var i in semesters_list){
         var semester = semesters_list[i];
         // if(semester.TermCode ==  lscache.get("semester").TermCode){
         //     output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' selected=\"selected\">" + semester.Description + "</option>";
         // }
         // else{
-          // console.log("SEMESTER LOOP", semester);
-          // console.log("Stored SEMESTER", Storage.Semester());
-            output += "<option class='a_semester' value='"+semester.TermCode + "' " + (semester.TermCode === Storage.Semester().toString() ? "selected=selected" : "") + ">" + semester.Description + "</option>";
+          console.log("SEMESTER LOOP", semester);
+            output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' " + (Storage.Semester() !== null && semester.TermCode === Storage.Semester().TermCode ? "selected=selected" : "") + ">" + semester.Description + "</option>";
         // }
     }
     // $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
