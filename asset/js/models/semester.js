@@ -46,7 +46,7 @@ Semester.getCurrentList = function(){
         resolve(Semester.semestersFactory(response));
       }, function(error) {
         console.error("Failed!", error);
-        // resolve(null);
+        reject(error);
       });
     }
   });
@@ -60,40 +60,16 @@ Semester.fetchCurrentList = function(){
          reject("Something went wrong fetching current semesters");
       }
       resolve(Semester.semestersFactory(JSON.parse(response.body)));
-      // If error, reject
     });
-    // needle.get(mscSchedulizer_config.api_host + "/semesters/", function(error, response) {
-    //   if (!error && response.statusCode == 200){
-    //     console.log(response.body);
-    //     resolve(JSON.parse(response.body));
-    //   }
-    //   else{
-    //     reject("Something went wrong fetching current semesters");
-    //   }
-    // });
-    // request({
-    //   uri: mscSchedulizer_config.api_host + "/semesters/",
-    //   method: "GET"
-    // }, function(error, response, body) {
-    //   resolve(JSON.parse(body));
-    // });
   });
 };
 
 Semester.semestersSelect = function(semesters_list){
     var output = "";
-    console.log("Stored SEMESTER", Storage.Semester());
     for (var i in semesters_list){
-        var semester = semesters_list[i];
-        // if(semester.TermCode ==  lscache.get("semester").TermCode){
-        //     output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' selected=\"selected\">" + semester.Description + "</option>";
-        // }
-        // else{
-          console.log("SEMESTER LOOP", semester);
-            output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' " + (Storage.Semester() !== null && semester.TermCode === Storage.Semester().TermCode ? "selected=selected" : "") + ">" + semester.Description + "</option>";
-        // }
+      var semester = semesters_list[i];
+      output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' " + (Storage.Semester() !== null && semester.TermCode === Storage.Semester().TermCode ? "selected=selected" : "") + ">" + semester.Description + "</option>";
     }
-    // $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
     return output;
 };
 

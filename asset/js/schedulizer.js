@@ -1,9 +1,3 @@
-// var lscache = require('lscache');
-// // var request = require("request");
-// var needle = require('needle');
-// // var Promise = require("bluebird");
-//
-// // var node_generic_functions = require('node_generic_functions');
 var Config = require('./config.js');
 var Course = require('./models/course.js').Course;
 var CourseTerm = require('./models/courseTerm.js').CourseTerm;

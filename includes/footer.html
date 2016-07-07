@@ -35,31 +35,20 @@
   <script type="text/javascript" src="asset/js/schedulizer_bundle.js"></script>
   <script>
   $(function(){
+    // Clear all old localstorage
+    lscache.flushExpired();
     // Get semesters list
-    // lscache.flush();
     mscSchedulizer.Semester.getCurrentList().then(function(semesters) {
-      // console.log("Success!", semesters);
-      // mscSchedulizer.Semester.updateSemestersSelect(semesters);
       // Make the semesters select dropdown
       $("#"+mscSchedulizer.Config.html_elements.semesters_select).html(mscSchedulizer.Semester.semestersSelect(semesters));
       return semesters;
     }).then(function(semesters){
       // Set the selected semester variable
-      // lscache.set("semester", semesters[1].TermCode);
-      // console.log("SEMESTERS",semesters);
       mscSchedulizer.Storage.SetSemester(JSON.parse(unescape($("#"+mscSchedulizer.Config.html_elements.semesters_select).val())));
-      // mscSchedulizer.Storage.SetSemester(semesters[1].TermCode);
-      console.log("LOCALSTORAGE SEMESTER",mscSchedulizer.Storage.Semester());
-      return mscSchedulizer.Department.getDepartments(mscSchedulizer.Storage.Semester().TermCode)
+      return mscSchedulizer.Department.getDepartments(mscSchedulizer.Storage.Semester().TermCode);
     }).then(function(departments){
-        console.log("Success!", departments);
-        // console.log(mscSchedulizer.Config.html_elements.departments_select);
-        // console.log(mscSchedulizer.Department.departmentsSelect(departments));
         $("#"+mscSchedulizer.Config.html_elements.departments_select).html(mscSchedulizer.Department.departmentsSelect(departments));
-        console.log($("#"+mscSchedulizer.Config.html_elements.departments_select).val());
         mscSchedulizer.Storage.SetDepartment(JSON.parse(unescape($("#"+mscSchedulizer.Config.html_elements.departments_select).val())));
-        console.log("STORED DEPT",mscSchedulizer.Storage.Department());
-        // console.log($("#"+mscSchedulizer.Config.html_elements.departments_select).html());
         $('.selectpicker').selectpicker({dropupAuto:false});
         $('.selectpicker').selectpicker('refresh');
         $(".bootstrap-select .dropdown-menu").niceScroll({
@@ -73,16 +62,11 @@
             horizrailenabled: false,
             cursorborderradius: 0,
         });
-        // mscSchedulizer.Storage.SetSemester(semesters[1].TermCode);
-        // mscSchedulizer.Storage.SetDepartment(semesters[1].TermCode);
-
+        console.log("STORED DEPT",mscSchedulizer.Storage.Department());
+        return new mscSchedulizer.Department(mscSchedulizer.Storage.Department()).getCourses();
+    })
+    .then(function(courses){
+      console.log("COURSES", courses);
     });
-    //
-
-    // $.getJSON("http://schedulizer-api.morrisville.edu/courses/?include_objects=1&semester=201608",function(data){
-    //   console.log(data);
-    //   var aCourse = new mscSchedulizer.Course(data[0]);
-    //   console.log(aCourse);
-    // });
   });
   </script>

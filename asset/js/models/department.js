@@ -4,15 +4,16 @@ var Promise = require('rsvp').Promise;
 
 var Semester = require('./semester.js').Semester;
 var Storage = require('./storage.js').Storage;
+var Course = require('./course.js').Course;
 var mscSchedulizer_config = require('../config.js');
-
+console.log("Course",Course);
+console.log("Semester",Semester);
 var Department = function(api_obj){
   var obj = Object.create(Department.prototype);
   try{
     obj.DepartmentCode = api_obj.DepartmentCode;
     obj.Name = api_obj.Name;
     obj.Semester = api_obj.Semester;
-    obj.SemesterObject = null;
     obj.SemesterObject = new Semester(api_obj.SemesterObject);
   }
   catch(err){
@@ -43,19 +44,14 @@ Department.getDepartments = function(semester){
         reject("Something went wrong fetching departments");
       }
       resolve(Department.departmentsFactory(JSON.parse(response.body)));
-      // If error, reject
     });
   });
 };
 
 Department.departmentsSelect = function(departments){
   var output = "";
-  // console.log("STORED DEPARTMENT",Storage.Department());
   for (var i in departments) {
       var department = departments[i];
-      // console.log("departmentcode",department.DepartmentCode);
-       // " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + "
-      // output += "<option class='a_department' value='"+ department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
       output += "<option class='a_department' value='" + escape(JSON.stringify(department)) + "' " + (Storage.Department() !== null && department.DepartmentCode === Storage.Department().DepartmentCode ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
   }
   return output;
@@ -63,22 +59,20 @@ Department.departmentsSelect = function(departments){
 
 // getDetpartmentCourses
 Department.prototype.getCourses = function(){
-//     department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
-//     $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(results){
-//         //remove this later
-//         var output = "";
-//         // Remove sections that are administrative entry
-//         results = mscSchedulizer.removeAdministrativeSections(results);
-//         for (var i in results) {
-//             var course = results[i];
-//             //Change to just one html output set
-//             output += "<li><a class='a_course' data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
-//         }
-//         $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
-//     })
-//     .fail(function() {
-//         $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li>Unable to load courses.</li>");
-//     });
+  console.log("getting courses");
+  console.log(self);
+  console.log(this);
+  var department = this;
+  console.log(Course);
+  return new Promise(function(resolve, reject) {
+    // console.log("GETTING dept for semester",semester);
+    httpplease.get(mscSchedulizer_config.api_host + "/courses/?department_code=" + department.DepartmentCode + "&semester="+department.Semester, function (err, response) {
+      if(err){
+        reject("Something went wrong fetching courses");
+      }
+      resolve(Course.coursesFactory(JSON.parse(response.body)));
+    });
+  });
 };
 module.exports = {
   Department: Department
