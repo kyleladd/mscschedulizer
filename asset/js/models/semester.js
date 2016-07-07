@@ -2,6 +2,7 @@ var lscache = require('lscache');
 var httpplease = require("httpplease");
 var Promise = require('rsvp').Promise;
 
+var Storage = require('./storage.js').Storage;
 var mscSchedulizer_config = require('../config.js');
 
 var Semester = function(api_obj){
@@ -41,7 +42,7 @@ Semester.getCurrentList = function(){
     } else {
       Semester.fetchCurrentList().then(function(response) {
         //Cache semesters for 1 day
-        lscache.set("semesters", response, 1440);
+        Storage.SetSemesters(response);
         resolve(Semester.semestersFactory(response));
       }, function(error) {
         console.error("Failed!", error);
@@ -87,7 +88,9 @@ Semester.semestersSelect = function(semesters_list){
         //     output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "' selected=\"selected\">" + semester.Description + "</option>";
         // }
         // else{
-            output += "<option class='a_semester' value='"+escape(JSON.stringify(semester)) + "'>" + semester.Description + "</option>";
+          // console.log("SEMESTER LOOP", semester);
+          // console.log("Stored SEMESTER", Storage.Semester());
+            output += "<option class='a_semester' value='"+semester.TermCode + "' " + (semester.TermCode === Storage.Semester().toString() ? "selected=selected" : "") + ">" + semester.Description + "</option>";
         // }
     }
     // $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);

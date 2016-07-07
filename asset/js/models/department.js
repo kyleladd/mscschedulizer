@@ -3,6 +3,7 @@ var httpplease = require("httpplease");
 var Promise = require('rsvp').Promise;
 
 var Semester = require('./semester.js').Semester;
+var Storage = require('./storage.js').Storage;
 var mscSchedulizer_config = require('../config.js');
 
 var Department = function(api_obj){
@@ -45,15 +46,20 @@ Department.getDepartments = function(semester){
     });
   });
 };
+
 Department.departmentsSelect = function(departments){
   var output = "";
+  // console.log("STORED DEPARTMENT",Storage.Department());
   for (var i in departments) {
       var department = departments[i];
-      //  " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + "
-      output += "<option class='a_department' value='"+ department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
+      // console.log("departmentcode",department.DepartmentCode);
+       // " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + "
+      // output += "<option class='a_department' value='"+ department.DepartmentCode + "'>" + department.DepartmentCode + ' ' + department.Name + "</option>";
+      output += "<option class='a_department' value='"+ department.DepartmentCode + "' " + (department.DepartmentCode === Storage.Department() ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
   }
   return output;
 };
+
 // getDetpartmentCourses
 Department.prototype.getCourses = function(){
 //     department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();

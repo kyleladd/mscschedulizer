@@ -1,6 +1,7 @@
 var Department = require('./department.js').Department;
 var Semester = require('./semester.js').Semester;
 var Section = require('./section.js').Section;
+var Filter = require('../filter.js').Filter;
 // var mscSchedulizer_config = require('../config.js');
 
 var Course = function(api_obj){

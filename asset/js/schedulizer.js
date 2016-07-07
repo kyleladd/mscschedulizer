@@ -14,6 +14,7 @@ var Department = require('./models/department.js').Department;
 var Section = require('./models/section.js').Section;
 var Semester = require('./models/semester.js').Semester;
 var Meeting = require('./models/meeting.js').Meeting;
+var Storage = require('./models/Storage.js').Storage;
 module.exports = {
   Config:Config,
   Course: Course,
@@ -24,5 +25,6 @@ module.exports = {
   Department: Department,
   Section: Section,
   Semester: Semester,
-  Meeting: Meeting
+  Meeting: Meeting,
+  Storage: Storage
 };

@@ -45,12 +45,18 @@
       return semesters;
     }).then(function(semesters){
       // Set the selected semester variable
-      lscache.set("semester", semesters[1].TermCode);
-      mscSchedulizer.Department.getDepartments(lscache.get("semester")).then(function(departments){
-        console.log("Success!", departments);
+      // lscache.set("semester", semesters[1].TermCode);
+      // console.log("SEMESTERS",semesters);
+      mscSchedulizer.Storage.SetSemester($("#"+mscSchedulizer.Config.html_elements.semesters_select).val());
+      // mscSchedulizer.Storage.SetSemester(semesters[1].TermCode);
+      // console.log("LOCALSTORAGE SEMESTER",mscSchedulizer.Storage.Semester());
+      return mscSchedulizer.Department.getDepartments(mscSchedulizer.Storage.Semester())
+    }).then(function(departments){
+        // console.log("Success!", departments);
         // console.log(mscSchedulizer.Config.html_elements.departments_select);
         // console.log(mscSchedulizer.Department.departmentsSelect(departments));
         $("#"+mscSchedulizer.Config.html_elements.departments_select).html(mscSchedulizer.Department.departmentsSelect(departments));
+        mscSchedulizer.Storage.SetDepartment($("#"+mscSchedulizer.Config.html_elements.departments_select).val());
         // console.log($("#"+mscSchedulizer.Config.html_elements.departments_select).html());
         $('.selectpicker').selectpicker({dropupAuto:false});
         $('.selectpicker').selectpicker('refresh');
@@ -65,14 +71,16 @@
             horizrailenabled: false,
             cursorborderradius: 0,
         });
-      });
+        // mscSchedulizer.Storage.SetSemester(semesters[1].TermCode);
+        // mscSchedulizer.Storage.SetDepartment(semesters[1].TermCode);
+        
     });
     //
 
-    $.getJSON("http://schedulizer-api.morrisville.edu/courses/?include_objects=1&semester=201608",function(data){
-      console.log(data);
-      var aCourse = new mscSchedulizer.Course(data[0]);
-      console.log(aCourse);
-    });
+    // $.getJSON("http://schedulizer-api.morrisville.edu/courses/?include_objects=1&semester=201608",function(data){
+    //   console.log(data);
+    //   var aCourse = new mscSchedulizer.Course(data[0]);
+    //   console.log(aCourse);
+    // });
   });
   </script>
