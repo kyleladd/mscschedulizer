@@ -1,8 +1,5 @@
 var node_generic_functions = require('node_generic_functions');
 var mscSchedulizer = require('./dist/models.js');
-mscSchedulizer.Config = require('./config.js');
-// var Filter = require('./filter.js').Filter;
-// var mscSchedulizer = require('./schedulizer.js');
 var lscache = require('lscache');
 window.mscSchedulizer = mscSchedulizer;
 window.node_generic_functions = node_generic_functions;

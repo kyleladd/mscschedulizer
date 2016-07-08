@@ -1,5 +1,3 @@
-// var Semester = require('./semester.js').Semester;
-
 var CourseTerm = function(api_obj){
   var obj = Object.create(CourseTerm.prototype);
   try{
@@ -28,6 +26,3 @@ CourseTerm.courseTermsFactory = function(list_json){
   }
   return list_obj;
 };
-// module.exports = {
-//   CourseTerm: CourseTerm
-// };

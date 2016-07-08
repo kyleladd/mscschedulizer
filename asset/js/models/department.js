@@ -1,13 +1,3 @@
-// var lscache = require('lscache');
-// var httpplease = require("httpplease");
-// var Promise = require('rsvp').Promise;
-
-// var Semester = require('./semester.js').Semester;
-// var Storage = require('./storage.js').Storage;
-// var Course = require('./course.js').Course;
-// var mscSchedulizer_config = require('../config.js');
-// console.log("Course",Course);
-// console.log("Semester",Semester);
 var Department = function(api_obj){
   var obj = Object.create(Department.prototype);
   try{
@@ -39,7 +29,7 @@ Department.departmentsFactory = function(list_json){
 Department.getDepartments = function(semester){
   return new Promise(function(resolve, reject) {
     // console.log("GETTING dept for semester",semester);
-    httpplease.get(mscSchedulizer_config.api_host + "/departments/?semester="+semester, function (err, response) {
+    httpplease.get(Config.api_host + "/departments/?semester="+semester, function (err, response) {
       if(err){
         reject("Something went wrong fetching departments");
       }
@@ -66,7 +56,7 @@ Department.prototype.getCourses = function(){
   console.log(Course);
   return new Promise(function(resolve, reject) {
     // console.log("GETTING dept for semester",semester);
-    httpplease.get(mscSchedulizer_config.api_host + "/courses/?department_code=" + department.DepartmentCode + "&semester="+department.Semester, function (err, response) {
+    httpplease.get(Config.api_host + "/courses/?department_code=" + department.DepartmentCode + "&semester="+department.Semester, function (err, response) {
       if(err){
         reject("Something went wrong fetching courses");
       }
@@ -74,6 +64,3 @@ Department.prototype.getCourses = function(){
     });
   });
 };
-// module.exports = {
-//   Department: Department
-// };

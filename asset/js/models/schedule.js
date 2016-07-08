@@ -1,10 +1,3 @@
-// var lscache = require('lscache');
-// var httpplease = require("httpplease");
-// var Promise = require('rsvp').Promise;
-
-// var Semester = require('./semester.js').Semester;
-// var mscSchedulizer_config = require('../config.js');
-
 var Schedule = function(api_obj){
   var obj = Object.create(Schedule.prototype);
   try
@@ -34,7 +27,7 @@ Schedule.schedulesFactory = function(list_json){
 
 Schedule.getSchedule = function(crns,semester){
   return new Promise(function(resolve, reject) {
-    httpplease.get(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+semester, function (err, res) {
+    httpplease.get(Config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+semester, function (err, res) {
       resolve(new Schedule(JSON.parse(res.ody)));
       // If error, reject
     });
@@ -42,7 +35,7 @@ Schedule.getSchedule = function(crns,semester){
 };
 Schedule.getSchedules = function(selections,semester){
   return new Promise(function(resolve, reject) {
-    httpplease.get(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+semester, function (err, res) {
+    httpplease.get(Config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+semester, function (err, res) {
       resolve(Schedule.schedulesFactory(JSON.parse(res.ody)));
       // If error, reject
     });
@@ -123,6 +116,3 @@ Schedule.prototype.genNoMeetingsOutput = function(){
         return "";
     }
 };
-// module.exports = {
-//   Schedule: Schedule
-// };

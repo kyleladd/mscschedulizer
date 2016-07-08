@@ -19,7 +19,8 @@
     "moment": "^2.14.1",
     "needle": "^1.0.0",
     "node_generic_functions": "git+https://github.com/kyleladd/node_generic_functions.git",
-    "request": "^2.72.0"
+    "request": "^2.72.0",
+    "rsvp": "^3.2.1"
   },
   "devDependencies": {
     "browserify": "^13.0.0",

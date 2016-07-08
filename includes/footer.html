@@ -66,6 +66,8 @@
         return new mscSchedulizer.Department(mscSchedulizer.Storage.Department()).getCourses();
     })
     .then(function(courses){
+      // remove administrative courses
+      courses = mscSchedulizer.AdministrativeSections(courses);
       console.log("COURSES", courses);
     })
     .catch(function (err) {

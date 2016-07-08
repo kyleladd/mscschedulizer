@@ -1,5 +1,3 @@
-// var lscache = require('lscache');
-
 var Storage = {};
 
 Storage.GenCourses = [];
@@ -92,7 +90,3 @@ Storage.getCookie = function(c_name) {
         }
     }
 };
-
-// module.exports = {
-//   Storage: Storage
-// };

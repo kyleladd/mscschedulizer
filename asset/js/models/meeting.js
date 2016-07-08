@@ -1,5 +1,3 @@
-// var moment = require('moment');
-
 var Meeting = function(api_obj){
   var obj = Object.create(Meeting.prototype);
   try
@@ -60,8 +58,3 @@ Meeting.sort = function(a, b) {
     }
     return 0;
 };
-
-
-// module.exports = {
-//   Meeting: Meeting
-// };
