@@ -1,4 +1,4 @@
-var lscache = require('lscache');
+// var lscache = require('lscache');
 
 var Storage = {};
 
@@ -93,6 +93,6 @@ Storage.getCookie = function(c_name) {
     }
 };
 
-module.exports = {
-  Storage: Storage
-};
+// module.exports = {
+//   Storage: Storage
+// };

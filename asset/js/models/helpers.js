@@ -68,6 +68,6 @@ Helpers.isScrolledIntoView = function(elem) {
     // && for entire element || for any part of the element
     return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
 };
-module.exports = {
-  Helpers: Helpers
-};
+// module.exports = {
+//   Helpers: Helpers
+// };

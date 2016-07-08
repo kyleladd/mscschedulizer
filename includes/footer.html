@@ -67,6 +67,9 @@
     })
     .then(function(courses){
       console.log("COURSES", courses);
+    })
+    .catch(function (err) {
+      console.log("CATCH ERR: ",err);
     });
   });
   </script>

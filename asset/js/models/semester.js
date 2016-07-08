@@ -1,9 +1,9 @@
-var lscache = require('lscache');
-var httpplease = require("httpplease");
-var Promise = require('rsvp').Promise;
+// var lscache = require('lscache');
+// var httpplease = require("httpplease");
+// var Promise = require('rsvp').Promise;
 
-var Storage = require('./storage.js').Storage;
-var mscSchedulizer_config = require('../config.js');
+// var Storage = require('./storage.js').Storage;
+// var mscSchedulizer_config = require('../config.js');
 
 var Semester = function(api_obj){
   var obj = Object.create(Semester.prototype);
@@ -54,6 +54,7 @@ Semester.getCurrentList = function(){
 
 Semester.fetchCurrentList = function(){
   console.log("Fetching semesters from API");
+  console.log(mscSchedulizer_config);
   return new Promise(function(resolve, reject) {
     httpplease.get(mscSchedulizer_config.api_host + "/semesters/", function (err, response) {
       if(err){
@@ -73,6 +74,6 @@ Semester.semestersSelect = function(semesters_list){
     return output;
 };
 
-module.exports = {
-  Semester: Semester
-};
+// module.exports = {
+//   Semester: Semester
+// };

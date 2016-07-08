@@ -1,13 +1,13 @@
-var lscache = require('lscache');
-var httpplease = require("httpplease");
-var Promise = require('rsvp').Promise;
+// var lscache = require('lscache');
+// var httpplease = require("httpplease");
+// var Promise = require('rsvp').Promise;
 
-var Semester = require('./semester.js').Semester;
-var Storage = require('./storage.js').Storage;
-var Course = require('./course.js').Course;
-var mscSchedulizer_config = require('../config.js');
-console.log("Course",Course);
-console.log("Semester",Semester);
+// var Semester = require('./semester.js').Semester;
+// var Storage = require('./storage.js').Storage;
+// var Course = require('./course.js').Course;
+// var mscSchedulizer_config = require('../config.js');
+// console.log("Course",Course);
+// console.log("Semester",Semester);
 var Department = function(api_obj){
   var obj = Object.create(Department.prototype);
   try{
@@ -74,6 +74,6 @@ Department.prototype.getCourses = function(){
     });
   });
 };
-module.exports = {
-  Department: Department
-};
+// module.exports = {
+//   Department: Department
+// };

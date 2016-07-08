@@ -1,9 +1,9 @@
-var lscache = require('lscache');
-var httpplease = require("httpplease");
-var Promise = require('rsvp').Promise;
+// var lscache = require('lscache');
+// var httpplease = require("httpplease");
+// var Promise = require('rsvp').Promise;
 
-var Semester = require('./semester.js').Semester;
-var mscSchedulizer_config = require('../config.js');
+// var Semester = require('./semester.js').Semester;
+// var mscSchedulizer_config = require('../config.js');
 
 var Schedule = function(api_obj){
   var obj = Object.create(Schedule.prototype);
@@ -123,6 +123,6 @@ Schedule.prototype.genNoMeetingsOutput = function(){
         return "";
     }
 };
-module.exports = {
-  Schedule: Schedule
-};
+// module.exports = {
+//   Schedule: Schedule
+// };

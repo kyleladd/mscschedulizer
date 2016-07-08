@@ -1,4 +1,4 @@
-var moment = require('moment');
+// var moment = require('moment');
 
 var Meeting = function(api_obj){
   var obj = Object.create(Meeting.prototype);
@@ -62,6 +62,6 @@ Meeting.sort = function(a, b) {
 };
 
 
-module.exports = {
-  Meeting: Meeting
-};
+// module.exports = {
+//   Meeting: Meeting
+// };

@@ -1,7 +1,7 @@
-var node_generic_functions = require('node_generic_functions');
+// var node_generic_functions = require('node_generic_functions');
 
-var CourseTerm = require('./courseTerm.js').CourseTerm;
-var Semester = require('./semester.js').Semester;
+// var CourseTerm = require('./courseTerm.js').CourseTerm;
+// var Semester = require('./semester.js').Semester;
 
 var Section = function(api_obj){
   var obj = Object.create(Section.prototype);
@@ -129,6 +129,6 @@ Section.sort = function(a,b){
     return node_generic_functions.alphaNumericSort(a.SectionNumber,b.SectionNumber);
 };
 
-module.exports = {
-  Section: Section
-};
+// module.exports = {
+//   Section: Section
+// };
