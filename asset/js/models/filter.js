@@ -102,6 +102,7 @@ Filter.checkboxDisplay = function(filter,elementID){
 Filter.concurrentEnrollment = function(section,filters){
     if(section.SectionAttributes !== null){
         var attributes = section.SectionAttributes.split(";");
+        console.log("GF",node_generic_functions);
         if(node_generic_functions.inList("CHS", attributes) || node_generic_functions.inList("NHS", attributes) || node_generic_functions.inList("ETC", attributes) || node_generic_functions.inList("OCBB", attributes)){
             return true;
         }
@@ -110,10 +111,10 @@ Filter.concurrentEnrollment = function(section,filters){
 };
 Filter.AdministrativeSections = function(courses){
   for (var c = courses.length-1; c >= 0; c--) {
-      if(typeof courses[c].Sections !== "undefined" && courses[c].Sections !== null){
+      if(typeof courses[c].Sections !== "undefined" && courses[c].Sections !== null && courses[c].Sections.length !== 0){
           for (var s = courses[c].Sections.length-1; s >= 0; s--) {
               // Apply filters to section function
-              if(mscSchedulizer.requiredFilters(courses[c].Sections[s])){
+              if(this.requiredFilters(courses[c].Sections[s])){
                   courses[c].Sections.splice(s, 1);
               }
           }
@@ -126,7 +127,7 @@ Filter.AdministrativeSections = function(courses){
 };
 Filter.requiredFilters = function(section){
   var filteredOut = false;
-  filteredOut = mscSchedulizer.concurrentEnrollmentFilter(section);
+  filteredOut = this.concurrentEnrollmentFilter(section);
   return filteredOut;
 };
 Filter.professor = function(section,filter){

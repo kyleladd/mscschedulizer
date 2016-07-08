@@ -67,7 +67,7 @@
     })
     .then(function(courses){
       // remove administrative courses
-      courses = mscSchedulizer.AdministrativeSections(courses);
+      courses = mscSchedulizer.Filter.AdministrativeSections(courses);
       console.log("COURSES", courses);
     })
     .catch(function (err) {

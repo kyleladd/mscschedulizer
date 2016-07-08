@@ -50,10 +50,7 @@ Department.departmentsSelect = function(departments){
 // getDetpartmentCourses
 Department.prototype.getCourses = function(){
   console.log("getting courses");
-  console.log(self);
-  console.log(this);
   var department = this;
-  console.log(Course);
   return new Promise(function(resolve, reject) {
     // console.log("GETTING dept for semester",semester);
     httpplease.get(Config.api_host + "/courses/?department_code=" + department.DepartmentCode + "&semester="+department.Semester, function (err, response) {
