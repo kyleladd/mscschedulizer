@@ -1,4 +1,4 @@
-module.exports = {
+var Config = {
     api_host:"http://schedulizer-api.morrisville.edu",
     html_elements:{
         // All elements are By ID
