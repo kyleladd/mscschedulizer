@@ -75,7 +75,7 @@ module.exports = function(grunt) {
   },
   concat: {
     basic: {
-      src: ['<%= dirs.src %>/main.js','<%= dirs.src %>/../config.js','<%= dirs.src %>/course.js','<%= dirs.src %>/courseTerm.js','<%= dirs.src %>/department.js','<%= dirs.src %>/generate.js','<%= dirs.src %>/helpers.js','<%= dirs.src %>/meeting.js','<%= dirs.src %>/schedule.js','<%= dirs.src %>/section.js','<%= dirs.src %>/semester.js','<%= dirs.src %>/storage.js','<%= dirs.src %>/filter.js','<%= dirs.src %>/export.js'],
+      src: ['<%= dirs.src %>/main.js','<%= dirs.src %>/../config.js','<%= dirs.src %>/selection.js','<%= dirs.src %>/course.js','<%= dirs.src %>/courseTerm.js','<%= dirs.src %>/department.js','<%= dirs.src %>/generate.js','<%= dirs.src %>/helpers.js','<%= dirs.src %>/meeting.js','<%= dirs.src %>/schedule.js','<%= dirs.src %>/section.js','<%= dirs.src %>/semester.js','<%= dirs.src %>/storage.js','<%= dirs.src %>/filter.js','<%= dirs.src %>/export.js'],
       dest: '<%= dirs.dest %>/models.js',
     },
   }
