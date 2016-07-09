@@ -1,10 +1,10 @@
 var Semester = function(api_obj){
   var obj = Object.create(Semester.prototype);
   try{
-    obj.TermCode = api_obj.TermCode;
-    obj.Description = api_obj.Description;
-    obj.TermStart = api_obj.TermStart;
-    obj.TermEnd = api_obj.TermEnd;
+    obj.TermCode = (api_obj.TermCode !== undefined ? api_obj.TermCode : "");
+    obj.Description = (api_obj.Description !== undefined ? api_obj.Description : "");
+    obj.TermStart = (api_obj.TermStart !== undefined ? api_obj.TermStart : "");
+    obj.TermEnd = (api_obj.TermEnd !== undefined ? api_obj.TermEnd : "");
   }
   catch(err){
       return null;

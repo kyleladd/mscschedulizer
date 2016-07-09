@@ -2,14 +2,14 @@ var Course = function(api_obj){
   var obj = Object.create(Course.prototype);
   try
   {
-    obj.DepartmentCode = api_obj.DepartmentCode;
-    obj.CourseNumber = api_obj.CourseNumber;
-    obj.CourseTitle = api_obj.CourseTitle;
-    obj.Description = api_obj.Description;
-    obj.Semester = api_obj.Semester;
-    obj.Sections = Section.sectionsFactory(api_obj.Sections);
-    obj.Department = new Department(api_obj.Department);
-    obj.SemesterObject = new Semester(api_obj.SemesterObject);
+    obj.DepartmentCode = (api_obj.DepartmentCode !== undefined ?  api_obj.DepartmentCode: "");
+    obj.CourseNumber = (api_obj.CourseNumber !== undefined ?  api_obj.CourseNumber: "");
+    obj.CourseTitle = (api_obj.CourseTitle !== undefined ?  api_obj.CourseTitle: "");
+    obj.Description = (api_obj.Description !== undefined ?  api_obj.Description: "");
+    obj.Semester = (api_obj.Semester !== undefined ?  api_obj.Semester: "");
+    obj.Sections = (api_obj.Sections !== undefined ?  Section.sectionsFactory(api_obj.Sections): []);
+    obj.Department = (api_obj.Department !== undefined ?  new Department(api_obj.Department): null);
+    obj.SemesterObject = (api_obj.SemesterObject !== undefined ?  new Semester(api_obj.SemesterObject): null);
   }
   catch(err){
     console.log("COURSE ERR", err);
@@ -55,3 +55,12 @@ Course.prototype.groupSections = function(){
     }
     return grouped_sections;
 };
+Course.DisplayShort = function(courses){
+  var output = "";
+  for (var i in courses) {
+      var course = courses[i];
+      //Change to just one html output set
+      output += "<li><a class='a_course' data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
+  }
+  return output;
+}

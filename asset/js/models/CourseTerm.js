@@ -1,11 +1,11 @@
 var CourseTerm = function(api_obj){
   var obj = Object.create(CourseTerm.prototype);
   try{
-    obj.TermCode = api_obj.TermCode;
-    obj.TermStart = api_obj.TermStart;
-    obj.TermEnd = api_obj.TermEnd;
-    obj.Semester = api_obj.Semester;
-    obj.SemesterObject = new Semester(api_obj.SemesterObject);
+    obj.TermCode = (api_obj.TermCode !== undefined ? api_obj.TermCode : "");
+    obj.TermStart = (api_obj.TermStart !== undefined ? api_obj.TermStart : "");
+    obj.TermEnd = (api_obj.TermEnd !== undefined ? api_obj.TermEnd : "");
+    obj.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
+    obj.SemesterObject = (api_obj.SemesterObject !== undefined ? new Semester(api_obj.SemesterObject) : null);
   }
   catch(err){
       return null;

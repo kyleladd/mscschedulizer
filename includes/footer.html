@@ -69,6 +69,8 @@
       // remove administrative courses
       courses = mscSchedulizer.Filter.AdministrativeSections(courses);
       console.log("COURSES", courses);
+      $("#"+mscSchedulizer.Config.html_elements.department_class_list).html(mscSchedulizer.Course.DisplayShort(courses));
+
     })
     .catch(function (err) {
       console.log("CATCH ERR: ",err);

@@ -1,10 +1,10 @@
 var Department = function(api_obj){
   var obj = Object.create(Department.prototype);
   try{
-    obj.DepartmentCode = api_obj.DepartmentCode;
-    obj.Name = api_obj.Name;
-    obj.Semester = api_obj.Semester;
-    obj.SemesterObject = new Semester(api_obj.SemesterObject);
+    obj.DepartmentCode = (api_obj.DepartmentCode !== undefined ? api_obj.DepartmentCode : "");
+    obj.Name = (api_obj.Name !== undefined ? api_obj.Name : "");
+    obj.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
+    obj.SemesterObject = (new Semester(api_obj.SemesterObject) !== undefined ? new Semester(api_obj.SemesterObject) : null);
   }
   catch(err){
       return null;
