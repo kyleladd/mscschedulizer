@@ -1,23 +1,24 @@
 var Course = function(api_obj){
-  var obj = Object.create(Course.prototype);
+  // this = Object.create(Course.prototype);
   try
   {
-    obj.DepartmentCode = (api_obj.DepartmentCode !== undefined ?  api_obj.DepartmentCode: "");
-    obj.CourseNumber = (api_obj.CourseNumber !== undefined ?  api_obj.CourseNumber: "");
-    obj.CourseTitle = (api_obj.CourseTitle !== undefined ?  api_obj.CourseTitle: "");
-    obj.Description = (api_obj.Description !== undefined ?  api_obj.Description: "");
-    obj.Semester = (api_obj.Semester !== undefined ?  api_obj.Semester: "");
-    obj.Sections = (api_obj.Sections !== undefined ?  Section.sectionsFactory(api_obj.Sections): []);
-    obj.Department = (api_obj.Department !== undefined ?  new Department(api_obj.Department): null);
-    obj.SemesterObject = (api_obj.SemesterObject !== undefined ?  new Semester(api_obj.SemesterObject): null);
+    Item.call(this,api_obj);
+    // this.DepartmentCode = (api_obj.DepartmentCode !== undefined ?  api_obj.DepartmentCode: "");
+    // this.CourseNumber = (api_obj.CourseNumber !== undefined ?  api_obj.CourseNumber: "");
+    // this.CourseTitle = (api_obj.CourseTitle !== undefined ?  api_obj.CourseTitle: "");
+    this.Description = (api_obj.Description !== undefined ?  api_obj.Description: "");
+    // this.Semester = (api_obj.Semester !== undefined ?  api_obj.Semester: "");
+    this.Sections = (api_obj.Sections !== undefined ?  Section.sectionsFactory(api_obj.Sections): []);
+    this.Department = (api_obj.Department !== undefined ?  new Department(api_obj.Department): null);
+    this.SemesterObject = (api_obj.SemesterObject !== undefined ?  new Semester(api_obj.SemesterObject): null);
   }
   catch(err){
     console.log("COURSE ERR", err);
     return null;
   }
-  return obj;
+  return this;
 };
-
+Course.prototype = Object.create(Item.prototype);
 Course.coursesFactory = function(list_json){
   var list_obj = [];
   if(list_json === null){
@@ -30,6 +31,9 @@ Course.coursesFactory = function(list_json){
     }
   }
   return list_obj;
+};
+Course.prototype.getDepartment = function(){
+    return this.DepartmentCode;
 };
 
 Course.prototype.groupSections = function(){

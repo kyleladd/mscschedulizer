@@ -70,6 +70,10 @@
       courses = mscSchedulizer.Filter.AdministrativeSections(courses);
       console.log("COURSES", courses);
       $("#"+mscSchedulizer.Config.html_elements.department_class_list).html(mscSchedulizer.Course.DisplayShort(courses));
+      for(var i in courses){
+        var course = courses[i];
+        console.log(course.getDepartment());
+      }
 
     })
     .catch(function (err) {
