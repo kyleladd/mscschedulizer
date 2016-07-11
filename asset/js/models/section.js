@@ -1,29 +1,29 @@
 var Section = function(api_obj){
-  var obj = Object.create(Section.prototype);
+  // var obj = Object.create(Section.prototype);
   try{
-    obj.CourseCRN = (api_obj.CourseCRN !== undefined ? api_obj.CourseCRN : "");
-    obj.DepartmentCode = (api_obj.DepartmentCode !== undefined ? api_obj.DepartmentCode : "");
-    obj.CourseNumber = (api_obj.CourseNumber !== undefined ? api_obj.CourseNumber : "");
-    obj.CourseTitle = (api_obj.CourseTitle !== undefined ? api_obj.CourseTitle : "");
-    obj.SectionNumber = (api_obj.SectionNumber !== undefined ? api_obj.SectionNumber : "");
-    obj.Credits = (api_obj.Credits !== undefined ? api_obj.Credits : "");
-    obj.CurrentEnrollment = (api_obj.CurrentEnrollment !== undefined ? api_obj.CurrentEnrollment : "");
-    obj.MaxEnrollment = (api_obj.MaxEnrollment !== undefined ? api_obj.MaxEnrollment : "");
-    obj.Campus = (api_obj.Campus !== undefined ? api_obj.Campus : "");
-    obj.Identifier = (api_obj.Identifier !== undefined ? api_obj.Identifier : "");
-    obj.Term = (api_obj.Term !== undefined ? api_obj.Term : "");
-    obj.Instructor = (api_obj.Instructor !== undefined ? api_obj.Instructor : "");
-    obj.SectionAttributes = (api_obj.SectionAttributes !== undefined ? api_obj.SectionAttributes : "");
-    obj.RequiredIdentifiers = (api_obj.RequiredIdentifiers !== undefined ? api_obj.RequiredIdentifiers : "");
-    obj.Meetings = (Meeting.meetingsFactory(api_obj.Meetings) !== undefined ? Meeting.meetingsFactory(api_obj.Meetings) : []);
-    obj.CourseTerm = (new CourseTerm(api_obj.CourseTerm) !== undefined ? new CourseTerm(api_obj.CourseTerm) : null);
-    obj.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
-    obj.SemesterObject = (new Semester(api_obj.SemesterObject) !== undefined ? new Semester(api_obj.SemesterObject) : null);
+    this.CourseCRN = (api_obj.CourseCRN !== undefined ? api_obj.CourseCRN : "");
+    this.DepartmentCode = (api_obj.DepartmentCode !== undefined ? api_obj.DepartmentCode : "");
+    this.CourseNumber = (api_obj.CourseNumber !== undefined ? api_obj.CourseNumber : "");
+    this.CourseTitle = (api_obj.CourseTitle !== undefined ? api_obj.CourseTitle : "");
+    this.SectionNumber = (api_obj.SectionNumber !== undefined ? api_obj.SectionNumber : "");
+    this.Credits = (api_obj.Credits !== undefined ? api_obj.Credits : "");
+    this.CurrentEnrollment = (api_obj.CurrentEnrollment !== undefined ? api_obj.CurrentEnrollment : "");
+    this.MaxEnrollment = (api_obj.MaxEnrollment !== undefined ? api_obj.MaxEnrollment : "");
+    this.Campus = (api_obj.Campus !== undefined ? api_obj.Campus : "");
+    this.Identifier = (api_obj.Identifier !== undefined ? api_obj.Identifier : "");
+    this.Term = (api_obj.Term !== undefined ? api_obj.Term : "");
+    this.Instructor = (api_obj.Instructor !== undefined ? api_obj.Instructor : "");
+    this.SectionAttributes = (api_obj.SectionAttributes !== undefined ? api_obj.SectionAttributes : "");
+    this.RequiredIdentifiers = (api_obj.RequiredIdentifiers !== undefined ? api_obj.RequiredIdentifiers : "");
+    this.Meetings = (Meeting.meetingsFactory(api_obj.Meetings) !== undefined ? Meeting.meetingsFactory(api_obj.Meetings) : []);
+    this.CourseTerm = (new CourseTerm(api_obj.CourseTerm) !== undefined ? new CourseTerm(api_obj.CourseTerm) : null);
+    this.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
+    this.SemesterObject = (new Semester(api_obj.SemesterObject) !== undefined ? new Semester(api_obj.SemesterObject) : null);
   }
   catch(err){
       return null;
   }
-  return obj;
+  return this;
 };
 
 Section.sectionsFactory = function(list_json){

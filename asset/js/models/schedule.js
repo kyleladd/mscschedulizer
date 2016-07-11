@@ -1,14 +1,14 @@
 var Schedule = function(api_obj){
-  var obj = Object.create(Schedule.prototype);
+  // var obj = Object.create(Schedule.prototype);
   try
   {
     // Schedules just contain lists of courses and do not come directly from the api, but are combination generated
-    obj.Courses = Course.coursesFactory(api_obj);
+    // obj.Courses = Course.coursesFactory(api_obj);
   }
   catch(err){
     return null;
   }
-  return obj;
+  return this;
 };
 
 Schedule.schedulesFactory = function(list_json){

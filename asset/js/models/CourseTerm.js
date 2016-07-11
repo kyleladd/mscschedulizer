@@ -1,16 +1,17 @@
 var CourseTerm = function(api_obj){
-  var obj = Object.create(CourseTerm.prototype);
+  // var obj = Object.create(CourseTerm.prototype);
   try{
-    obj.TermCode = (api_obj.TermCode !== undefined ? api_obj.TermCode : "");
-    obj.TermStart = (api_obj.TermStart !== undefined ? api_obj.TermStart : "");
-    obj.TermEnd = (api_obj.TermEnd !== undefined ? api_obj.TermEnd : "");
-    obj.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
-    obj.SemesterObject = (api_obj.SemesterObject !== undefined ? new Semester(api_obj.SemesterObject) : null);
+    this.TermCode = (api_obj.TermCode !== undefined ? api_obj.TermCode : "");
+    this.TermStart = (api_obj.TermStart !== undefined ? api_obj.TermStart : "");
+    this.TermEnd = (api_obj.TermEnd !== undefined ? api_obj.TermEnd : "");
+    this.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
+    this.SemesterObject = (api_obj.SemesterObject !== undefined ? new Semester(api_obj.SemesterObject) : null);
   }
   catch(err){
-      return null;
+    console.log("CourseTerm err", err);
+    return null;
   }
-  return obj;
+  return this;
 };
 
 CourseTerm.courseTermsFactory = function(list_json){

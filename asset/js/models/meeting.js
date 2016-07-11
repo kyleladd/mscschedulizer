@@ -1,22 +1,22 @@
 var Meeting = function(api_obj){
-  var obj = Object.create(Meeting.prototype);
+  // var obj = Object.create(Meeting.prototype);
   try
   {
-    obj.Id = (api_obj.Id !== undefined ? api_obj.Id : "");
-    obj.CourseCRN = (api_obj.CourseCRN !== undefined ? api_obj.CourseCRN : "");
-    obj.Monday = (api_obj.Monday !== undefined ? api_obj.Monday : "");
-    obj.Tuesday = (api_obj.Tuesday !== undefined ? api_obj.Tuesday : "");
-    obj.Wednesday = (api_obj.Wednesday !== undefined ? api_obj.Wednesday : "");
-    obj.Thursday = (api_obj.Thursday !== undefined ? api_obj.Thursday : "");
-    obj.Friday = (api_obj.Friday !== undefined ? api_obj.Friday : "");
-    obj.StartTime = (api_obj.StartTime !== undefined ? api_obj.StartTime : "");
-    obj.EndTime = (api_obj.EndTime !== undefined ? api_obj.EndTime : "");
-    obj.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
+    this.Id = (api_obj.Id !== undefined ? api_obj.Id : "");
+    this.CourseCRN = (api_obj.CourseCRN !== undefined ? api_obj.CourseCRN : "");
+    this.Monday = (api_obj.Monday !== undefined ? api_obj.Monday : "");
+    this.Tuesday = (api_obj.Tuesday !== undefined ? api_obj.Tuesday : "");
+    this.Wednesday = (api_obj.Wednesday !== undefined ? api_obj.Wednesday : "");
+    this.Thursday = (api_obj.Thursday !== undefined ? api_obj.Thursday : "");
+    this.Friday = (api_obj.Friday !== undefined ? api_obj.Friday : "");
+    this.StartTime = (api_obj.StartTime !== undefined ? api_obj.StartTime : "");
+    this.EndTime = (api_obj.EndTime !== undefined ? api_obj.EndTime : "");
+    this.Semester = (api_obj.Semester !== undefined ? api_obj.Semester : "");
   }
   catch(err){
     return null;
   }
-  return obj;
+  return this;
 };
 
 Meeting.meetingsFactory = function(list_json){

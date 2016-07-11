@@ -1,5 +1,5 @@
 var Filter = function(api_obj){
-  var obj = Object.create(Filter.prototype);
+  // var obj = Object.create(Filter.prototype);
   try{
     // obj.TermCode = api_obj.TermCode;
     // obj.Description = api_obj.Description;
@@ -9,7 +9,7 @@ var Filter = function(api_obj){
   catch(err){
       return null;
   }
-  return obj;
+  return this;
 };
 
 Filter.Display = function(){

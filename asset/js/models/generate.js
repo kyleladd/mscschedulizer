@@ -1,7 +1,7 @@
 var Generate = function(api_obj){
-  var obj = Object.create(Generate.prototype);
+  // var obj = Object.create(Generate.prototype);
   try{
-    return obj;
+    // return obj;
     // obj.DepartmentCode = api_obj.DepartmentCode;
     // obj.Name = api_obj.Name;
     // obj.Semester = api_obj.Semester;
@@ -13,7 +13,7 @@ var Generate = function(api_obj){
   catch(err){
       return null;
   }
-  return obj;
+  return this;
 };
 Generate.getCombinations = function(courses,callback){
     var sectionCombinations = [];

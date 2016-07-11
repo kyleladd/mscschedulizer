@@ -1,18 +1,18 @@
 var Selection = function(api_obj){
-  var obj = Object.create(Selection.prototype);
+  // var obj = Object.create(Selection.prototype);
   try
   {
-    obj.DepartmentCode = (api_obj.DepartmentCode !== undefined ?  api_obj.DepartmentCode: "");
-    obj.CourseNumber = (api_obj.CourseNumber !== undefined ?  api_obj.CourseNumber: "");
-    obj.CourseTitle = (api_obj.CourseTitle !== undefined ?  api_obj.CourseTitle: "");
-    obj.Semester = (api_obj.Semester !== undefined ?  api_obj.Semester: "");
-    obj.CourseCRN = (api_obj.CourseCRN !== undefined ?  api_obj.CourseCRN: "");
+    this.DepartmentCode = (api_obj.DepartmentCode !== undefined ?  api_obj.DepartmentCode: "");
+    this.CourseNumber = (api_obj.CourseNumber !== undefined ?  api_obj.CourseNumber: "");
+    this.CourseTitle = (api_obj.CourseTitle !== undefined ?  api_obj.CourseTitle: "");
+    this.Semester = (api_obj.Semester !== undefined ?  api_obj.Semester: "");
+    this.CourseCRN = (api_obj.CourseCRN !== undefined ?  api_obj.CourseCRN: "");
   }
   catch(err){
     console.log("Selection ERR", err);
     return null;
   }
-  return obj;
+  return this;
 };
 
 Selection.SelectionsFactory = function(list_json){
