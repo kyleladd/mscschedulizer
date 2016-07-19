@@ -546,11 +546,13 @@ module.exports = {
             for (var cp = all_cp.length-1; cp >= 0; cp--) {
                 var section_combination = all_cp[cp];
                 // If combination does not have all of the requirements
+                RequirementsLoop:
                 for (var c = crnrequirements.length-1; c >= 0; c--) {
                     // If CRN is not null, it is a crn requirement
                     if(crnrequirements[c].CourseCRN !== null){
                         if(node_generic_functions.searchListDictionaries(section_combination,crnrequirements[c],false,true).length===0){
                             all_cp.splice(cp, 1);
+                            break RequirementsLoop;
                         }
                     }
                 }
