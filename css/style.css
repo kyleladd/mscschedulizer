@@ -4398,7 +4398,7 @@ ul.footer-nav li a:hover {
     position: fixed;
     bottom: 18px;
     right: 15px;
-    z-index:999999;
+    z-index:1049;
 }
 
 .back-to-top i {
