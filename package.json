@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "js-combinatorics": "^0.5.0",
-    "node_generic_functions": "git+https://github.com/kyleladd/node_generic_functions.git"
+    "node_generic_functions": "git+https://github.com/kyleladd/node_generic_functions.git",
+    "readmore-js": "^2.1.0"
   },
   "devDependencies": {
     "browserify": "^13.0.0",

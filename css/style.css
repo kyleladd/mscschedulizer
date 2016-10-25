@@ -3576,7 +3576,7 @@ and (min-width : 551px){
 }
 
 .blog-post .post-content {
-	padding-left: 54px;
+	/*padding-left: 54px;*/
 	position: relative;
 }
 
@@ -3972,6 +3972,14 @@ ul.post-meta li, ul.post-meta li a {
 
 .sidebar .widget ul {
 	margin: 0;
+	/*margin-left:5px;*/
+	font-weight:bold;
+}
+.sidebar .widget ul ul {
+	margin: 0;
+	margin-left:10px;
+	/*font-size:smaller;*/
+	font-weight:normal;
 }
 
 .widget-search input[type="search"] {
@@ -5953,4 +5961,17 @@ table.course_details tr.field-name td:nth-child(8){
     .classic-title{
         border-bottom-color: #0BB586;
     }
+}
+
+.post-tags{
+	display:none !important;
+}
+
+.blog-post .main-button[data-readmore-toggle]{
+	width:auto;
+	display:inline-block;
+}
+
+.blog-post ol{
+	list-style-type:decimal;;
 }
