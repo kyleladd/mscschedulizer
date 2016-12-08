@@ -540,20 +540,30 @@ module.exports = {
                 }
             });
         });
-        // Checking the CRN requirements within each combination
+        // Checking the CRN requirements within each combination search classes selected for the requirements for this course
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
         if(crnrequirements.length > 0){
+            //Group the requirements by identifier
+            for (var c = crnrequirements.length-1; c >= 0; c--) {
+                crnrequirements[c] = node_generic_functions.searchListDictionaries(course_sections,{DepartmentCode:crnrequirements[c].DepartmentCode,CourseNumber:crnrequirements[c].CourseNumber,CourseTitle:crnrequirements[c].CourseTitle,CourseCRN:crnrequirements[c].CourseCRN},false,false);
+            }
+            var groupedRequirements = mscSchedulizer.groupSectionRequirements(crnrequirements);
+            //for each requirement add to keys like campus required identifiers + identifiers - see groupsections function and do that for reqiuirement identifiers
+            // get all requirement data by searching list dictionaries of course_sections with crn requirement
+            //splice if combination does not include the number of required identifiers with CRN
+
             for (var cp = all_cp.length-1; cp >= 0; cp--) {
                 var section_combination = all_cp[cp];
                 // If combination does not have all of the requirements
                 RequirementsLoop:
-                for (var c = crnrequirements.length-1; c >= 0; c--) {
-                    // If CRN is not null, it is a crn requirement
-                    if(crnrequirements[c].CourseCRN !== null){
-                        if(node_generic_functions.searchListDictionaries(section_combination,crnrequirements[c],false,true).length===0){
-                            all_cp.splice(cp, 1);
-                            break RequirementsLoop;
+                for (var t in groupedRequirements){
+                    if (typeof groupedRequirements[t] !== 'function') {
+                        for (var r = groupedRequirements[t].length-1; r >= 0; r--) {
+                            if(node_generic_functions.searchListDictionaries(section_combination,groupedRequirements[t][r],false,false)!==null){
+                                break RequirementsLoop;
+                            }
                         }
+                        all_cp.splice(cp, 1);
                     }
                 }
             }
@@ -577,6 +587,25 @@ module.exports = {
             }
         }
         return all_cp;
+    },
+    groupSectionRequirements:function(course_sections){
+        //GROUP BY CAMPUS?????? - i don't think so otherwise 'or' would turn into 'and' requirement
+
+        // Sections are to be grouped by identifier
+        var grouped_sections = {};
+        for (var i in course_sections) {
+          var course_section = course_sections[i];
+          var identifier = course_section.Identifier;
+          // Apply Filters To SECTION
+          if(identifier === "" || identifier === null){
+            identifier = "empty";
+          }
+          if (!(identifier in grouped_sections)){
+            grouped_sections[identifier] = [];
+          }
+          grouped_sections[identifier].push(course_section);
+        }
+        return grouped_sections;
     },
     getScheduleCombinations:function(section_combinations){
         // Make sure each class has at least one available section (After filters)
