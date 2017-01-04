@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npm install -g grunt-cli",
-    "build": "npm install && bower install && grunt",
+    "build": "npm install && bower install && grunt --target=prod",
     "test": "node-qunit-phantomjs test/index.html && jshint --verbose asset/js/schedulizer.js"
   },
   "dependencies": {

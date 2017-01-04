@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-
+  var target = grunt.option('target') || 'dev';
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     uglify: {
@@ -67,6 +67,12 @@ module.exports = function(grunt) {
         rename: function(dest, src) {
           return dest + src.replace('.example','');
         }
+      },
+      browserifybundle: {
+        expand: true, src: ['asset/js/schedulizer_bundle.js'], dest: '',
+        rename: function(dest, src) {
+          return dest + src.replace('.js','.min.js');
+        }
       }
     }
   });
@@ -76,7 +82,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-bower-task');
-
-  grunt.registerTask('default', ['copy','browserify','uglify','cssmin']);
+  var tasks = ['copy:main','browserify','cssmin'];
+  if(target==="prod"){
+    tasks.push("uglify");
+  }
+  else{
+    tasks.push("copy:browserifybundle"); 
+  }
+  grunt.registerTask('default', tasks);
   grunt.registerTask('dev', ['default','watch']);
 };
