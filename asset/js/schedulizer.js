@@ -548,8 +548,13 @@ module.exports = {
         if(crnrequirements.length > 0){
             //Group the requirements by identifier
             for (var c = crnrequirements.length-1; c >= 0; c--) {
-                crnrequirements[c] = node_generic_functions.searchListDictionaries(course_sections,{DepartmentCode:crnrequirements[c].DepartmentCode,CourseNumber:crnrequirements[c].CourseNumber,CourseTitle:crnrequirements[c].CourseTitle,CourseCRN:crnrequirements[c].CourseCRN},false,false);
+                
+                var requirement = node_generic_functions.searchListDictionaries(course_sections,{DepartmentCode:crnrequirements[c].DepartmentCode,CourseNumber:crnrequirements[c].CourseNumber,CourseTitle:crnrequirements[c].CourseTitle,CourseCRN:crnrequirements[c].CourseCRN},false,false);
+                if(requirement !== null){
+                    crnrequirements[c] = requirement;
+                }
             }
+            console.log("crnrequirements#2",crnrequirements);
             var groupedRequirements = mscSchedulizer.groupSectionsByIdentifier(crnrequirements);
             //for each requirement add to keys like campus required identifiers + identifiers - see groupsections function and do that for reqiuirement identifiers
             // get all requirement data by searching list dictionaries of course_sections with crn requirement
@@ -562,7 +567,7 @@ module.exports = {
                 // Be sure to test optional requirements BIOL 105
                 CourseSectionTypeLoop:
                 for (var t in groupedSectionCombination){
-                    if (typeof groupedSectionCombination[t] !== 'function') {
+                    // if (typeof groupedSectionCombination[t] !== 'function') {
                         // if this section type has a requirement of the same type
                         if (typeof groupedRequirements[t] !== 'undefined') {
                             for (var r = groupedSectionCombination[t].length-1; r >= 0; r--) {
@@ -570,9 +575,10 @@ module.exports = {
                                     continue CourseSectionTypeLoop;
                                 }
                             }
+                            console.log("splicing");
                             all_cp.splice(cp, 1);
                         }
-                    }
+                    // }
                 }
             }
         }
