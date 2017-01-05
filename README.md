@@ -1,5 +1,5 @@
 # MSCschedulizer
-[![Build Status](https://travis-ci.org/mscweb/mscschedulizer.svg?branch=master)](https://travis-ci.org/mscweb/mscschedulizer)
+[![Build Status](https://travis-ci.org/kyleladd/mscschedulizer.svg?branch=master)](https://travis-ci.org/kyleladd/mscschedulizer)
 ## Installation
 - One command install: ```npm run-script build```
 
