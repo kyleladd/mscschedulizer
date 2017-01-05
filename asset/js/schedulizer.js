@@ -542,9 +542,6 @@ module.exports = {
         });
         // Checking the CRN requirements within each combination search classes selected for the requirements for this course
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
-        console.log("crnrequirements",crnrequirements);
-        console.log("mscSchedulizer.classes_selected",mscSchedulizer.classes_selected);
-        console.log("course_sections[0]",course_sections[0]);
         if(crnrequirements.length > 0){
             //Group the requirements by identifier
             for (var c = crnrequirements.length-1; c >= 0; c--) {
@@ -554,33 +551,30 @@ module.exports = {
                     crnrequirements[c] = requirement;
                 }
             }
-            console.log("crnrequirements#2",crnrequirements);
             var groupedRequirements = mscSchedulizer.groupSectionsByIdentifier(crnrequirements);
             //for each requirement add to keys like campus required identifiers + identifiers - see groupsections function and do that for reqiuirement identifiers
             // get all requirement data by searching list dictionaries of course_sections with crn requirement
             //splice if combination does not include the number of required identifiers with CRN
-
             for (var cp = all_cp.length-1; cp >= 0; cp--) {
                 var section_combination = all_cp[cp];
                 var groupedSectionCombination = mscSchedulizer.groupSectionsByIdentifier(section_combination);
-
                 // Be sure to test optional requirements BIOL 105
                 CourseSectionTypeLoop:
-                for (var t in groupedSectionCombination){
-                    // if (typeof groupedSectionCombination[t] !== 'function') {
+                for (var gs in groupedSectionCombination){
+                    if (typeof groupedSectionCombination[gs] !== 'function') {
                         // if this section type has a requirement of the same type
-                        if (typeof groupedRequirements[t] !== 'undefined') {
-                            for (var r = groupedSectionCombination[t].length-1; r >= 0; r--) {
-                                if(node_generic_functions.searchListDictionaries(groupedRequirements[t],groupedSectionCombination[t][r],false,false)!==null){
+                        if (typeof groupedRequirements[gs] !== 'undefined') {
+                            for (var r = groupedSectionCombination[gs].length-1; r >= 0; r--) {
+                                if(node_generic_functions.searchListDictionaries(groupedRequirements[gs],groupedSectionCombination[gs][r],false,false)!==null){
                                     continue CourseSectionTypeLoop;
                                 }
                             }
-                            console.log("splicing");
                             all_cp.splice(cp, 1);
                         }
-                    // }
+                    }
                 }
             }
+
         }
         // Check to see if the combination has sections that overlap
         //For each combination
@@ -607,7 +601,6 @@ module.exports = {
 
         // Sections are to be grouped by identifier
         var grouped_sections = {};
-        console.log(course_sections);
         for (var i in course_sections) {
             if (typeof course_sections[i] !== 'function') {
               var course_section = course_sections[i];
