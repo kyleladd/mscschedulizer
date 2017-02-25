@@ -4,13 +4,13 @@ module.exports = {
     classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
     schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true,ShowInternational:false},
-    gen_courses :[],
-    semester :JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "Unknown", TermStart: "", TermEnd: ""},
-    department :JSON.parse(localStorage.getItem('department')) || "",
-    department_courses :JSON.parse(localStorage.getItem('department_courses')) || "",
-    current_semester_list:JSON.parse(localStorage.getItem('current_semester_list')) || [],
-    gen_schedules:[],
-    num_loaded:0,
+    gen_courses: [],
+    semester: JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "", TermStart: "", TermEnd: ""},
+    department: JSON.parse(localStorage.getItem('department')) || "",
+    department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
+    current_semester_list: JSON.parse(localStorage.getItem('current_semester_list')) || [],
+    gen_schedules: [],
+    num_loaded: 0,
     getTLD:function(url_location){
         var parts = url_location.hostname.split('.');
         var sndleveldomain = parts.slice(-2).join('.');
