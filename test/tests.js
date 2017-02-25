@@ -719,8 +719,6 @@ QUnit.module("splitMeetings", {
 QUnit.module("getSectionCombinations", {
   beforeEach: function() {
     // prepare something for all following tests
-    // Nursing
-    // aCourse = {"DepartmentCode":"NURS","CourseNumber":"110","CourseTitle":"Fundamentals of Nursing IB","Description":"This course continues with the theoretical foundation of nursing education and nursing practice with a focus on assessment and implementation of basic nursing care.  Students learn to practice therapeutic communication skills to obtain assessment data and implement effective basic nursing care.  Critical thinking skills are facilitated by experiences in the clinical agency which enable the student to correlate theoretical knowledge and campus laboratory skills to nursing practice.  Particular attention is given to the care of the geriatric individual.  Students use medical technology to assess and implement care as well as recognize the role of technology in the diagnosis of health care problems. There is a fee for  transportation.\nPrerequisite: , NURS105 (with C+ grade or better)\n4 credits (4 lecture hours, 5 clinical laboratory hours, and 2 college laboratory per week for weeks 8-15 of the fall or spring  semester)\n","Semester":"201608","Sections":[{"CourseCRN":"10081","DepartmentCode":"NURS","CourseNumber":"110","CourseTitle":"Fundamentals of Nursing IB","SectionNumber":"01","Credits":4,"CurrentEnrollment":2,"MaxEnrollment":63,"Campus":"M","Identifier":"A1","Term":"9","Instructor":"Stephenson, Jane E","SectionAttributes":"HESI","RequiredIdentifiers":"A2;A3","Meetings":[{"Id":69330,"CourseCRN":"10081","Monday":1,"Tuesday":1,"Wednesday":0,"Thursday":0,"Friday":0,"StartTime":"1400","EndTime":"1550","Semester":"201608"}],"CourseTerm":{"TermCode":"9","TermStart":"2016-10-19T00:00:00","TermEnd":"2016-12-09T00:00:00","Semester":"201608","SemesterObject":null},"Semester":"201608","SemesterObject":null},{"CourseCRN":"10155","DepartmentCode":"NURS","CourseNumber":"110","CourseTitle":"Fundamentals of Nursing IB","SectionNumber":"01L","Credits":0,"CurrentEnrollment":0,"MaxEnrollment":7,"Campus":"M","Identifier":"A2","Term":"9","Instructor":"Peck-Sanford, Kristen M","SectionAttributes":null,"RequiredIdentifiers":"A1;A3","Meetings":[{"Id":69360,"CourseCRN":"10155","Monday":0,"Tuesday":0,"Wednesday":1,"Thursday":0,"Friday":0,"StartTime":"1201","EndTime":"1300","Semester":"201608"},{"Id":69361,"CourseCRN":"10155","Monday":0,"Tuesday":0,"Wednesday":1,"Thursday":0,"Friday":0,"StartTime":"0700","EndTime":"1200","Semester":"201608"},{"Id":69362,"CourseCRN":"10155","Monday":0,"Tuesday":0,"Wednesday":1,"Thursday":0,"Friday":0,"StartTime":"0600","EndTime":"0659","Semester":"201608"}],"CourseTerm":{"TermCode":"9","TermStart":"2016-10-19T00:00:00","TermEnd":"2016-12-09T00:00:00","Semester":"201608","SemesterObject":null},"Semester":"201608","SemesterObject":null},{"CourseCRN":"10156","DepartmentCode":"NURS","CourseNumber":"110","CourseTitle":"Fundamentals of Nursing IB","SectionNumber":"09L","Credits":0,"CurrentEnrollment":1,"MaxEnrollment":7,"Campus":"M","Identifier":"A2","Term":"9","Instructor":"Matt, Brian ","SectionAttributes":null,"RequiredIdentifiers":"A1;A3","Meetings":[{"Id":69363,"CourseCRN":"10156","Monday":0,"Tuesday":0,"Wednesday":0,"Thursday":1,"Friday":0,"StartTime":"0600","EndTime":"0659","Semester":"201608"},{"Id":69364,"CourseCRN":"10156","Monday":0,"Tuesday":0,"Wednesday":0,"Thursday":1,"Friday":0,"StartTime":"1201","EndTime":"1300","Semester":"201608"},{"Id":69365,"CourseCRN":"10156","Monday":0,"Tuesday":0,"Wednesday":0,"Thursday":1,"Friday":0,"StartTime":"0700","EndTime":"1200","Semester":"201608"}],"CourseTerm":{"TermCode":"9","TermStart":"2016-10-19T00:00:00","TermEnd":"2016-12-09T00:00:00","Semester":"201608","SemesterObject":null},"Semester":"201608","SemesterObject":null},{"CourseCRN":"14551","DepartmentCode":"NURS","CourseNumber":"110","CourseTitle":"Fundamentals of Nursing IB","SectionNumber":"01R","Credits":0,"CurrentEnrollment":1,"MaxEnrollment":8,"Campus":"M","Identifier":"A3","Term":"9","Instructor":"Graham, Carol A","SectionAttributes":null,"RequiredIdentifiers":"A1;A2","Meetings":[{"Id":70408,"CourseCRN":"14551","Monday":0,"Tuesday":0,"Wednesday":0,"Thursday":0,"Friday":1,"StartTime":"0900","EndTime":"1050","Semester":"201608"}],"CourseTerm":{"TermCode":"9","TermStart":"2016-10-19T00:00:00","TermEnd":"2016-12-09T00:00:00","Semester":"201608","SemesterObject":null},"Semester":"201608","SemesterObject":null}]};
     // CITA 120 - lab,lecture,campus
     sandbox = sinon.sandbox.create();
     mscSchedulizer.classes_selected = [];
@@ -735,15 +733,12 @@ QUnit.module("getSectionCombinations", {
 });
     QUnit.test("should return the number of section combinations", function(assert) {
         // Ignore filters, don't filter anything out
-        // mscSchedulizer.applyFiltersToSection = sandbox.stub().returns(false);
         sandbox.stub(mscSchedulizer,'applyFiltersToSection').returns(false);
-        // sandbox.stub(mscSchedulizer, 'campusFilter').returns(true);
         var result = mscSchedulizer.getSectionCombinations(aCourse.Sections);
         assert.deepEqual(result.length, 3, "should return valid generated combinations based on Identifiers"); 
     });
     QUnit.test("should return section combinations that don't include multiple campuses", function(assert) {
         // Ignore filters, don't filter anything out
-        // mscSchedulizer.applyFiltersToSection = sandbox.stub().returns(false);
         sandbox.stub(mscSchedulizer,'applyFiltersToSection').returns(false);
         aCourse = testData.courseMultipleCampuses;
         var result = mscSchedulizer.getSectionCombinations(aCourse.Sections);
@@ -757,7 +752,6 @@ QUnit.module("getSectionCombinations", {
     });
     QUnit.test("crn-specific selections should have 'or' functionality if multiple are selected with the same identifier", function(assert) {
         // Ignore filters, don't filter anything out
-        // mscSchedulizer.applyFiltersToSection = sandbox.stub().returns(false);
         sandbox.stub(mscSchedulizer,'applyFiltersToSection').returns(false);
         mscSchedulizer.classes_selected = [
             {
@@ -786,7 +780,6 @@ QUnit.module("getSectionCombinations", {
 
     QUnit.test("non crn-specific selections should have 'or' functionality if multiple are selected with the same identifier", function(assert) {
         // Ignore filters, don't filter anything out
-        // mscSchedulizer.applyFiltersToSection = sandbox.stub().returns(false);
         sandbox.stub(mscSchedulizer,'applyFiltersToSection').returns(false);
         mscSchedulizer.classes_selected = [
             {
@@ -815,10 +808,8 @@ QUnit.module("groupSectionsByIdentifier", {
 });
     QUnit.test("should group sections based on their identifier", function(assert) {
         // Ignore filters, don't filter anything out
-        // mscSchedulizer.applyFiltersToSection = sandbox.stub().returns(false);
         sandbox.stub(mscSchedulizer,'applyFiltersToSection').returns(false);
         var result = mscSchedulizer.groupSectionsByIdentifier(aCourse.Sections);
-        // assert.deepEqual(result.length, 3, "should return valid generated combinations based on Identifiers"); 
         assert.equal(Object.keys(result).length, 3, "Should have a key for each campus");
         assert.notDeepEqual(result["A1"], undefined, "Should have a key for each A1");
         assert.notDeepEqual(result["A2"], undefined, "Should have a key for each A2");
