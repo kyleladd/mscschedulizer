@@ -4,13 +4,13 @@ module.exports = {
     classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
     schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true,ShowInternational:false},
-    gen_courses :[],
-    semester :JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "Unknown", TermStart: "", TermEnd: ""},
-    department :JSON.parse(localStorage.getItem('department')) || "",
-    department_courses :JSON.parse(localStorage.getItem('department_courses')) || "",
-    current_semester_list:JSON.parse(localStorage.getItem('current_semester_list')) || [],
-    gen_schedules:[],
-    num_loaded:0,
+    gen_courses: [],
+    semester: JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "", TermStart: "", TermEnd: ""},
+    department: JSON.parse(localStorage.getItem('department')) || "",
+    department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
+    current_semester_list: JSON.parse(localStorage.getItem('current_semester_list')) || [],
+    gen_schedules: [],
+    num_loaded: 0,
     getTLD:function(url_location){
         var parts = url_location.hostname.split('.');
         var sndleveldomain = parts.slice(-2).join('.');
@@ -542,13 +542,15 @@ module.exports = {
         });
         // Checking the CRN requirements within each combination search classes selected for the requirements for this course
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
+        // crnrequirements = crnrequirements.filter(return CourseCRN !== null);
         if(crnrequirements.length > 0){
             //Group the requirements by identifier
             for (var c = crnrequirements.length-1; c >= 0; c--) {
-                
-                var requirement = node_generic_functions.searchListDictionaries(course_sections,{DepartmentCode:crnrequirements[c].DepartmentCode,CourseNumber:crnrequirements[c].CourseNumber,CourseTitle:crnrequirements[c].CourseTitle,CourseCRN:crnrequirements[c].CourseCRN},false,false);
-                if(requirement !== null){
-                    crnrequirements[c] = requirement;
+                if(crnrequirements[c].CourseCRN !==null){
+                    var requirement = node_generic_functions.searchListDictionaries(course_sections,{DepartmentCode:crnrequirements[c].DepartmentCode,CourseNumber:crnrequirements[c].CourseNumber,CourseTitle:crnrequirements[c].CourseTitle,CourseCRN:crnrequirements[c].CourseCRN},false,false);
+                    if(requirement !== null){
+                        crnrequirements[c] = requirement;
+                    }
                 }
             }
             var groupedRequirements = mscSchedulizer.groupSectionsByIdentifier(crnrequirements);
@@ -574,7 +576,6 @@ module.exports = {
                     }
                 }
             }
-
         }
         // Check to see if the combination has sections that overlap
         //For each combination
@@ -583,8 +584,8 @@ module.exports = {
             combinationloop:
             for (var s = combination.length-1; s >= 1; s--) {
                 var section1 = combination[s];
-                for (var t = s-1; t >= 0; t--) {
-                    var section2 = combination[t];
+                for (var z = s-1; z >= 0; z--) {
+                    var section2 = combination[z];
                     if(mscSchedulizer.doSectionsOverlap(section1,section2)){
                         //If they do overlap, remove combination and break
                         all_cp.splice(i, 1);
