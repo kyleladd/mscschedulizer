@@ -482,12 +482,63 @@ module.exports = {
         }
     },
     loadAll:function(courses,options,callback){
+        console.log(courses);
         if(typeof options === "undefined"){
             options = {editable:true};
         }
         var outputCombinations = [courses];
         mscSchedulizer.gen_schedules = outputCombinations;
         callback(outputCombinations, options);
+    },
+    loadFullSchedule: function(schedule){
+      var courses = JSON.parse(JSON.stringify(schedule[0])); //avoid byref
+      for (var c = courses.length-1; c >= 0; c--) {
+        for (var s = courses[c].Sections.length-1; s >= 0; s--) {
+          if(mscSchedulizer.applyFiltersToSection(courses[c].Sections[s],mscSchedulizer.schedule_filters)){
+            courses[c].Sections.splice(s, 1);
+          }
+        } 
+      }
+      mscSchedulizer.createSchedules([courses], {
+        eventClick: function(calEvent, jsEvent, view) {
+            var events = $(this).closest(".fc").fullCalendar('clientEvents', function(evt) {
+                return true;
+            });
+            var myel = $('#section_details').length ? $('#section_details') : $(mscSchedulizer.modalTemplate("section_details")).appendTo("body");
+            $('#section_details').on('show.bs.modal', function (event) {
+                var modal = $(this);
+                modal.find('.modal-title').text("Course Section Details");
+                var section_output = JSON.parse(JSON.stringify(calEvent.course));//avoid byref
+                section_output.Sections = [calEvent.section];
+                modal.find('.modal-body').html(mscSchedulizer.detailedCoursesOutput([section_output],false,false));
+                modal.find('.modal-footer').html("<button type=\"button\" class=\"btn btn-danger remove-from-consideration\" data-event-id=\"" + calEvent._id + "\" data-section=\"" + escape(JSON.stringify(calEvent.section)) + "\" data-dismiss=\"modal\">Remove</button><button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>");
+                $('.course_details').basictable();
+            });
+            $('#section_details').modal({show:true});
+        },
+        eventDrop: function(event, delta, revertFunc) {
+        },
+        eventResize: function(event, delta, revertFunc) {
+        },
+        dayClick: function(date, jsEvent, view) {
+        },
+        eventMouseover: function( event, jsEvent, view ) {
+          var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+            return el.section.CourseCRN === event.section.CourseCRN;
+          });
+          for(var i in matching_section_events){
+            $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
+          }
+        },
+        eventMouseout: function( event, jsEvent, view ) {
+          var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+            return el.section.CourseCRN === event.section.CourseCRN;
+          });
+          for(var i in matching_section_events){
+            $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
+          }
+        }
+      });
     },
     getCombinations:function(courses,callback){
         var sectionCombinations = [];
