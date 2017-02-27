@@ -5844,6 +5844,11 @@ ul.slicknav_nav{
 .fc-body{
     border-top:2px solid #eee;
 }
+.fc .event-hover{
+	-webkit-box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
+	-moz-box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
+	box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.75);
+}
 
 .bootstrap-select .dropdown-menu.open{
 	z-index:9999999;

@@ -481,6 +481,14 @@ module.exports = {
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><strong>No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</strong></p>");
         }
     },
+    loadAll:function(courses,options,callback){
+        if(typeof options === "undefined"){
+            options = {editable:true};
+        }
+        var outputCombinations = [courses];
+        mscSchedulizer.gen_schedules = outputCombinations;
+        callback(outputCombinations, options);
+    },
     getCombinations:function(courses,callback){
         var sectionCombinations = [];
         var courseslist = [];
@@ -1031,7 +1039,7 @@ module.exports = {
         }
         return meetups;
     },
-    createSchedules:function(schedules){
+    createSchedules:function(schedules,options){
         mscSchedulizer.num_loaded = 0;
         if(schedules !== null && schedules.length > 0 ){
             var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
@@ -1067,7 +1075,7 @@ module.exports = {
                             var meetups = mscSchedulizer.splitMeetings(meeting);
                             for (var u in meetups) {
                                 var meetup = meetups[u];
-                                events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer_config.colors[c]});
+                                events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer_config.colors[c],course:course,section:section,meeting:meeting});
                             }
                         }
                     }
@@ -1091,24 +1099,27 @@ module.exports = {
             $('#modal_courseDetails').modal({show:false});
             $('#modal_courseDetails').on('show.bs.modal', function (event) {
                 var trigger = $(event.relatedTarget); // Element that triggered the modal
-                // var schedule = trigger.data('schedule'); // Extract info from data-* attributes
                 var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
                 var modal = $(this);
                 modal.find('.modal-title').text("Schedule Details");
                 modal.find('.modal-body').html('<div style=\'display:block;\'>' + mscSchedulizer.exportLink(schedule) + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
                 $('.course_details').basictable();
             });
-            mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
+            mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
         }
         else{
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span></p>");
+            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + (!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])) ? "<a href=\"alternate_view.html\">Try the alternate view</a>" : "") + "</p>");
         }
     },
-    initSchedules:function(schedules,start,count){
+    initSchedules:function(schedules,start,count,options){
+        if(typeof options === 'undefined'){
+            options = {};
+        }
         for (var i = 0; i < count ; i++) {
             var num = start + i;
             if(schedules[num] !== undefined){
-                $('#schedule_' + num).fullCalendar({
+                options = mscSchedulizer.merge_options(
+                {
                     editable: false,
                     handleWindowResize: true,
                     slotEventOverlap:false,
@@ -1124,8 +1135,12 @@ module.exports = {
                     height:'auto',
                     // allDayText: 'TBD',
                     allDaySlot: false,
-                    events: schedules[num].events
-                });
+                    events: schedules[num].events,
+                    eventRender: function (event, element) {
+                        element.attr("data-event-id",event._id); //for converting fullcal js object to html element
+                    }
+                },options);
+                $('#schedule_' + num).fullCalendar(options);
                 var additionalOutput = "";
                 if(schedules[num].courseWithoutMeeting.length > 0){
                     additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
@@ -1136,7 +1151,17 @@ module.exports = {
             }
         }
     },
-    optionsOutput:function(schedule){
+    optionsOutput:function(schedule,options){
+        if(typeof(options) === "undefined"){
+            options = {};
+        }
+        options = mscSchedulizer.merge_options(
+        {
+            favorite:true,
+            details:true,
+            preview:true,
+            export:true
+        },options);
         var result = "<div class=\"options\">";
         result += mscSchedulizer.favoriteLinkOutput(schedule);
         result += mscSchedulizer.detailsLinkOutput(schedule);
@@ -1239,5 +1264,17 @@ module.exports = {
             return moment(a.StartTime,"Hmm") - moment(b.StartTime,"Hmm");
         }
         return 0;
-    }
+    },
+    /**
+    * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
+    * @param obj1
+    * @param obj2
+    * @returns obj3 a new object based on obj1 and obj2
+    */
+    merge_options: function(obj1,obj2){
+        var obj3 = {};
+        for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+        for (var attributename in obj2) { obj3[attributename] = obj2[attributename]; }
+        return obj3;
+    },
 };
