@@ -73,12 +73,19 @@
         });
     }
     // Generate Page
-    mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["generate.html"])){
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
-      mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
+      if(mscSchedulizer.filtered_course_sections.length > 0){
+        console.log("using only alt view course sections");
+        mscSchedulizer.gen_courses = mscSchedulizer.filtered_course_sections;
+        mscSchedulizer.getCombinations(mscSchedulizer.filtered_course_sections,mscSchedulizer.createSchedules);
+      }
+      else{
+        console.log("using all course sections");
+        mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
+      }
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
           mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
@@ -112,16 +119,10 @@
     }
 
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])){
-
+      mscSchedulizer.setFilteredCourseSections([]);
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
-      // mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
-      // $(window).scroll(function(){
-      //   if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
-      //     mscSchedulizer.initSchedules(mscSchedulizer.gen_schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad);
-      //   }
-      // });
       $("#"+mscSchedulizer_config.html_elements.filters.not_full).click(function(){
           mscSchedulizer.schedule_filters.NotFull = !mscSchedulizer.schedule_filters.NotFull;
           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
@@ -147,12 +148,9 @@
           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
           mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
       });
-
-
-
-         mscSchedulizer.getCourseInfos(function(courses){
-          mscSchedulizer.loadAll(courses,{},mscSchedulizer.loadFullSchedule);
-        });
+      mscSchedulizer.getCourseInfos(function(courses){
+        mscSchedulizer.loadAll(courses,{},mscSchedulizer.loadFullSchedule);
+      });
       $(document).on("click",".remove-from-consideration",function(data) {
         var that = $(this);
         var matching_section_events = $(".fc").fullCalendar('clientEvents').filter(function (el) {
@@ -161,7 +159,29 @@
         for(var i in matching_section_events){
           $(".fc").fullCalendar('removeEvents', matching_section_events[i]._id);
         }
-
+        var filtered_courses = [];
+        var all_courses = $(".fc").fullCalendar('clientEvents');
+        for(var i = 0; i < all_courses.length; i ++){
+          var fullCalendarCourse = all_courses[i];
+          //if course not in array, push it,
+          //some are filtered out so they aren't on the calendar - this is a temp workaround
+          var course_index = node_generic_functions.searchListDictionaries(filtered_courses,{DepartmentCode:fullCalendarCourse.course.DepartmentCode,CourseNumber:fullCalendarCourse.course.CourseNumber,CourseTitle:fullCalendarCourse.course.CourseTitle},true);
+          //if course does not exist
+          if(course_index===-1){
+            fullCalendarCourse.course.Sections = [fullCalendarCourse.section];
+            filtered_courses.push(JSON.parse(JSON.stringify(fullCalendarCourse.course)));
+          }
+          else{
+            //if section does not exist, push it
+            //if course not in array, push it,
+            var section_index = node_generic_functions.searchListDictionaries(filtered_courses[course_index].Sections,{CourseCRN:fullCalendarCourse.section.CourseCRN},true);
+            if(section_index===-1){
+              fullCalendarCourse.course.Sections = [fullCalendarCourse.section];
+              filtered_courses[course_index].Sections.push(JSON.parse(JSON.stringify(fullCalendarCourse.section)));
+            }
+          }
+        }
+        mscSchedulizer.setFilteredCourseSections(filtered_courses);
       });
     }
     // Load schedules from favorites array

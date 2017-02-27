@@ -9,6 +9,7 @@ module.exports = {
     department: JSON.parse(localStorage.getItem('department')) || "",
     department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
     current_semester_list: JSON.parse(localStorage.getItem('current_semester_list')) || [],
+    filtered_course_sections: JSON.parse(localStorage.getItem('filtered_course_sections')) || [],
     gen_schedules: [],
     num_loaded: 0,
     getTLD:function(url_location){
@@ -73,6 +74,10 @@ module.exports = {
         }
         localStorage.setItem("current_semester_list", JSON.stringify(semesters));
         mscSchedulizer.current_semester_list = semesters;
+    },
+    setFilteredCourseSections:function(filteredCourseSections){
+        localStorage.setItem("filtered_course_sections", JSON.stringify(filteredCourseSections));
+        mscSchedulizer.filtered_course_sections = filteredCourseSections;
     },
     setSemester:function(semester){
         try{
@@ -482,7 +487,6 @@ module.exports = {
         }
     },
     loadAll:function(courses,options,callback){
-        console.log(courses);
         if(typeof options === "undefined"){
             options = {editable:true};
         }
