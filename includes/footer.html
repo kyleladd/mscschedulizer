@@ -119,7 +119,7 @@
     }
 
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])){
-      mscSchedulizer.setFilteredCourseSections([]);
+      mscSchedulizer.setUserCourseAdjustments([]);
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
@@ -159,29 +159,31 @@
         for(var i in matching_section_events){
           $(".fc").fullCalendar('removeEvents', matching_section_events[i]._id);
         }
-        var filtered_courses = [];
-        var all_courses = $(".fc").fullCalendar('clientEvents');
-        for(var i = 0; i < all_courses.length; i ++){
-          var fullCalendarCourse = all_courses[i];
-          //if course not in array, push it,
-          //some are filtered out so they aren't on the calendar - this is a temp workaround
-          var course_index = node_generic_functions.searchListDictionaries(filtered_courses,{DepartmentCode:fullCalendarCourse.course.DepartmentCode,CourseNumber:fullCalendarCourse.course.CourseNumber,CourseTitle:fullCalendarCourse.course.CourseTitle},true);
-          //if course does not exist
-          if(course_index===-1){
-            fullCalendarCourse.course.Sections = [fullCalendarCourse.section];
-            filtered_courses.push(JSON.parse(JSON.stringify(fullCalendarCourse.course)));
-          }
-          else{
-            //if section does not exist, push it
-            //if course not in array, push it,
-            var section_index = node_generic_functions.searchListDictionaries(filtered_courses[course_index].Sections,{CourseCRN:fullCalendarCourse.section.CourseCRN},true);
-            if(section_index===-1){
-              fullCalendarCourse.course.Sections = [fullCalendarCourse.section];
-              filtered_courses[course_index].Sections.push(JSON.parse(JSON.stringify(fullCalendarCourse.section)));
-            }
-          }
-        }
-        mscSchedulizer.setFilteredCourseSections(filtered_courses);
+        console.log("removed sections list",matching_section_events);
+        // var filtered_out_course_sections = [];
+        // //All full calendar courses
+        // var all_courses = $(".fc").fullCalendar('clientEvents');
+        // for(var i = 0; i < all_courses.length; i ++){
+        //   var fullCalendarCourse = all_courses[i];
+        //   //if course not in array, push it as a filtered out course
+        //   //some are filtered out so they aren't on the calendar - this is a temp workaround
+        //   var course_index = node_generic_functions.searchListDictionaries(filtered_out_course_sections,{DepartmentCode:fullCalendarCourse.course.DepartmentCode,CourseNumber:fullCalendarCourse.course.CourseNumber,CourseTitle:fullCalendarCourse.course.CourseTitle},true);
+        //   //if course does not exist
+        //   if(course_index===-1){
+        //     fullCalendarCourse.course.Sections = [fullCalendarCourse.section];
+        //     filtered_out_course_sections.push(JSON.parse(JSON.stringify(fullCalendarCourse.course)));
+        //   }
+        //   else{
+        //     //if section does not exist, push it
+        //     //if course not in array, push it,
+        //     var section_index = node_generic_functions.searchListDictionaries(filtered_out_course_sections[course_index].Sections,{CourseCRN:fullCalendarCourse.section.CourseCRN},true);
+        //     if(section_index===-1){
+        //       fullCalendarCourse.course.Sections = [fullCalendarCourse.section];
+        //       filtered_out_course_sections[course_index].Sections.push(JSON.parse(JSON.stringify(fullCalendarCourse.section)));
+        //     }
+        //   }
+        // }
+        // mscSchedulizer.updateUserCourseAdjustments(filtered_out_course_sections);
       });
     }
     // Load schedules from favorites array

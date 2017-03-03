@@ -9,7 +9,7 @@ module.exports = {
     department: JSON.parse(localStorage.getItem('department')) || "",
     department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
     current_semester_list: JSON.parse(localStorage.getItem('current_semester_list')) || [],
-    filtered_course_sections: JSON.parse(localStorage.getItem('filtered_course_sections')) || [],
+    user_course_adjustments: JSON.parse(localStorage.getItem('user_course_adjustments')) || [],
     gen_schedules: [],
     num_loaded: 0,
     getTLD:function(url_location){
@@ -75,9 +75,9 @@ module.exports = {
         localStorage.setItem("current_semester_list", JSON.stringify(semesters));
         mscSchedulizer.current_semester_list = semesters;
     },
-    setFilteredCourseSections:function(filteredCourseSections){
-        localStorage.setItem("filtered_course_sections", JSON.stringify(filteredCourseSections));
-        mscSchedulizer.filtered_course_sections = filteredCourseSections;
+    setUserCourseAdjustments:function(user_course_adjustments){
+        localStorage.setItem("user_course_adjustments", JSON.stringify(user_course_adjustments));
+        mscSchedulizer.user_course_adjustments = user_course_adjustments;
     },
     setSemester:function(semester){
         try{
@@ -473,6 +473,7 @@ module.exports = {
         courses_list = courses_list.replace('&','?');
         if(courses_list !== ""){
             $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester="+mscSchedulizer.semester.TermCode, function(courses){
+                //Make users adjustments here
                 mscSchedulizer.gen_courses = courses;
                 return callback(mscSchedulizer.gen_courses,callback2);
             })
