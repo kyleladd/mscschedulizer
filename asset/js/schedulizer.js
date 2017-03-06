@@ -1209,7 +1209,7 @@ module.exports = {
         for (var i = 0; i < count ; i++) {
             var num = start + i;
             if(schedules[num] !== undefined){
-                options = mscSchedulizer.merge_options(
+                var final_options = mscSchedulizer.merge_options(
                 {
                     editable: false,
                     handleWindowResize: true,
@@ -1231,7 +1231,7 @@ module.exports = {
                         element.attr("data-event-id",event._id); //for converting fullcal js object to html element
                     }
                 },options);
-                $('#schedule_' + num).fullCalendar(options);
+                $('#schedule_' + num).fullCalendar(final_options);
                 var additionalOutput = "";
                 if(schedules[num].courseWithoutMeeting.length > 0){
                     additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
@@ -1246,13 +1246,14 @@ module.exports = {
         if(typeof(options) === "undefined"){
             options = {};
         }
-        options = mscSchedulizer.merge_options(
+        var final_options = mscSchedulizer.merge_options(
         {
             favorite:true,
             details:true,
             preview:true,
             export:true
         },options);
+        //TODO-KL: not using these options, why?
         var result = "<div class=\"options\">";
         result += mscSchedulizer.favoriteLinkOutput(schedule);
         result += mscSchedulizer.detailsLinkOutput(schedule);
