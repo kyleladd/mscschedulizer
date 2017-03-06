@@ -9,7 +9,8 @@ module.exports = {
     department: JSON.parse(localStorage.getItem('department')) || "",
     department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
     current_semester_list: JSON.parse(localStorage.getItem('current_semester_list')) || [],
-    user_course_adjustments: JSON.parse(localStorage.getItem('user_course_adjustments')) || [],
+    user_course_adjustments: JSON.parse(localStorage.getItem('user_course_adjustments')) || {Sections:[],Meetings:[]}, // type:add/remove/update update section by crn, update meeting by id - does meeting id change, i can't remember if it is a fake unique primary key. - i think it stays the same
+    do_apply_user_adjustments: JSON.parse(localStorage.getItem('do_apply_user_adjustments')) || "true",
     gen_schedules: [],
     num_loaded: 0,
     getTLD:function(url_location){
@@ -157,13 +158,17 @@ module.exports = {
     },
     getDepartmentCourses: function(department){
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
-        $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(results){
+        $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(courses){
+            if(mscSchedulizer.do_apply_user_adjustments === "true"){
+                //Make users adjustments here
+                courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+            }
             //remove this later
             var output = "";
             // Remove sections that are administrative entry
-            results = mscSchedulizer.removeAdministrativeSections(results);
-            for (var i in results) {
-                var course = results[i];
+            courses = mscSchedulizer.removeAdministrativeSections(courses);
+            for (var i in courses) {
+                var course = courses[i];
                 //Change to just one html output set
                 output += "<li><a class='a_course' data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
             }
@@ -215,13 +220,17 @@ module.exports = {
     },
     getDepartmentCoursesDetails: function(department){
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
-        $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(results){
+        $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(courses){
+            if(mscSchedulizer.do_apply_user_adjustments === "true"){
+                //Make users adjustments here
+                courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+            }
             // Remove sections that are administrative entry
-            results = mscSchedulizer.removeAdministrativeSections(results);
-            // Save results to mscschedulizer variable in localstorage
-            localStorage.setItem("department_courses", JSON.stringify(results));
-            mscSchedulizer.department_courses = results;
-            var output = mscSchedulizer.getDepartmentCoursesOutput(results);
+            courses = mscSchedulizer.removeAdministrativeSections(courses);
+            // Save courses to mscschedulizer variable in localstorage
+            localStorage.setItem("department_courses", JSON.stringify(courses));
+            mscSchedulizer.department_courses = courses;
+            var output = mscSchedulizer.getDepartmentCoursesOutput(courses);
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
         })
         .fail(function() {
@@ -473,7 +482,10 @@ module.exports = {
         courses_list = courses_list.replace('&','?');
         if(courses_list !== ""){
             $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester="+mscSchedulizer.semester.TermCode, function(courses){
-                //Make users adjustments here
+                if(mscSchedulizer.do_apply_user_adjustments === "true"){
+                    //Make users adjustments here
+                    courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+                }
                 mscSchedulizer.gen_courses = courses;
                 return callback(mscSchedulizer.gen_courses,callback2);
             })
@@ -486,6 +498,25 @@ module.exports = {
         else{
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><strong>No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</strong></p>");
         }
+    },
+    applyUserAdjustments: function(courses,adjustments){
+        adjustments.Sections.forEach(function(section_adjustment){
+            if(section_adjustment.type === "remove"){
+                for (var c = courses.length-1; c >= 0; c--) {
+                    for (var s = courses[c].Sections.length-1; s >= 0; s--) {
+                        // Apply filters to section function
+                        if(courses[c].Sections[s].CourseCRN === section_adjustment.Section.CourseCRN){
+                            courses[c].Sections.splice(s, 1);
+                        }
+                        if(courses[c].Sections.length === 0){
+                            courses.splice(c, 1);
+                        }
+                    }
+                }
+            }
+        });
+        console.log("COURSES",courses);
+        return courses;
     },
     loadAll:function(courses,options,callback){
         if(typeof options === "undefined"){
@@ -568,6 +599,8 @@ module.exports = {
             }
         }
         mscSchedulizer.gen_schedules = outputCombinations;
+        console.log("genned schedules",mscSchedulizer.gen_schedules);
+        console.log("genned schedules no ref",JSON.parse(JSON.stringify(mscSchedulizer.gen_schedules)));
         callback(outputCombinations);
     },
     getSectionCombinations:function(course_sections){
@@ -1096,6 +1129,7 @@ module.exports = {
         return meetups;
     },
     createSchedules:function(schedules,options){
+        console.log("CREATE SCHED SCHEDS",schedules);
         mscSchedulizer.num_loaded = 0;
         if(schedules !== null && schedules.length > 0 ){
             var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
@@ -1168,6 +1202,7 @@ module.exports = {
         }
     },
     initSchedules:function(schedules,start,count,options){
+        console.log("INIT SCHED SCHEDS",schedules);
         if(typeof options === 'undefined'){
             options = {};
         }
