@@ -249,6 +249,7 @@ module.exports = {
         });
     },
     getDepartmentCoursesOutput: function(courses){
+        //TODO-KL: apply user adjustments here
         var department_courses = JSON.parse(JSON.stringify(courses));
         //Filter out sections based on user's filters
         for (var c = department_courses.length-1; c >= 0; c--) {
@@ -276,9 +277,9 @@ module.exports = {
       }
     },
     getSemestersList:function(callback){
-        $.getJSON(mscSchedulizer_config.api_host + "/semesters/", function(results){
-            mscSchedulizer.setCurrentSemesterListVar(results);
-            callback(results);
+        $.getJSON(mscSchedulizer_config.api_host + "/semesters/", function(semesters){
+            mscSchedulizer.setCurrentSemesterListVar(semesters);
+            callback(semesters);
         })
         .fail(function() {
             mscSchedulizer.setCurrentSemesterListVar(null);
@@ -299,10 +300,10 @@ module.exports = {
         $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
     },
     getDepartments:function(callback){
-        $.getJSON(mscSchedulizer_config.api_host + "/departments/?semester="+mscSchedulizer.semester.TermCode, function(results){
+        $.getJSON(mscSchedulizer_config.api_host + "/departments/?semester="+mscSchedulizer.semester.TermCode, function(departments){
             var output = "";
-            for (var i in results) {
-                var department = results[i];
+            for (var i in departments) {
+                var department = departments[i];
                 output += "<option class='a_department' value='"+department.DepartmentCode + "' " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
             }
             $("#"+mscSchedulizer_config.html_elements.departments_select).html(output);
