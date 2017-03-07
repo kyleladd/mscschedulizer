@@ -568,23 +568,23 @@ module.exports = {
         eventResize: function(event, delta, revertFunc) {
         },
         dayClick: function(date, jsEvent, view) {
-        },
-        eventMouseover: function( event, jsEvent, view ) {
-          var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
-            return el.section.CourseCRN === event.section.CourseCRN;
-          });
-          for(var i in matching_section_events){
-            $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
-          }
-        },
-        eventMouseout: function( event, jsEvent, view ) {
-          var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
-            return el.section.CourseCRN === event.section.CourseCRN;
-          });
-          for(var i in matching_section_events){
-            $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
-          }
         }
+        // eventMouseover: function( event, jsEvent, view ) {
+        //   var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+        //     return el.section.CourseCRN === event.section.CourseCRN;
+        //   });
+        //   for(var i in matching_section_events){
+        //     $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
+        //   }
+        // },
+        // eventMouseout: function( event, jsEvent, view ) {
+        //   var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+        //     return el.section.CourseCRN === event.section.CourseCRN;
+        //   });
+        //   for(var i in matching_section_events){
+        //     $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
+        //   }
+        // }
       });
     },
     getCombinations:function(courses,callback){
@@ -1241,6 +1241,22 @@ module.exports = {
                     events: schedules[num].events,
                     eventRender: function (event, element) {
                         element.attr("data-event-id",event._id); //for converting fullcal js object to html element
+                    },
+                    eventMouseover: function( event, jsEvent, view ) {
+                      var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+                        return el.section.CourseCRN === event.section.CourseCRN;
+                      });
+                      for(var i in matching_section_events){
+                        $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
+                      }
+                    },
+                    eventMouseout: function( event, jsEvent, view ) {
+                      var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+                        return el.section.CourseCRN === event.section.CourseCRN;
+                      });
+                      for(var i in matching_section_events){
+                        $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
+                      }
                     }
                 },options);
                 $('#schedule_' + num).fullCalendar(final_options);
