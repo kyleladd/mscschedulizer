@@ -664,6 +664,7 @@ module.exports = {
                         if(identifiers_run.indexOf(section.Identifier) === -1){
                           identifiers_run.push(section.Identifier);
                         }
+                        // My guess is this needs adjustment // note issue with phys107 and all lectures alt view eliminated
                         if(section.RequiredIdentifiers !== null && typeof section.RequiredIdentifiers === 'string'){
                             var identifierRequirements = section.RequiredIdentifiers.split(";");
                             // for each requirement
@@ -680,10 +681,12 @@ module.exports = {
                         var cp = Combinatorics.cartesianProduct.apply(null,cp_list);
                         cp = cp.toArray();
                         all_cp = all_cp.concat(cp);
+                        // not checking the identifiers - just blindly doing cartesian product???
                     }
                 }
             });
         });
+        console.log("before crn requirements",all_cp); // note issue with phys107 and all lectures alt view eliminated
         // Checking the CRN requirements within each combination search classes selected for the requirements for this course
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
         // crnrequirements = crnrequirements.filter(return CourseCRN !== null);
@@ -698,6 +701,7 @@ module.exports = {
                 }
             }
             var groupedRequirements = mscSchedulizer.groupSectionsByIdentifier(crnrequirements);
+            console.log("groupedRequirements",groupedRequirements);
             //for each requirement add to keys like campus required identifiers + identifiers - see groupsections function and do that for reqiuirement identifiers
             // get all requirement data by searching list dictionaries of course_sections with crn requirement
             //splice if combination does not include the number of required identifiers with CRN
@@ -739,6 +743,7 @@ module.exports = {
                 }
             }
         }
+        console.log("section combinations",all_cp);
         return all_cp;
     },
     groupSectionsByIdentifier:function(course_sections){
