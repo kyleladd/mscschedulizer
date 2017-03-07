@@ -9,7 +9,7 @@ module.exports = {
     department: JSON.parse(localStorage.getItem('department')) || "",
     department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
     current_semester_list: JSON.parse(localStorage.getItem('current_semester_list')) || [],
-    user_course_adjustments: JSON.parse(localStorage.getItem('user_course_adjustments')) || {Sections:[],Meetings:[]}, // type:add/remove/update update section by crn, update meeting by id - does meeting id change, i can't remember if it is a fake unique primary key. - i think it stays the same
+    user_course_adjustments: JSON.parse(localStorage.getItem('user_course_adjustments')) || {Courses:[],Sections:[],Meetings:[]}, // type:add/remove/update update section by crn, update meeting by id - does meeting id change, i can't remember if it is a fake unique primary key. - i think it stays the same
     do_apply_user_adjustments: JSON.parse(localStorage.getItem('do_apply_user_adjustments')) || "true",
     gen_schedules: [],
     num_loaded: 0,
@@ -504,7 +504,7 @@ module.exports = {
         }
         else{
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><strong>No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</strong></p>");
-        }
+        }filters
     },
     applyUserAdjustments: function(courses,adjustments){
         adjustments.Sections.forEach(function(section_adjustment){
@@ -524,6 +524,50 @@ module.exports = {
         });
         console.log("COURSES",courses);
         return courses;
+    },
+    altViewFilterOutput: function(adjustments){
+        var output = "";
+        if(adjustments.Courses.length === 0 && adjustments.Sections.length === 0 && adjustments.Meetings.length === 0){
+          return "Check out <a href=\"alternate_view.html\">the alternate view</a> to visually filter course sections.";
+        }
+        output+="<table class=\"course_details table\">";
+        output+="<thead><tr class=\"field-name\"><td></td><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td><td></td></tr></thead><tbody>";
+            for (var s in adjustments.Sections) {
+                var section = adjustments.Sections[s].Section;
+                var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
+                groupedmeetings.sort(mscSchedulizer.sortMeetings);
+                console.log(groupedmeetings);
+                for (var m in groupedmeetings) {
+                    var meeting = groupedmeetings[m];
+                    try
+                    {
+                        if(!moment(meeting.StartTime,"Hmm").isValid() || !moment(meeting.EndTime,"Hmm").isValid()){
+                            throw("Not a valid date");
+                        }
+                        meeting.startTime = moment(meeting.StartTime,"Hmm").format("h:mma");
+                        meeting.endTime = moment(meeting.EndTime,"Hmm").format("h:mma");
+                        meeting.days = mscSchedulizer.daysList(meeting);
+                    }
+                    catch(err)
+                    {
+                        meeting.startTime = "TBD";
+                        meeting.endTime = "";
+                        meeting.days = [];
+                    }
+                    // if(node_generic_functions.searchListDictionaries(terms,section.CourseTerm,true) == -1){
+                    //     terms.push(section.CourseTerm);
+                    // }
+                    if(section.Credits === null){
+                        section.Credits = "variable";
+                    }
+                    console.log("output append");
+                    output+="<tr class=\"a_course_section\"><td>" + ((adjustments.Sections[s].type === "remove") ? "R" : "" ) + "</td><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td><td><button class=\"user_course_filter remove\" data-value="+escape(JSON.stringify(adjustments.Sections[s]))+">Undo</button></td></tr>";
+                }
+            }
+            output+="</tbody></table>";
+        console.log("ADJUSTMENTS",adjustments);
+        console.log("output",output);
+        return output;
     },
     loadAll:function(courses,options,callback){
         if(typeof options === "undefined"){
@@ -803,10 +847,12 @@ module.exports = {
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Norwich Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label></span>";
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations that include online sections will be shown.\"><label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label></span>";
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown.\"><label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label></span>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"Alternate view filtering of course sections.\"><label><button id=\""+mscSchedulizer_config.html_elements.alt_view_filter+"\"> Alt View</button></label></span>";
         result += "</div>";
         result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
         result += "</div>";
+        result += mscSchedulizer.modalTemplate('modal_alt_view_filters');
         return result;
     },
     updateFilters:function(schedule_filters){
@@ -824,6 +870,27 @@ module.exports = {
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
         // Initialize the tooltips for filters
         $('.filtertooltiptrigger').tooltipster({ theme: 'tooltipster-punk',maxWidth:250,delay:750,iconTouch:true});
+        $('#modal_alt_view_filters').on('show.bs.modal', function (event) {
+            var trigger = $(event.relatedTarget); // Element that triggered the modal
+            // var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
+            var modal = $(this);
+            modal.find('.modal-title').text("Alt View Filters");
+            modal.find('.modal-body').html("<div style=\"display:block;\">" + mscSchedulizer.altViewFilterOutput(mscSchedulizer.user_course_adjustments) + "</div>");
+            $('.course_details').basictable();
+        });
+        $(document).on("click", "#" + mscSchedulizer_config.html_elements.alt_view_filter,function() {
+            $('#modal_alt_view_filters').modal({show:true});
+        });
+        $(document).on("click", ".user_course_filter.remove",function() {
+            console.log($(this).data("value"));
+            var adjustment = JSON.parse(unescape($(this).data("value")));
+            console.log(adjustment);
+            console.log(mscSchedulizer.user_course_adjustments.Sections);
+            mscSchedulizer.user_course_adjustments.Sections = mscSchedulizer.user_course_adjustments.Sections.filter(function(user_adjustment){
+                return !(JSON.stringify(user_adjustment) === JSON.stringify(adjustment));
+            });
+            mscSchedulizer.setUserCourseAdjustments(mscSchedulizer.user_course_adjustments);
+        });
     },
     timeBlockDisplay:function(filters){
         var result = "<span class=\"filtertooltiptrigger\" title=\"By adding time blocks filters, you can block out times that you do not want to have classes.\">Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a></span>";
@@ -1409,5 +1476,5 @@ module.exports = {
         for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
         for (var attributename in obj2) { obj3[attributename] = obj2[attributename]; }
         return obj3;
-    },
+    }
 };

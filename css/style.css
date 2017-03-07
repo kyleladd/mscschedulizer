@@ -5945,6 +5945,10 @@ table.course_details tr.field-name td:nth-child(8){
     border-width: 1px !important;
     border-color:#0bb586 !important;
 }
+#filters > #checkbox_filters > span.filtertooltiptrigger {
+    margin-left: 4px;
+    margin-right: 4px;
+}
 .modal-trigger{
     cursor:pointer;
 }

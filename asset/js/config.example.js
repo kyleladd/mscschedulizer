@@ -10,6 +10,7 @@ module.exports = {
         filters_container:"filters",
         checkbox_filters:"checkbox_filters",
         timeblock_filters:"timeblock_filters",
+        alt_view_filter:"altViewFilter",
         filters:{
             not_full:"notFullFilter",
             morrisville_campus:"morrisville_campus_filter",
