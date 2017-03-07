@@ -493,7 +493,6 @@ module.exports = {
                 //     courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
                 // }
                 mscSchedulizer.gen_courses = courses;
-                console.log("getcourseinfo json callback");
                 return callback(mscSchedulizer.gen_courses,callback2);
             })
             .fail(function() {
@@ -522,7 +521,6 @@ module.exports = {
                 }
             }
         });
-        console.log("COURSES",courses);
         return courses;
     },
     altViewFilterOutput: function(adjustments){
@@ -536,7 +534,6 @@ module.exports = {
                 var section = adjustments.Sections[s].Section;
                 var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
                 groupedmeetings.sort(mscSchedulizer.sortMeetings);
-                console.log(groupedmeetings);
                 for (var m in groupedmeetings) {
                     var meeting = groupedmeetings[m];
                     try
@@ -560,13 +557,10 @@ module.exports = {
                     if(section.Credits === null){
                         section.Credits = "variable";
                     }
-                    console.log("output append");
                     output+="<tr class=\"a_course_section\"><td>" + ((adjustments.Sections[s].type === "remove") ? "R" : "" ) + "</td><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td><td><button class=\"user_course_filter remove\" data-value="+escape(JSON.stringify(adjustments.Sections[s]))+">Undo</button></td></tr>";
                 }
             }
             output+="</tbody></table>";
-        console.log("ADJUSTMENTS",adjustments);
-        console.log("output",output);
         return output;
     },
     loadAll:function(courses,options,callback){
@@ -632,7 +626,6 @@ module.exports = {
       });
     },
     getCombinations:function(courses,callback){
-        console.log("getting combinations");
         var sectionCombinations = [];
         var courseslist = [];
         var outputCombinations = [];
@@ -655,8 +648,6 @@ module.exports = {
             }
         }
         mscSchedulizer.gen_schedules = outputCombinations;
-        console.log("genned schedules",mscSchedulizer.gen_schedules);
-        console.log("genned schedules no ref",JSON.parse(JSON.stringify(mscSchedulizer.gen_schedules)));
         callback(outputCombinations);
     },
     getSectionCombinations:function(course_sections){
@@ -872,25 +863,24 @@ module.exports = {
         $('.filtertooltiptrigger').tooltipster({ theme: 'tooltipster-punk',maxWidth:250,delay:750,iconTouch:true});
         $('#modal_alt_view_filters').on('show.bs.modal', function (event) {
             var trigger = $(event.relatedTarget); // Element that triggered the modal
-            // var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
-            var modal = $(this);
-            modal.find('.modal-title').text("Alt View Filters");
-            modal.find('.modal-body').html("<div style=\"display:block;\">" + mscSchedulizer.altViewFilterOutput(mscSchedulizer.user_course_adjustments) + "</div>");
+            mscSchedulizer.updateAltViewModal();
             $('.course_details').basictable();
         });
         $(document).on("click", "#" + mscSchedulizer_config.html_elements.alt_view_filter,function() {
             $('#modal_alt_view_filters').modal({show:true});
         });
         $(document).on("click", ".user_course_filter.remove",function() {
-            console.log($(this).data("value"));
             var adjustment = JSON.parse(unescape($(this).data("value")));
-            console.log(adjustment);
-            console.log(mscSchedulizer.user_course_adjustments.Sections);
             mscSchedulizer.user_course_adjustments.Sections = mscSchedulizer.user_course_adjustments.Sections.filter(function(user_adjustment){
                 return !(JSON.stringify(user_adjustment) === JSON.stringify(adjustment));
             });
             mscSchedulizer.setUserCourseAdjustments(mscSchedulizer.user_course_adjustments);
+            mscSchedulizer.updateAltViewModal();
         });
+    },
+    updateAltViewModal: function(){
+        $('#modal_alt_view_filters').find('.modal-title').text("Alt View Filters");
+        $('#modal_alt_view_filters').find('.modal-body').html("<div style=\"display:block;\">" + mscSchedulizer.altViewFilterOutput(mscSchedulizer.user_course_adjustments) + "</div>");
     },
     timeBlockDisplay:function(filters){
         var result = "<span class=\"filtertooltiptrigger\" title=\"By adding time blocks filters, you can block out times that you do not want to have classes.\">Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a></span>";
@@ -1208,7 +1198,6 @@ module.exports = {
         return meetups;
     },
     createSchedules:function(schedules,options){
-        console.log("CREATE SCHED SCHEDS",schedules);
         mscSchedulizer.num_loaded = 0;
         if(schedules !== null && schedules.length > 0 ){
             var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
@@ -1281,7 +1270,6 @@ module.exports = {
         }
     },
     initSchedules:function(schedules,start,count,options){
-        console.log("INIT SCHED SCHEDS",schedules);
         if(typeof options === 'undefined'){
             options = {};
         }
