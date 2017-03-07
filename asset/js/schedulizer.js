@@ -159,10 +159,11 @@ module.exports = {
     getDepartmentCourses: function(department){
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(courses){
-            if(mscSchedulizer.do_apply_user_adjustments === "true"){
-                //Make users adjustments here
-                courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
-            }
+            //not going to worry about department courses user adjustments in this version/ atm
+            // if(mscSchedulizer.do_apply_user_adjustments === "true"){
+            //     //Make users adjustments here
+            //     courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+            // }
             //remove this later
             var output = "";
             // Remove sections that are administrative entry
@@ -221,15 +222,18 @@ module.exports = {
     getDepartmentCoursesDetails: function(department){
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(courses){
-            if(mscSchedulizer.do_apply_user_adjustments === "true"){
-                //Make users adjustments here
-                courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
-            }
+            
+            
             // Remove sections that are administrative entry
             courses = mscSchedulizer.removeAdministrativeSections(courses);
             // Save courses to mscschedulizer variable in localstorage
             localStorage.setItem("department_courses", JSON.stringify(courses));
             mscSchedulizer.department_courses = courses;
+            // TODO-KL: make user adjustments - nope, should be done in the getDepartmentCoursesOutput function
+            // if(mscSchedulizer.do_apply_user_adjustments === "true"){
+            //     //Make users adjustments here
+            //     courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+            // }
             var output = mscSchedulizer.getDepartmentCoursesOutput(courses);
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
         })
@@ -249,8 +253,9 @@ module.exports = {
         });
     },
     getDepartmentCoursesOutput: function(courses){
-        //TODO-KL: apply user adjustments here
         var department_courses = JSON.parse(JSON.stringify(courses));
+        //TODO-KL: apply user adjustments here
+        courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
         //Filter out sections based on user's filters
         for (var c = department_courses.length-1; c >= 0; c--) {
             for (var s = department_courses[c].Sections.length-1; s >= 0; s--) {
@@ -482,12 +487,13 @@ module.exports = {
         }
         courses_list = courses_list.replace('&','?');
         if(courses_list !== ""){
-            $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester="+mscSchedulizer.semester.TermCode, function(courses){
-                if(mscSchedulizer.do_apply_user_adjustments === "true"){
-                    //Make users adjustments here
-                    courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
-                }
+            $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester=" + mscSchedulizer.semester.TermCode, function(courses){
+                // if(mscSchedulizer.do_apply_user_adjustments === "true"){
+                //     //Make users adjustments here
+                //     courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+                // }
                 mscSchedulizer.gen_courses = courses;
+                console.log("getcourseinfo json callback");
                 return callback(mscSchedulizer.gen_courses,callback2);
             })
             .fail(function() {
@@ -537,6 +543,10 @@ module.exports = {
         } 
       }
       mscSchedulizer.createSchedules([courses], {
+        favorite:false,
+        details:true,
+        preview:true,
+        export:false,
         eventClick: function(calEvent, jsEvent, view) {
             var events = $(this).closest(".fc").fullCalendar('clientEvents', function(evt) {
                 return true;
@@ -578,6 +588,7 @@ module.exports = {
       });
     },
     getCombinations:function(courses,callback){
+        console.log("getting combinations");
         var sectionCombinations = [];
         var courseslist = [];
         var outputCombinations = [];
@@ -1237,7 +1248,7 @@ module.exports = {
                 if(schedules[num].courseWithoutMeeting.length > 0){
                     additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
                 }
-                additionalOutput += mscSchedulizer.optionsOutput(schedules[num]);
+                additionalOutput += mscSchedulizer.optionsOutput(schedules[num],final_options);
                 $('#schedule_' + num).append(additionalOutput);
                 mscSchedulizer.num_loaded++;
             }
@@ -1256,10 +1267,23 @@ module.exports = {
         },options);
         //TODO-KL: not using these options, why?
         var result = "<div class=\"options\">";
-        result += mscSchedulizer.favoriteLinkOutput(schedule);
-        result += mscSchedulizer.detailsLinkOutput(schedule);
-        result += mscSchedulizer.previewLinkOutput(schedule);
-        result += mscSchedulizer.exportLink(schedule);
+        if(final_options.favorite){
+            result += mscSchedulizer.favoriteLinkOutput(schedule);
+        }
+
+        if(final_options.details){
+            result += mscSchedulizer.detailsLinkOutput(schedule);
+        }
+
+        if(final_options.preview){
+            result += mscSchedulizer.previewLinkOutput(schedule);
+        }
+
+        if(final_options.export){
+            result += mscSchedulizer.exportLink(schedule);
+        }
+
+
         result+="</div>";
         return result;
     },

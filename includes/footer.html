@@ -85,7 +85,12 @@
       // }
       // else{
         console.log("using all course sections");
-        mscSchedulizer.getCourseInfos(mscSchedulizer.getCombinations,mscSchedulizer.createSchedules);
+        mscSchedulizer.getCourseInfos(function(courses){
+          console.log("getcourseinfo callback");
+          var adjusted_courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+          mscSchedulizer.gen_courses = adjusted_courses;
+          mscSchedulizer.getCombinations(adjusted_courses,mscSchedulizer.createSchedules);
+        },mscSchedulizer.createSchedules);
       // }
       $(window).scroll(function(){
         if(mscSchedulizer.isScrolledIntoView(document.getElementById("footer"))){
@@ -149,9 +154,14 @@
           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
           mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
       });
+      
       mscSchedulizer.getCourseInfos(function(courses){
-        mscSchedulizer.loadAll(courses,{},mscSchedulizer.loadFullSchedule);
-      });
+        console.log("getcourseinfo callback");
+        var adjusted_courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+        mscSchedulizer.gen_courses = adjusted_courses;
+        mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
+      },mscSchedulizer.createSchedules);
+
       $(document).on("click",".remove-from-consideration",function(data) {
         var that = $(this);
         var matching_section_events = $(".fc").fullCalendar('clientEvents').filter(function (el) {
