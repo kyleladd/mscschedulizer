@@ -654,42 +654,115 @@ module.exports = {
         var grouped_sections = mscSchedulizer.groupSections(course_sections);
         // Use Identifiers to generate combinations
         var all_cp = [];
+        // Sections should have uniform requirements per identifier
+        var identifier_requirements = {};
         Object.keys(grouped_sections).forEach(function(campus) {
-            var identifiers_run = [];
+            identifier_requirements[campus] = [];
             Object.keys(grouped_sections[campus]).forEach(function(key) {
-                for (var s = grouped_sections[campus][key].length-1; s >= 0; s--) {
-                    var section = grouped_sections[campus][key][s];
-                    var cp_list = [];
-                    if(identifiers_run.indexOf(section.Identifier) === -1 || identifiers_run.indexOf(section.Identifier) === identifiers_run.length - 1){
-                        if(identifiers_run.indexOf(section.Identifier) === -1){
-                          identifiers_run.push(section.Identifier);
-                        }
-                        // My guess is this needs adjustment // note issue with phys107 and all lectures alt view eliminated
-                        if(section.RequiredIdentifiers !== null && typeof section.RequiredIdentifiers === 'string'){
-                            var identifierRequirements = section.RequiredIdentifiers.split(";");
-                            // for each requirement
-                            for(var r in identifierRequirements){
-                                var requirement = identifierRequirements[r];
-                                identifiers_run.unshift(requirement);
-                                // if key in object
-                                if((requirement in grouped_sections[campus])){
-                                    cp_list.push(grouped_sections[campus][requirement]);
-                                }
-                            }
-                        }
-                        cp_list.push([section]);
-                        var cp = Combinatorics.cartesianProduct.apply(null,cp_list);
-                        cp = cp.toArray();
-                        all_cp = all_cp.concat(cp);
-                        // not checking the identifiers - just blindly doing cartesian product???
-                    }
+                if(grouped_sections[campus][key].length > 0){
+                    identifier_requirements[campus].push(grouped_sections[campus][key][0].RequiredIdentifiers.split(";").concat(grouped_sections[campus][key][0].Identifier).sort());
                 }
             });
         });
+        console.log("identifier_requirements",identifier_requirements);
+        Object.keys(identifier_requirements).forEach(function(campus) {
+            console.log("campus",campus);
+            var groupedIdentifierRequirements = [];
+            for (var ra = identifier_requirements[campus].length-1; ra >= 0; ra--) {
+                console.log("groupedIdentifierRequirements",groupedIdentifierRequirements);
+                console.log("identifier_requirements[campus][ra]",identifier_requirements[campus][ra]);
+                if(!mscSchedulizer.arrayContainsAnotherArray(identifier_requirements[campus][ra],groupedIdentifierRequirements)){
+                    groupedIdentifierRequirements.push(identifier_requirements[campus][ra]);
+                }
+            }
+            console.log("end-groupedIdentifierRequirements",groupedIdentifierRequirements);
+            IdentifierCombinations:
+            for(var rq = groupedIdentifierRequirements.length-1; rq >= 0; rq--){
+                var cp_list = [];
+                for(var rqi = groupedIdentifierRequirements[rq].length-1; rqi >= 0; rqi--){
+                    if(typeof grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]] === "undefined"){
+                        console.log("continuing");
+                        continue IdentifierCombinations;
+                    }
+                    cp_list.push(grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]]);
+                }
+                if(cp_list.length > 0 ){
+                    console.log("cp_list",cp_list);
+                    cp = Combinatorics.cartesianProduct.apply(null,cp_list);
+                    cp = cp.toArray();
+                    all_cp = all_cp.concat(cp);
+                }
+            }
+        });
+
+
+        // Object.keys(grouped_sections).forEach(function(campus) {
+        //     var identifiers_run = [];
+        //     Object.keys(grouped_sections[campus]).forEach(function(key) {
+        //         SectionLoop:
+        //         for (var s = grouped_sections[campus][key].length-1; s >= 0; s--) {
+        //             var                      = [];
+        //             var section = grouped_sections[campus][key][s];
+        //             var cp_list = [];
+        //             if(identifiers_run.indexOf(section.Identifier) === -1 || identifiers_run.indexOf(section.Identifier) === identifiers_run.length - 1){
+        //             //     if(identifiers_run.indexOf(section.Identifier) === -1){
+        //             //       identifiers_run.push(section.Identifier);
+        //             //     }
+        //                 // My guess is this needs adjustment // note issue with phys107 and all lectures alt view eliminated
+        //                 if(section.RequiredIdentifiers !== null && typeof section.RequiredIdentifiers === 'string'){
+        //                     var identifierRequirements = section.RequiredIdentifiers.split(";");
+        //                     // for each requirement
+        //                     for(var r in identifierRequirements){
+        //                         var requirement = identifierRequirements[r];
+        //                         // identifiers_run.unshift(requirement);
+        //                         // if key in object
+        //                         console.log("r",r);
+        //                         console.log("requirement",requirement);
+        //                         console.log("grouped_sections[campus]",grouped_sections[campus]);
+        //                         if(!(requirement in grouped_sections[campus])){
+        //                             console.log("continuing");
+        //                             continue SectionLoop;
+        //                             // cp_list.push(grouped_sections[campus][requirement]);
+        //                             // console.log("requirement",requirement);
+        //                             // console.log("cp_list",cp_list);
+        //                         }
+        //                         else{
+        //                             cp_list.push(grouped_sections[campus][requirement]);
+        //                             temp_identifiers_run.push(requirement);
+        //                         }
+        //                     }
+        //                 }
+        //                 identifiers_run = identifiers_run.concat(temp_identifiers_run);
+        //                 identifiers_run.push(section.Identifier);
+        //                 console.log("[section]",[section]);
+        //                 cp_list.push([section]);
+        //                 console.log("cp_list",cp_list);
+        //                 var cp = [];
+        //                 if(cp_list.length > 0 ){
+        //                     cp = Combinatorics.cartesianProduct.apply(null,cp_list);
+        //                     cp = cp.toArray();
+        //                     all_cp = all_cp.concat(cp);
+        //                 }                        
+        //                 console.log("cp",cp);
+                        
+                        
+        //                 // not checking the identifiers - just blindly doing cartesian product???
+        //             }
+        //         }
+        //     });
+        // });
+
+
+
+
+
+
+
         console.log("before crn requirements",all_cp); // note issue with phys107 and all lectures alt view eliminated
         // Checking the CRN requirements within each combination search classes selected for the requirements for this course
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
         // crnrequirements = crnrequirements.filter(return CourseCRN !== null);
+        console.log("crnrequirements",crnrequirements);
         if(crnrequirements.length > 0){
             //Group the requirements by identifier
             for (var c = crnrequirements.length-1; c >= 0; c--) {
@@ -1469,5 +1542,26 @@ module.exports = {
         for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
         for (var attributename in obj2) { obj3[attributename] = obj2[attributename]; }
         return obj3;
+    },
+    arraysEqual: function(arr1, arr2) {
+        if(arr1.length !== arr2.length)
+            return false;
+        for(var i = arr1.length; i--;) {
+            if(arr1[i] !== arr2[i])
+                return false;
+        }
+
+        return true;
+    },
+    arrayContainsAnotherArray: function(needle, haystack){
+        for(var h = 0; h < haystack.length; h++){
+            // for(var h = 0; h < haystack.length; h++){
+                if(mscSchedulizer.arraysEqual(needle,haystack[h]))
+                {
+                    return true;
+                }
+            // }
+        }
+        return false;
     }
 };
