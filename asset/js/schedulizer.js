@@ -627,6 +627,7 @@ module.exports = {
       });
     },
     getCombinations:function(courses,callback){
+        console.time('getCombinations');
         var sectionCombinations = [];
         var courseslist = [];
         var outputCombinations = [];
@@ -649,6 +650,7 @@ module.exports = {
             }
         }
         mscSchedulizer.gen_schedules = outputCombinations;
+        console.timeEnd('getCombinations');
         callback(outputCombinations);
     },
     getSectionCombinations:function(course_sections){
@@ -1207,7 +1209,9 @@ module.exports = {
         return meetups;
     },
     createSchedules:function(schedules,options){
+        console.time('createSchedules');
         mscSchedulizer.num_loaded = 0;
+        console.time('createSchedules-event-info');
         if(schedules !== null && schedules.length > 0 ){
             var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
             if(schedules.length != 1){outputSchedules += "s";}
@@ -1261,6 +1265,8 @@ module.exports = {
                 schedule.courseWithoutMeeting = noMeetings;
                 outputSchedules += "<div id=\"schedule_" + i + "\" class=\"schedule_combination\"></div>";
             }
+            console.timeEnd('createSchedules-event-info');
+            console.time('createSchedules-html-dom-manipulation');
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html(outputSchedules);
 
             $('#modal_courseDetails').modal({show:false});
@@ -1273,10 +1279,12 @@ module.exports = {
                 $('.course_details').basictable();
             });
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
+            console.timeEnd('createSchedules-html-dom-manipulation');
         }
         else{
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + (!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])) ? "<a href=\"alternate_view.html\">Try the alternate view</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
         }
+        console.timeEnd('createSchedules');
     },
     initSchedules:function(schedules,start,count,options){
         if(typeof options === 'undefined'){
