@@ -13,6 +13,7 @@ module.exports = {
     do_apply_user_adjustments: JSON.parse(localStorage.getItem('do_apply_user_adjustments')) || "true",
     gen_schedules: [],
     num_loaded: 0,
+    errors: JSON.parse(localStorage.getItem('errors')) || {generate_errors:[]},
     getTLD:function(url_location){
         var parts = url_location.hostname.split('.');
         var sndleveldomain = parts.slice(-2).join('.');
@@ -651,6 +652,7 @@ module.exports = {
         callback(outputCombinations);
     },
     getSectionCombinations:function(course_sections){
+        console.log(course_sections);
         var grouped_sections = mscSchedulizer.groupSections(course_sections);
         // Use Identifiers to generate combinations
         var all_cp = [];
@@ -664,30 +666,24 @@ module.exports = {
                 }
             });
         });
-        console.log("identifier_requirements",identifier_requirements);
         Object.keys(identifier_requirements).forEach(function(campus) {
-            console.log("campus",campus);
             var groupedIdentifierRequirements = [];
             for (var ra = identifier_requirements[campus].length-1; ra >= 0; ra--) {
-                console.log("groupedIdentifierRequirements",groupedIdentifierRequirements);
-                console.log("identifier_requirements[campus][ra]",identifier_requirements[campus][ra]);
                 if(!mscSchedulizer.arrayContainsAnotherArray(identifier_requirements[campus][ra],groupedIdentifierRequirements)){
                     groupedIdentifierRequirements.push(identifier_requirements[campus][ra]);
                 }
             }
-            console.log("end-groupedIdentifierRequirements",groupedIdentifierRequirements);
             IdentifierCombinations:
             for(var rq = groupedIdentifierRequirements.length-1; rq >= 0; rq--){
                 var cp_list = [];
                 for(var rqi = groupedIdentifierRequirements[rq].length-1; rqi >= 0; rqi--){
                     if(typeof grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]] === "undefined"){
-                        console.log("continuing");
+                        mscSchedulizer.errors.generate_errors.push("Could not find course: " + course_sections[0].DepartmentCode + " " + course_sections[0].CourseNumber + " with identifier: " + groupedIdentifierRequirements[rq][rqi]);
                         continue IdentifierCombinations;
                     }
                     cp_list.push(grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]]);
                 }
                 if(cp_list.length > 0 ){
-                    console.log("cp_list",cp_list);
                     cp = Combinatorics.cartesianProduct.apply(null,cp_list);
                     cp = cp.toArray();
                     all_cp = all_cp.concat(cp);
@@ -695,74 +691,9 @@ module.exports = {
             }
         });
 
-
-        // Object.keys(grouped_sections).forEach(function(campus) {
-        //     var identifiers_run = [];
-        //     Object.keys(grouped_sections[campus]).forEach(function(key) {
-        //         SectionLoop:
-        //         for (var s = grouped_sections[campus][key].length-1; s >= 0; s--) {
-        //             var                      = [];
-        //             var section = grouped_sections[campus][key][s];
-        //             var cp_list = [];
-        //             if(identifiers_run.indexOf(section.Identifier) === -1 || identifiers_run.indexOf(section.Identifier) === identifiers_run.length - 1){
-        //             //     if(identifiers_run.indexOf(section.Identifier) === -1){
-        //             //       identifiers_run.push(section.Identifier);
-        //             //     }
-        //                 // My guess is this needs adjustment // note issue with phys107 and all lectures alt view eliminated
-        //                 if(section.RequiredIdentifiers !== null && typeof section.RequiredIdentifiers === 'string'){
-        //                     var identifierRequirements = section.RequiredIdentifiers.split(";");
-        //                     // for each requirement
-        //                     for(var r in identifierRequirements){
-        //                         var requirement = identifierRequirements[r];
-        //                         // identifiers_run.unshift(requirement);
-        //                         // if key in object
-        //                         console.log("r",r);
-        //                         console.log("requirement",requirement);
-        //                         console.log("grouped_sections[campus]",grouped_sections[campus]);
-        //                         if(!(requirement in grouped_sections[campus])){
-        //                             console.log("continuing");
-        //                             continue SectionLoop;
-        //                             // cp_list.push(grouped_sections[campus][requirement]);
-        //                             // console.log("requirement",requirement);
-        //                             // console.log("cp_list",cp_list);
-        //                         }
-        //                         else{
-        //                             cp_list.push(grouped_sections[campus][requirement]);
-        //                             temp_identifiers_run.push(requirement);
-        //                         }
-        //                     }
-        //                 }
-        //                 identifiers_run = identifiers_run.concat(temp_identifiers_run);
-        //                 identifiers_run.push(section.Identifier);
-        //                 console.log("[section]",[section]);
-        //                 cp_list.push([section]);
-        //                 console.log("cp_list",cp_list);
-        //                 var cp = [];
-        //                 if(cp_list.length > 0 ){
-        //                     cp = Combinatorics.cartesianProduct.apply(null,cp_list);
-        //                     cp = cp.toArray();
-        //                     all_cp = all_cp.concat(cp);
-        //                 }                        
-        //                 console.log("cp",cp);
-                        
-                        
-        //                 // not checking the identifiers - just blindly doing cartesian product???
-        //             }
-        //         }
-        //     });
-        // });
-
-
-
-
-
-
-
-        console.log("before crn requirements",all_cp); // note issue with phys107 and all lectures alt view eliminated
         // Checking the CRN requirements within each combination search classes selected for the requirements for this course
         var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
-        // crnrequirements = crnrequirements.filter(return CourseCRN !== null);
-        console.log("crnrequirements",crnrequirements);
+        // crnrequirements = crnrequirements.filter(functiom(){return CourseCRN !== null});
         if(crnrequirements.length > 0){
             //Group the requirements by identifier
             for (var c = crnrequirements.length-1; c >= 0; c--) {
@@ -774,7 +705,6 @@ module.exports = {
                 }
             }
             var groupedRequirements = mscSchedulizer.groupSectionsByIdentifier(crnrequirements);
-            console.log("groupedRequirements",groupedRequirements);
             //for each requirement add to keys like campus required identifiers + identifiers - see groupsections function and do that for reqiuirement identifiers
             // get all requirement data by searching list dictionaries of course_sections with crn requirement
             //splice if combination does not include the number of required identifiers with CRN
@@ -816,7 +746,6 @@ module.exports = {
                 }
             }
         }
-        console.log("section combinations",all_cp);
         return all_cp;
     },
     groupSectionsByIdentifier:function(course_sections){
@@ -1344,7 +1273,7 @@ module.exports = {
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
         }
         else{
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + (!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])) ? "<a href=\"alternate_view.html\">Try the alternate view</a>" : "") + "</p>");
+            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + (!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])) ? "<a href=\"alternate_view.html\">Try the alternate view</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
         }
     },
     initSchedules:function(schedules,start,count,options){
