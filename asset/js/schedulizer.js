@@ -652,7 +652,6 @@ module.exports = {
         callback(outputCombinations);
     },
     getSectionCombinations:function(course_sections){
-        console.log(course_sections);
         var grouped_sections = mscSchedulizer.groupSections(course_sections);
         // Use Identifiers to generate combinations
         var all_cp = [];
@@ -661,8 +660,11 @@ module.exports = {
         Object.keys(grouped_sections).forEach(function(campus) {
             identifier_requirements[campus] = [];
             Object.keys(grouped_sections[campus]).forEach(function(key) {
-                if(grouped_sections[campus][key].length > 0){
+                if(grouped_sections[campus][key].length > 0 && grouped_sections[campus][key][0].RequiredIdentifiers !== null){
                     identifier_requirements[campus].push(grouped_sections[campus][key][0].RequiredIdentifiers.split(";").concat(grouped_sections[campus][key][0].Identifier).sort());
+                }
+                else if(grouped_sections[campus][key].length > 0){
+                    identifier_requirements[campus].push(grouped_sections[campus][key][0].Identifier === "" || grouped_sections[campus][key][0].Identifier === null ? ["empty"] : [grouped_sections[campus][key][0].Identifier]);
                 }
             });
         });
