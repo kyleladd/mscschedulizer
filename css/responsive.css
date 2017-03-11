@@ -284,6 +284,10 @@
 	    color: #4D4F54 !important;
 	}
 
+	ul.social-list li a.api:hover {
+	    color: #3353a5 !important;
+	}
+
 	ul.social-list li a.trello:hover {
 	    color: #298FCA !important;
 	}

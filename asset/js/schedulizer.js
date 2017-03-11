@@ -5,6 +5,7 @@ module.exports = {
     favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
     schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true,ShowInternational:false},
     gen_courses: [],
+    fetched_courses: [],
     semester: JSON.parse(localStorage.getItem('semester')) || {TermCode: "", Description: "", TermStart: "", TermEnd: ""},
     department: JSON.parse(localStorage.getItem('department')) || "",
     department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
@@ -530,7 +531,7 @@ module.exports = {
           return "Check out <a href=\"alternate_view.html\">the alternate view</a> to visually filter course sections.";
         }
         output+="<table class=\"course_details table\">";
-        output+="<thead><tr class=\"field-name\"><td></td><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td><td></td></tr></thead><tbody>";
+        output+="<thead><tr class=\"field-name\"><td></td><td>Dept</td><td>Number</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td><td></td></tr></thead><tbody>";
             for (var s in adjustments.Sections) {
                 var section = adjustments.Sections[s].Section;
                 var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
@@ -558,7 +559,7 @@ module.exports = {
                     if(section.Credits === null){
                         section.Credits = "variable";
                     }
-                    output+="<tr class=\"a_course_section\"><td>" + ((adjustments.Sections[s].type === "remove") ? "R" : "" ) + "</td><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td><td><button class=\"user_course_filter remove\" data-value="+escape(JSON.stringify(adjustments.Sections[s]))+">Undo</button></td></tr>";
+                    output+="<tr class=\"a_course_section\"><td>" + ((adjustments.Sections[s].type === "remove") ? "R" : "" ) + "</td><td>" + section.DepartmentCode + "</td><td>" + section.CourseNumber + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td><td><button class=\"user_course_filter remove\" data-value="+escape(JSON.stringify(adjustments.Sections[s]))+">Undo</button></td></tr>";
                 }
             }
             output+="</tbody></table>";
@@ -881,6 +882,7 @@ module.exports = {
             $('#modal_alt_view_filters').modal({show:true});
         });
         $(document).on("click", ".user_course_filter.remove",function() {
+            console.log("removing/undoing");
             var adjustment = JSON.parse(unescape($(this).data("value")));
             mscSchedulizer.user_course_adjustments.Sections = mscSchedulizer.user_course_adjustments.Sections.filter(function(user_adjustment){
                 return !(JSON.stringify(user_adjustment) === JSON.stringify(adjustment));
@@ -1209,6 +1211,7 @@ module.exports = {
         return meetups;
     },
     createSchedules:function(schedules,options){
+        console.log("num_combinations",schedules.length);
         console.time('createSchedules');
         mscSchedulizer.num_loaded = 0;
         console.time('createSchedules-event-info');
@@ -1267,6 +1270,7 @@ module.exports = {
             }
             console.timeEnd('createSchedules-event-info');
             console.time('createSchedules-html-dom-manipulation');
+            console.log("setting output schedules");
             $("#"+mscSchedulizer_config.html_elements.schedules_container).html(outputSchedules);
 
             $('#modal_courseDetails').modal({show:false});

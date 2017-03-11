@@ -546,6 +546,10 @@ ul.social-list li a.github:hover {
     background-color: #4D4F54;
 }
 
+ul.social-list li a.api:hover {
+    background-color: #3353a5;
+}
+
 ul.social-list li a.trello:hover {
     background-color: #298FCA;
 }
@@ -2783,6 +2787,10 @@ ul.icons-list li i {
 	background-color: #4D4F54;
 }
 
+.team-member .member-social a.api:hover i {
+	background-color: #3353a5;
+}
+
 .team-member .member-social a.trello:hover i {
 	background-color: #298FCA;
 }
@@ -4250,6 +4258,10 @@ footer a:hover {
 
 .social-widget ul.social-icons li a.github:hover i {
     background-color: #4D4F54;
+}
+
+.social-widget ul.social-icons li a.api:hover i {
+    background-color: #3353a5;
 }
 
 .social-widget ul.social-icons li a.trello:hover i {
