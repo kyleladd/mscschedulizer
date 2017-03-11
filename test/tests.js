@@ -746,7 +746,7 @@ QUnit.module("getSectionCombinations", {
         result.forEach(function(combination){
             var campus = combination[0].Campus;
             combination.forEach(function(section){
-                assert.equal(section.Campus,campus,"All sections of a combination should be on the same campus");
+                assert.equal(section.Campus,campus,"All sections of a combination should be on the same campus: " + campus);
             });
         });
     });

@@ -529,7 +529,7 @@ var courseMultipleCampuses = {
       "Term": "1",
       "Instructor": "Johnson, Sharon E",
       "SectionAttributes": null,
-      "RequiredIdentifiers": null,
+      "RequiredIdentifiers": "A2",
       "Meetings": [
         {
           "Id": 68403,
