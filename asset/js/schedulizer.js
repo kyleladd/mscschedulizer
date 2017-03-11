@@ -557,7 +557,7 @@ module.exports = {
                     if(section.Credits === null){
                         section.Credits = "variable";
                     }
-                    output+="<tr class=\"a_course_section\"><td>" + ((adjustments.Sections[s].type === "remove") ? "R" : "" ) + "</td><td>" + section.DepartmentCode + "</td><td>" + section.CourseNumber + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td><td><button class=\"user_course_filter remove\" data-value="+escape(JSON.stringify(adjustments.Sections[s]))+">Undo</button></td></tr>";
+                    output+="<tr class=\"a_course_section\"><td>" + ((adjustments.Sections[s].type === "remove") ? "R" : "" ) + "</td><td>" + section.DepartmentCode + "</td><td>" + section.CourseNumber + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td><td><button class=\"btn btn-slide fa icon-trash user_course_filter remove btn-danger\" data-value="+escape(JSON.stringify(adjustments.Sections[s]))+"><i class=\"fa fa-trash\"></i><span>Delete</span></button></td></tr>";
                 }
             }
             output+="</tbody></table>";
@@ -846,7 +846,7 @@ module.exports = {
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Norwich Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label></span>";
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations that include online sections will be shown.\"><label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label></span>";
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown.\"><label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label></span>";
-        result += "<span class=\"filtertooltiptrigger\" title=\"Alternate view filtering of course sections.\"><label><button id=\""+mscSchedulizer_config.html_elements.alt_view_filter+"\"> Alt View</button></label></span>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"Alternate view filtering of course sections.\"><label><button id=\""+mscSchedulizer_config.html_elements.alt_view_filter+"\" class=\"btn btn-1\">Visual Filter</button></label></span>";
         result += "</div>";
         result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);

@@ -5964,6 +5964,114 @@ table.course_details tr.field-name td:nth-child(8){
 .modal-trigger{
     cursor:pointer;
 }
+
+/*Buttons - based on https://tympanus.net/Development/CreativeButtons/*/
+.btn {
+	position: relative;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.btn:after {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+/* Button 1 */
+.btn-1 {
+	border: 2px solid #0bb586;
+	color: #0bb586;
+	background:#fff;
+	padding:3px;
+}
+
+/* Button 1a */
+.btn-1:hover,
+.btn-1:active {
+	color: #088562;
+	background: #fff;
+	border-color: #088562;
+}
+
+/* Button 5 */
+.btn-slide {
+	/*background: #823aa0;*/
+	color: #fff;
+/*	height: 70px;
+	min-width: 260px;*/
+	line-height: 16px;
+	font-size: 16px;
+	overflow: hidden;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+}
+
+.btn-slide:active {
+	background: #9053a9;
+	top: 2px;
+}
+
+.btn-slide span {
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	-webkit-transition: all 0.3s;
+	-webkit-backface-visibility: hidden;
+	-moz-transition: all 0.3s;
+	-moz-backface-visibility: hidden;
+	transition: all 0.3s;
+	backface-visibility: hidden;
+}
+
+.btn-slide:before {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	/*line-height: 2.5;*/
+	/*font-size: 180%;*/
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.btn-slide:active:before {
+	color: #703b87;
+}
+
+/* Button 5b */
+.btn-slide:hover span {
+	-webkit-transform: translateX(200%);
+	-moz-transform: translateX(200%);
+	-ms-transform: translateX(200%);
+	transform: translateX(200%);
+}
+
+.btn-slide i {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	/*line-height: 2.5;*/
+	/*font-size: 180%;*/
+	/*line-height:2;*/
+	line-height:1.6;
+	font-size:120%;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+	left: -100%;
+	top: 0;
+}
+
+.btn-slide:hover i {
+	left: 0;
+}
+
 @media only screen and (max-width: 585px) {
     table.course_details tr { border-bottom: 1px solid #ccc;border-top: 1px solid #ccc; }
 }
