@@ -120,7 +120,7 @@
       });
     }
 
-    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])){
+    if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
       mscSchedulizer.do_apply_user_adjustments = "false";
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
 
@@ -176,7 +176,8 @@
       $(document).on("click", ".user_course_filter.remove",function() {
           var adjusted_courses = mscSchedulizer.applyUserAdjustments(JSON.parse(JSON.stringify(mscSchedulizer.fetched_courses)),mscSchedulizer.user_course_adjustments);
           mscSchedulizer.gen_courses = adjusted_courses;
-          mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+          // mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+          mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
       });
     }
     // Load schedules from favorites array

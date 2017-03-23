@@ -529,7 +529,7 @@ module.exports = {
     altViewFilterOutput: function(adjustments){
         var output = "";
         if(adjustments.Courses.length === 0 && adjustments.Sections.length === 0 && adjustments.Meetings.length === 0){
-          return "Check out <a href=\"alternate_view.html\">the alternate view</a> to visually filter course sections.";
+          return "Check out <a href=\"visual_filter.html\">the visual filter view</a> to visually filter course sections.";
         }
         output+="<table class=\"course_details table\">";
         output+="<thead><tr class=\"field-name\"><td></td><td>Dept</td><td>Number</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td><td></td></tr></thead><tbody>";
@@ -846,7 +846,7 @@ module.exports = {
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Norwich Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label></span>";
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations that include online sections will be shown.\"><label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label></span>";
         result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown.\"><label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label></span>";
-        result += "<span class=\"filtertooltiptrigger\" title=\"Alternate view filtering of course sections.\"><label><button id=\""+mscSchedulizer_config.html_elements.alt_view_filter+"\" class=\"btn btn-1\">Visual Filter</button></label></span>";
+        result += "<span class=\"filtertooltiptrigger\" title=\"A visual view to filter course sections.\"><label><button id=\""+mscSchedulizer_config.html_elements.alt_view_filter+"\" class=\"btn btn-1\">Visual Filters</button></label></span>";
         result += "</div>";
         result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
         result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
