@@ -849,24 +849,6 @@ module.exports = {
         mscSchedulizer.checkboxFilterDisplay(filters.ShowInternational,mscSchedulizer_config.html_elements.filters.show_international);
         $("#"+mscSchedulizer_config.html_elements.timeblock_filters).html(mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks));
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
-        // Initialize the tooltips for filters
-        $('.filtertooltiptrigger').tooltipster({ theme: 'tooltipster-punk',maxWidth:250,delay:750,iconTouch:true});
-        $('#modal_alt_view_filters').on('show.bs.modal', function (event) {
-            var trigger = $(event.relatedTarget); // Element that triggered the modal
-            mscSchedulizer.updateAltViewModal();
-            $('.course_details').basictable();
-        });
-        $(document).on("click", "#" + mscSchedulizer_config.html_elements.alt_view_filter,function() {
-            $('#modal_alt_view_filters').modal({show:true});
-        });
-        $(document).on("click", ".user_course_filter.remove",function() {
-            var adjustment = JSON.parse(unescape($(this).data("value")));
-            mscSchedulizer.user_course_adjustments.Sections = mscSchedulizer.user_course_adjustments.Sections.filter(function(user_adjustment){
-                return (JSON.stringify(user_adjustment) !== JSON.stringify(adjustment));
-            });
-            mscSchedulizer.setUserCourseAdjustments(mscSchedulizer.user_course_adjustments);
-            mscSchedulizer.updateAltViewModal();
-        });
     },
     updateAltViewModal: function(){
         $('#modal_alt_view_filters').find('.modal-title').text("Alt View Filters");

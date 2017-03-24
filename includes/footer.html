@@ -75,6 +75,23 @@
     // Generate Page
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["generate.html"])){
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+              $('.filtertooltiptrigger').tooltipster({ theme: 'tooltipster-punk',maxWidth:250,delay:750,iconTouch:true});
+        $('#modal_alt_view_filters').on('show.bs.modal', function (event) {
+            var trigger = $(event.relatedTarget); // Element that triggered the modal
+            mscSchedulizer.updateAltViewModal();
+            $('.course_details').basictable();
+        });
+        $(document).on("click", "#" + mscSchedulizer_config.html_elements.alt_view_filter,function() {
+            $('#modal_alt_view_filters').modal({show:true});
+        });
+        $(document).on("click", ".user_course_filter.remove",function() {
+            var adjustment = JSON.parse(unescape($(this).data("value")));
+            mscSchedulizer.user_course_adjustments.Sections = mscSchedulizer.user_course_adjustments.Sections.filter(function(user_adjustment){
+                return (JSON.stringify(user_adjustment) !== JSON.stringify(adjustment));
+            });
+            mscSchedulizer.setUserCourseAdjustments(mscSchedulizer.user_course_adjustments);
+            mscSchedulizer.updateAltViewModal();
+        });
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
         mscSchedulizer.getCourseInfos(function(courses){
@@ -122,6 +139,23 @@
 
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+              $('.filtertooltiptrigger').tooltipster({ theme: 'tooltipster-punk',maxWidth:250,delay:750,iconTouch:true});
+        $('#modal_alt_view_filters').on('show.bs.modal', function (event) {
+            var trigger = $(event.relatedTarget); // Element that triggered the modal
+            mscSchedulizer.updateAltViewModal();
+            $('.course_details').basictable();
+        });
+        $(document).on("click", "#" + mscSchedulizer_config.html_elements.alt_view_filter,function() {
+            $('#modal_alt_view_filters').modal({show:true});
+        });
+        $(document).on("click", ".user_course_filter.remove",function() {
+            var adjustment = JSON.parse(unescape($(this).data("value")));
+            mscSchedulizer.user_course_adjustments.Sections = mscSchedulizer.user_course_adjustments.Sections.filter(function(user_adjustment){
+                return (JSON.stringify(user_adjustment) !== JSON.stringify(adjustment));
+            });
+            mscSchedulizer.setUserCourseAdjustments(mscSchedulizer.user_course_adjustments);
+            mscSchedulizer.updateAltViewModal();
+        });
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
       $("#"+mscSchedulizer_config.html_elements.filters.not_full).click(function(){
@@ -191,6 +225,23 @@
     // Course Listings page
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["course-listings.html"])){
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
+              $('.filtertooltiptrigger').tooltipster({ theme: 'tooltipster-punk',maxWidth:250,delay:750,iconTouch:true});
+        $('#modal_alt_view_filters').on('show.bs.modal', function (event) {
+            var trigger = $(event.relatedTarget); // Element that triggered the modal
+            mscSchedulizer.updateAltViewModal();
+            $('.course_details').basictable();
+        });
+        $(document).on("click", "#" + mscSchedulizer_config.html_elements.alt_view_filter,function() {
+            $('#modal_alt_view_filters').modal({show:true});
+        });
+        $(document).on("click", ".user_course_filter.remove",function() {
+            var adjustment = JSON.parse(unescape($(this).data("value")));
+            mscSchedulizer.user_course_adjustments.Sections = mscSchedulizer.user_course_adjustments.Sections.filter(function(user_adjustment){
+                return (JSON.stringify(user_adjustment) !== JSON.stringify(adjustment));
+            });
+            mscSchedulizer.setUserCourseAdjustments(mscSchedulizer.user_course_adjustments);
+            mscSchedulizer.updateAltViewModal();
+        });
 
         mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
         mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);        // Department selected - View Department Courses
