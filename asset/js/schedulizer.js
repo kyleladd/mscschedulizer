@@ -529,7 +529,7 @@ module.exports = {
     altViewFilterOutput: function(adjustments){
         var output = "";
         if(adjustments.Courses.length === 0 && adjustments.Sections.length === 0 && adjustments.Meetings.length === 0){
-          return "Check out <a href=\"visual_filter.html\">the visual filter view</a> to visually filter course sections.";
+          return "Check out the <a href=\"visual_filter.html\">visual filter view</a> to visually filter course sections.";
         }
         output+="<table class=\"course_details table\">";
         output+="<thead><tr class=\"field-name\"><td></td><td>Dept</td><td>Number</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td><td></td></tr></thead><tbody>";
@@ -889,6 +889,7 @@ module.exports = {
     updateAltViewModal: function(){
         $('#modal_alt_view_filters').find('.modal-title').text("Alt View Filters");
         $('#modal_alt_view_filters').find('.modal-body').html("<div style=\"display:block;\">" + mscSchedulizer.altViewFilterOutput(mscSchedulizer.user_course_adjustments) + "</div>");
+        $('#modal_alt_view_filters').find('.modal-footer').html("<a href=\"visual_filter.html\"><button type=\"button\" class=\"btn btn-secondary\">Add Filter</button></a> <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>");
     },
     timeBlockDisplay:function(filters){
         var result = "<span class=\"filtertooltiptrigger\" title=\"By adding time blocks filters, you can block out times that you do not want to have classes.\">Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a></span>";
