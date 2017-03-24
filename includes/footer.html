@@ -121,7 +121,6 @@
     }
 
     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
-      mscSchedulizer.do_apply_user_adjustments = "false";
       $("#"+mscSchedulizer_config.html_elements.filters_container).html(mscSchedulizer.filtersDisplay());
 
       mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);

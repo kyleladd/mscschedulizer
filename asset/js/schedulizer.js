@@ -11,8 +11,7 @@ module.exports = {
     department: JSON.parse(localStorage.getItem('department')) || "",
     department_courses: JSON.parse(localStorage.getItem('department_courses')) || "",
     current_semester_list: JSON.parse(localStorage.getItem('current_semester_list')) || [],
-    user_course_adjustments: JSON.parse(localStorage.getItem('user_course_adjustments')) || {Courses:[],Sections:[],Meetings:[]}, // type:add/remove/update update section by crn, update meeting by id - does meeting id change, i can't remember if it is a fake unique primary key. - i think it stays the same
-    do_apply_user_adjustments: JSON.parse(localStorage.getItem('do_apply_user_adjustments')) || "true",
+    user_course_adjustments: JSON.parse(localStorage.getItem('user_course_adjustments')) || {Courses:[],Sections:[],Meetings:[]}, // type:add/remove/update update section by crn, update meeting by id - i believe meeting ids  are persistent and are not fake.
     gen_schedules: [],
     num_loaded: 0,
     errors: JSON.parse(localStorage.getItem('errors')) || {generate_errors:[]},
@@ -162,12 +161,6 @@ module.exports = {
     getDepartmentCourses: function(department){
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(courses){
-            //not going to worry about department courses user adjustments in this version/ atm
-            // if(mscSchedulizer.do_apply_user_adjustments === "true"){
-            //     //Make users adjustments here
-            //     courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
-            // }
-            //remove this later
             var output = "";
             // Remove sections that are administrative entry
             courses = mscSchedulizer.removeAdministrativeSections(courses);
@@ -225,18 +218,12 @@ module.exports = {
     getDepartmentCoursesDetails: function(department){
         department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
         $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(courses){
-            
-            
             // Remove sections that are administrative entry
             courses = mscSchedulizer.removeAdministrativeSections(courses);
             // Save courses to mscschedulizer variable in localstorage
             localStorage.setItem("department_courses", JSON.stringify(courses));
             mscSchedulizer.department_courses = courses;
-            // TODO-KL: make user adjustments - nope, should be done in the getDepartmentCoursesOutput function
-            // if(mscSchedulizer.do_apply_user_adjustments === "true"){
-            //     //Make users adjustments here
-            //     courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
-            // }
+
             var output = mscSchedulizer.getDepartmentCoursesOutput(courses);
             $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
         })
@@ -257,7 +244,6 @@ module.exports = {
     },
     getDepartmentCoursesOutput: function(courses){
         var department_courses = JSON.parse(JSON.stringify(courses));
-        //TODO-KL: apply user adjustments here
         department_courses = mscSchedulizer.applyUserAdjustments(department_courses,mscSchedulizer.user_course_adjustments);
         //Filter out sections based on user's filters
         for (var c = department_courses.length-1; c >= 0; c--) {
@@ -491,10 +477,6 @@ module.exports = {
         courses_list = courses_list.replace('&','?');
         if(courses_list !== ""){
             $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester=" + mscSchedulizer.semester.TermCode, function(courses){
-                // if(mscSchedulizer.do_apply_user_adjustments === "true"){
-                //     //Make users adjustments here
-                //     courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
-                // }
                 mscSchedulizer.gen_courses = courses;
                 return callback(mscSchedulizer.gen_courses,callback2);
             })
@@ -1345,7 +1327,6 @@ module.exports = {
             preview:true,
             export:true
         },options);
-        //TODO-KL: not using these options, why?
         var result = "<div class=\"options\">";
         if(final_options.favorite){
             result += mscSchedulizer.favoriteLinkOutput(schedule);
