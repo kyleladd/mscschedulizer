@@ -258,7 +258,7 @@ module.exports = {
     getDepartmentCoursesOutput: function(courses){
         var department_courses = JSON.parse(JSON.stringify(courses));
         //TODO-KL: apply user adjustments here
-        courses = mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments);
+        department_courses = mscSchedulizer.applyUserAdjustments(department_courses,mscSchedulizer.user_course_adjustments);
         //Filter out sections based on user's filters
         for (var c = department_courses.length-1; c >= 0; c--) {
             for (var s = department_courses[c].Sections.length-1; s >= 0; s--) {
@@ -1274,7 +1274,7 @@ module.exports = {
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
         }
         else{
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + (!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])) ? "<a href=\"alternate_view.html\">Try the alternate view</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
+            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + ((!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])) && !(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["favorites.html"]))) ? "<a href=\"alternate_view.html\">Try the alternate view</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
         }
     },
     initSchedules:function(schedules,start,count,options){

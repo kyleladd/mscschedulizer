@@ -241,6 +241,10 @@
             //Get From Endpoint - Department Courses
             mscSchedulizer.getDepartments(mscSchedulizer.getDepartmentCoursesDetails);
         });
+
+        $(document).on("click", ".user_course_filter.remove",function() {
+            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+      });
     }
 
     // Favorites
