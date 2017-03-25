@@ -1239,7 +1239,7 @@ module.exports = {
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
         }
         else{
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + ((!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["alternate_view.html"])) && !(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["favorites.html"]))) ? "<a href=\"alternate_view.html\">Try the alternate view</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
+            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + ((!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])) && !(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["favorites.html"]))) ? "<a href=\"visual_filter.html\">Try the visual filter</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
         }
     },
     initSchedules:function(schedules,start,count,options){
