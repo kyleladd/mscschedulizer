@@ -873,8 +873,13 @@ module.exports = {
     removeTimeBlockFilter:function(index){
         mscSchedulizer.schedule_filters.TimeBlocks.splice(index, 1);
         mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
-        mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
-        $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+        if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
+            mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
+        }
+        else{
+            mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+        }
     },
     updateDayTimeBlockFilter:function(index){
         mscSchedulizer.schedule_filters.TimeBlocks[index] = {};
@@ -884,8 +889,13 @@ module.exports = {
         mscSchedulizer.schedule_filters.TimeBlocks[index].EndTime = node_generic_functions.padStr(node_generic_functions.convertToInttime(timeOnlyDatepair.endTimeInput.value).toString(),3);
         mscSchedulizer.schedule_filters.TimeBlocks[index].Days = $("#weekCal_"+index).weekLine('getSelected');
         mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
-        mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
-        $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+        if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
+            mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
+        }
+        else{
+            mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+        }
     },
     initTimeBlockPickers:function(filters){
         for(var i=0; i<filters.length;i++){
