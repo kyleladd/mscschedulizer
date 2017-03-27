@@ -1243,7 +1243,7 @@ module.exports = {
                 var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
                 var modal = $(this);
                 modal.find('.modal-title').text("Schedule Details");
-                modal.find('.modal-body').html('<div style=\'display:block;\'>' + mscSchedulizer.exportLink(schedule) + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
+                modal.find('.modal-body').html('<div style=\'display:block;\'>' + (typeof options !== "undefined" && options.export === true ? mscSchedulizer.exportLink(schedule) : "") + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
                 $('.course_details').basictable();
             });
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
