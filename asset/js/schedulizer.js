@@ -926,7 +926,7 @@ module.exports = {
     concurrentEnrollmentFilter:function(section,filters){
         if(section.SectionAttributes !== null){
             var attributes = section.SectionAttributes.split(";");
-            if(node_generic_functions.inList("CHS", attributes) || node_generic_functions.inList("NHS", attributes) || node_generic_functions.inList("ETC", attributes) || node_generic_functions.inList("OCBB", attributes)){
+            if(node_generic_functions.inList("ETC", attributes) || node_generic_functions.inList("OCBB", attributes)){
                 return true;
             }
         }
