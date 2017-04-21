@@ -366,15 +366,19 @@ module.exports = {
         }
         return meeting;
     },
-    detailedCoursesOutput:function(courses,icon,show_crn_selections){
+    detailedCoursesOutput:function(courses,icon,show_crn_selections,show_total_credits){
         if(typeof icon === "undefined"){
             icon = true;
         }
         if(typeof show_crn_selections === "undefined"){
             show_crn_selections = true;
         }
+        if(typeof show_total_credits === "undefined"){
+            show_total_credits = true;
+        }
         var output = "";
         var terms = []; //List of term objects used in this department
+        var total_credits = 0;
         for (var i in courses) {
             var course = courses[i];
             //Order by Section Number
@@ -425,6 +429,12 @@ module.exports = {
                     if(section.Credits === null){
                         section.Credits = "variable";
                     }
+                    else{
+                        var credits = parseInt(section.Credits);
+                        if(!isNaN(credits)){
+                            total_credits += credits;
+                        }
+                    }
 
                     output+="<tr class=\"a_course_section"+((node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1 && show_crn_selections === true) ? " selected_section" : "") +"\" data-value='" + escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN})) + "'><td>" + section.Term + "</td><td>" + section.Campus + "</td><td>" + section.CourseCRN + "</td><td>" + section.SectionNumber + "</td><td>" + section.Credits + "</td><td>" + section.CurrentEnrollment + "/" + section.MaxEnrollment + "</td><td>" + meeting.days.join(" ") + "&nbsp;</td><td>" + meeting.startTime + " - " + meeting.endTime + "</td><td>" + section.Instructor + "</td></tr>";
                 }
@@ -464,7 +474,7 @@ module.exports = {
             }
             special_msc_message += "<br/>";
         }
-        output = term_output + special_msc_message + output;
+        output = term_output + special_msc_message + output + (show_total_credits ? "Total Credits: " + total_credits : "");
         return output;
     },
     getCourseInfos:function(callback,callback2){
@@ -577,7 +587,7 @@ module.exports = {
                 modal.find('.modal-title').text("Course Section Details");
                 var section_output = JSON.parse(JSON.stringify(calEvent.course));//avoid byref
                 section_output.Sections = [calEvent.section];
-                modal.find('.modal-body').html(mscSchedulizer.detailedCoursesOutput([section_output],false,false));
+                modal.find('.modal-body').html(mscSchedulizer.detailedCoursesOutput([section_output],false,false,false));
                 modal.find('.modal-footer').html("<button type=\"button\" class=\"btn btn-danger remove-from-consideration\" data-event-id=\"" + calEvent._id + "\" data-section=\"" + escape(JSON.stringify(calEvent.section)) + "\" data-dismiss=\"modal\">Remove</button><button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>");
                 $('.course_details').basictable();
             });
@@ -1243,7 +1253,7 @@ module.exports = {
                 var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
                 var modal = $(this);
                 modal.find('.modal-title').text("Schedule Details");
-                modal.find('.modal-body').html('<div style=\'display:block;\'>' + (typeof options !== "undefined" && options.export === true ? mscSchedulizer.exportLink(schedule) : "") + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false));
+                modal.find('.modal-body').html('<div style=\'display:block;\'>' + (typeof options !== "undefined" && options.export === true ? mscSchedulizer.exportLink(schedule) : "") + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false,true));
                 $('.course_details').basictable();
             });
             mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
