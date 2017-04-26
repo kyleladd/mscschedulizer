@@ -114,7 +114,6 @@
                     <li><a href="#semester">Changing Semester</a></li>
                     <li><a href="#department">Changing Departments</a></li>
                     <li><a href="#selectclasses">Select Classes</a></li>
-                    <li><a href="#selectclasses">Select Classes</a></li>
                     <li><a href="#courselistings">Course Listings</a>
                     <li><a href="#crnselections">CRN-Specific Selections</a>
                     <li><a href="#description">Course Description</a>
@@ -125,9 +124,10 @@
                   <ul>
                     <li><a href="#full">Hide Full Filter</a>
                     <li><a href="#online">Online Filter</a></li>
-                    <li><a href="#courselistings">Campus Filter</a>
-                    <li><a href="#crnselections">Day/Time Filter</a>
+                    <li><a href="#campusfilter">Campus Filter</a>
+                    <li><a href="#daytimeblockfilters">Day/Time Filter</a>
                     <li><a href="#oncampussuny">ONCAMPUS SUNY</a>
+                    <li><a href="#visualfilters">The Visual Filter</a>
                   </ul>
                 </li>
                 <li>
@@ -144,11 +144,10 @@
           </div>
           <!--End sidebar-->
 
-
           <!-- Start Blog Posts -->
           <div class="col-md-9 blog-box">
 
-            <!-- Start Post -->
+             <!-- Start Post -->
             <div class="blog-post video-post">
               <!-- Post Video -->
               <div class="post-head">
@@ -167,7 +166,40 @@
             <div class="blog-post video-post">
               <!-- Post Video -->
               <div class="post-head">
-                <div class="fluid-width-video-wrapper">Video Coming Soon</div>
+                <div class="fluid-width-video-wrapper" style="padding-top: 56.25%;"><iframe src="https://www.youtube.com/embed/Kr9d-YZ3aJM" frameborder="0" allowfullscreen></iframe></div>
+              </div>
+              <!-- Post Content -->
+              <div class="post-content">
+                <h2 class="post-title"><a href="#overview">Selecting Classes</a></h2>
+                <p>There are a few ways to select courses within the schedulizer. One way is to use the Select Classes page which will select the class with all of its sections to be used within the generated combinations. This functionality is the same as using the Course details page and clicking the plus icon next to a course's title. To remove a selection, click on the corresponding listing from within the selections section of the sidebar. </p>
+              </div>
+              <div class="post-tags">selections,selectclasses,crnselections</div>
+            </div>
+            <!-- End Post -->
+
+            <!-- Start Post -->
+            <div class="blog-post video-post">
+              <!-- Post Video -->
+              <div class="post-head">
+                <div class="fluid-width-video-wrapper" style="padding-top: 56.25%;"><iframe src="https://www.youtube.com/embed/Dv4ofVRgTVA" frameborder="0" allowfullscreen></iframe></div>
+              </div>
+              <!-- Post Content -->
+              <div class="post-content">
+                <h2 class="post-title"><a href="#overview">Filters</a></h2>
+                <p>For more information about each particular filter, hover over them to see a tooltip.</p>
+              </div>
+              <div class="post-tags">full,online,campusfilter,daytimeblockfilters,oncampussuny</div>
+            </div>
+            <!-- End Post -->
+
+            <!-- Start Post -->
+            <div class="blog-post image-post">
+             
+              <div class="post-head">
+                <a class="lightbox" title="This is an image title" href="http://placehold.it/960x540?text=Video Coming Soon">
+                <div class="thumb-overlay"><i class="fa fa-arrows-alt"></i></div>
+                <img alt="" src="http://placehold.it/960x540">
+                </a>
               </div>
               <!-- Post Content -->
               <div class="post-content">
@@ -202,10 +234,37 @@
             </div>
             <!-- End Post -->
 
+            <div class="blog-post video-post">
+              <!-- Post Video -->
+              <div class="post-head">
+                <div class="fluid-width-video-wrapper" style="padding-top: 56.25%;"><iframe src="https://www.youtube.com/embed/46cTD5HSNT8" frameborder="0" allowfullscreen></iframe></div>
+              </div>
+                 
+              <div class="post-content">
+                <h2><a href="#crnselections">CRN Selections</a></h2>
+                <p>Perhaps you want only a particular section or sections of a course to be in the result of the combinations of schedules. When multiple sections are selected that are of the same type (lectures, labs), they are treated as an "OR". However, if the crn selections are of different types, they are treated as an "AND".</p>
+              </div>
+              <div class="post-tags">crnselections,filters</div>
+            </div>
+
+            <div class="blog-post video-post">
+              <!-- Post Video -->
+              <div class="post-head">
+                <div class="fluid-width-video-wrapper" style="padding-top: 56.25%;"><iframe src="https://www.youtube.com/embed/36DMVD527pE" frameborder="0" allowfullscreen></iframe></div>
+              </div>
+                 
+              <div class="post-content">
+                <h2><a href="#visualfilters">Visual Filters</a></h2>
+                <p>By using the visual filter, you're able to remove sections from consideration. Once your courses are selected (via the select classes or the course listings pages), you're able to view all of the sections of all of your selected courses onto one schedule via the Visual Filters page.  By clicking on a particular section you're able to see the details for that section as well as the ability to remove the section from consideration. When a section is removed from consideration, it will not appear in any of the generated combinations on the Generate page.</p>
+                <h4>Within the Video</h4>
+                <p>The above video shows how to add and remove visual filters and demonstrates there impact on generated schedules.</p>
+                <h4>Using Visual Filters</h4>
+                <p><strong>To add a visual filter</strong>, (after selecting your courses) go to the visual filters page (accessible via the main navigation). <strong>To view your current schedule filters and remove a visual filter,</strong> above the schedule section on the Generate and Visual Filters pages, click the visual filters button. This will then list out all visual filters. Alongside each filter will be the ability to delete the filter (thus adding the section back into consideration).</p>
+              </div>
+              <div class="post-tags">visualfilters,filters</div>
+            </div>
           </div>
           <!-- End Blog Posts -->
-
-
         </div>
       </div>
     </div>
@@ -230,13 +289,20 @@
   function filterTutorials(){
     var searchTag = "";
     try{
-      searchTag = $("ul.video-post-filter li a.current").attr("href");
-      searchTag = searchTag.substring(1,searchTag.length);}
+      if($("ul.video-post-filter li a.current").length > 0){
+        searchTag = $("ul.video-post-filter li a.current").attr("href");
+        searchTag = searchTag.substring(1,searchTag.length);
+      }
+      else{
+        searchTag = $(".widget-search input").val();
+      }
+    }
     catch(err){
       searchTag = "all";
     }
+    searchTag = searchTag.toLowerCase();
     var $items = $('.blog-post');
-    if(searchTag==="all"){
+    if(searchTag==="all" || searchTag === ""){
       $items.filter(function(){return true;}).show('slow');
     }
     else{
@@ -270,6 +336,10 @@
       $(".video-post-filter a").removeClass("current");
       $(".video-post-filter a[href='#"+$(this).attr("href").substring(1)+"']" ).addClass("current");
       filterTutorials();
+    });
+    $(".widget-search input").keyup(function() {
+       $(".video-post-filter a").removeClass("current");
+       filterTutorials();
     });
   });
 

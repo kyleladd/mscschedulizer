@@ -861,7 +861,7 @@ module.exports = {
         mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
     },
     updateAltViewModal: function(){
-        $('#modal_alt_view_filters').find('.modal-title').text("Alt View Filters");
+        $('#modal_alt_view_filters').find('.modal-title').text("Visual Filters");
         $('#modal_alt_view_filters').find('.modal-body').html("<div style=\"display:block;\">" + mscSchedulizer.altViewFilterOutput(mscSchedulizer.user_course_adjustments) + "</div>");
         $('#modal_alt_view_filters').find('.modal-footer').html("<a href=\"visual_filter.html\"><button type=\"button\" class=\"btn btn-secondary\">Add Filter</button></a> <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>");
     },
