@@ -1,0 +1,54 @@
+<!-- Start Content -->
+<div id="content">
+  <div class="container">
+    <div class="page-content">
+
+      <div class="row sidebar-page">
+      
+                <!--Sidebar-->
+      <div class="col-sm-3 col-xs-12 sidebar left-sidebar">
+        
+        <!-- Search Widget -->
+        <!-- <div class="widget widget-search">
+          <form action="#">
+            <input type="search" placeholder="Enter Keywords..." />
+            <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+          </form>
+        </div> -->
+
+        <div class="widget widget-categories">
+          <h4>Semesters <span class="head-line"></span></h4>
+          <semester-selector semester="$ctrl.semester" semesters="$ctrl.semesters" class="selectpicker col-xs-12"></semester-selector>
+        </div>
+
+        <!-- Tags Widget -->
+        <div class="widget widget-tags">
+          <h4>Selections <span class="head-line"></span></h4>
+          <div class="tagcloud" id="course_selections">
+          </div>
+        </div>
+
+        <!-- Categories Widget -->
+        <div class="widget widget-categories">
+          <h4>Departments <span class="head-line"></span></h4>
+          <select id="departments" class="selectpicker col-xs-12" data-live-search="true"><!-- Data loaded from api --></select>
+        </div>
+
+      </div>
+      <!--End sidebar-->
+      <!-- Page Content -->
+      <div class="col-sm-9 col-xs-12 page-content">
+        
+        <!-- Classic Heading -->
+        <h4 class="classic-title"><span>Courses</span></h4>
+        
+        <ul id="dept_class_list"><li><div class="loader"></div> <div class="status">Loading Courses...</div></li></ul>
+                    
+      </div>
+      <!-- End Page Content-->
+             
+      
+    </div>
+  </div>
+</div>
+</div>

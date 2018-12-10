@@ -44,24 +44,8 @@
   <script type="text/javascript" src="js/jquery.migrate.js"></script>
   <script type="text/javascript" src="js/modernizrr.js"></script>
   <script type="text/javascript" src="asset/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/jquery.fitvids.js"></script>
-  <script type="text/javascript" src="js/owl.carousel.min.js"></script>
-  <script type="text/javascript" src="js/nivo-lightbox.min.js"></script>
-  <script type="text/javascript" src="js/jquery.isotope.min.js"></script>
-  <script type="text/javascript" src="js/jquery.appear.js"></script>
-  <script type="text/javascript" src="js/count-to.js"></script>
-  <script type="text/javascript" src="js/jquery.textillate.js"></script>
-  <script type="text/javascript" src="js/jquery.lettering.js"></script>
-  <script type="text/javascript" src="js/jquery.easypiechart.min.js"></script>
-  <script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
-  <script type="text/javascript" src="js/jquery.parallax.js"></script>
-  
   <script type="text/javascript" src="js/jquery.slicknav.js"></script>
   <script type="text/javascript" src="js/pnotify.custom.min.js"></script>
-
-  <!--[if IE 8]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
 </head>
 
 <body>
@@ -71,71 +55,144 @@
 
     <!-- Start Header Section -->
     <div class="hidden-header"></div>
-    <header class="clearfix"></header>
-    <!-- End Header Section -->
+    <header class="clearfix">
 
-
-    <!-- Start Home Page Slider -->
-    <section id="home">
-      <!-- Carousel -->
-      <div id="main-slide" class="carousel slide" data-ride="carousel">
-
-        <!-- Indicators -->
-        <!-- <ol class="carousel-indicators">
-          <li data-target="#main-slide" data-slide-to="0" class="active"></li>
-        </ol> -->
-        <!--/ Indicators end-->
-
-        <!-- Carousel inner -->
-        <div class="carousel-inner">
-          <div class="item active">
-            <img class="img-responsive" src="images/slider/bg1.jpg" alt="slider">
-            <div class="slider-content">
-              <div class="col-md-12 text-center">
-                <h2 class="animated2">
-                              <span>Welcome to <strong>MSCschedulizer</strong></span>
-                              </h2>
-                <h3 class="animated3">
-                                <span>Find the perfect course schedule in minutes</span>
-                              </h3>
-                <p class="animated4"><a href="select-classes.html" class="slider btn btn-system btn-large">Get Started</a>
-                </p>
-              </div>
-            </div>
-          </div>
-          <!--/ Carousel item end -->
-        </div>
-        <!-- Carousel inner end-->
-
-        <!-- Controls -->
-        <!-- <a class="left carousel-control" href="#main-slide" data-slide="prev">
-          <span><i class="fa fa-angle-left"></i></span>
-        </a>
-        <a class="right carousel-control" href="#main-slide" data-slide="next">
-          <span><i class="fa fa-angle-right"></i></span>
-        </a> -->
-      </div>
-      <!-- /carousel -->
-    </section>
-    <!-- End Home Page Slider -->
-<div id="content">
-      <div class="container">
-        <div class="page-content">
+      <!-- Start Top Bar -->
+      <div class="top-bar">
+        <div class="container">
           <div class="row">
-
-            <div class="col-md-12">
-              <!-- Classic Heading -->
-              <h4 class="classic-title"><span>Demo</span></h4>
-              <iframe width="420" height="315" src="https://www.youtube.com/embed/QiC1SQgJImU" frameborder="0" allowfullscreen></iframe>
+            <div class="col-md-7">
+              <!-- Start Contact Info -->
+              <ul class="contact-details">
+                <li><a href="mailto:web@morrisville.edu"><i class="fa fa-envelope-o"></i> web@morrisville.edu</a>
+                </li>
+              </ul>
+              <!-- End Contact Info -->
             </div>
+            <!-- .col-md-6 -->
+            <div class="col-md-5">
+              <!-- Start Social Links -->
+              <ul class="social-list">
+                <li>
+                  <a class="android itl-tooltip" data-placement="bottom" title="Android App" href="https://play.google.com/store/apps/details?id=us.kyleladd.mscschedulizer"><i class="fa fa-android" aria-hidden="true"></i></a>
+                </li>
+                <li>
+                  <a class="share itl-tooltip" data-placement="bottom" title="Share current page" href="javascript:void(0)"><i class="fa fa-share-alt" aria-hidden="true"></i></a>
+                </li>
+                <li>
+                  <a class="github itl-tooltip" data-placement="bottom" title="GitHub" target="_blank" href="https://github.com/kyleladd/mscschedulizer"><i class="fa fa-github"></i></a>
+                </li>
+                <li>
+                  <a class="api itl-tooltip" data-placement="bottom" title="API" target="_blank" href="https://schedulizer-api.morrisville.edu"><i class="fa fa-cloud" aria-hidden="true"></i></a>
+                </li>
+                <li>
+                  <a class="trello itl-tooltip" data-placement="bottom" title="Trello" target="_blank" href="https://trello.com/b/bNiEIopB/mscschedulizer"><i class="fa fa-trello"></i></a>
+                </li>
+              </ul>
+              <!-- End Social Links -->
+            </div>
+            <!-- .col-md-6 -->
           </div>
+          <!-- .row -->
+        </div>
+        <!-- .container -->
       </div>
-    </div>
-</div>
+      <!-- .top-bar -->
+      <!-- End Top Bar -->
+
+
+      <!-- Start  Logo & Naviagtion  -->
+      <div class="navbar navbar-default navbar-top">
+        <div class="container">
+          <div class="navbar-header">
+            <!-- Stat Toggle Nav Link For Mobiles -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <i class="fa fa-bars"></i>
+            </button>
+            <!-- End Toggle Nav Link For Mobiles -->
+            <a class="navbar-brand" href="index.html">
+              <!-- <img alt="" src="images/mscschedulizer.png"> --><span style="color: #0bb586;">MSC</span><span>schedulizer</span>
+            </a>
+          </div>
+          <div class="navbar-collapse collapse">
+            <!-- Start Navigation List -->
+            <ul id="main-nav" class="nav navbar-nav navbar-right">
+              <li><a ui-sref="index" ui-sref-active="active">Home</a></li>
+              <li><a ui-sref="select-classes" ui-sref-active="active">Select Classes</a></li>
+              <li class="drop">
+                <a ui-sref="generate" ui-sref-active="active">Generate</a>
+                <ul class="dropdown">
+                  <li>
+                    <a ui-sref="visual-filter" ui-sref-active="active">Visual Filter</a>
+                  </li>
+                </ul>
+              </li>
+              <li><a ui-sref="favorites" ui-sref-active="active">Favorites</a></li>
+              <li><a ui-sref="course-listings" ui-sref-active="active">Course Listings</a></li>
+            </ul>
+            <!-- End Navigation List -->
+          </div>
+        </div>
+
+        <!-- Mobile Menu Start -->
+        <ul id="main-nav-mobile" class="wpb-mobile-menu">
+          <!-- Generate from JS -->
+        </ul>
+        <!-- Mobile Menu End -->
+
+      </div>
+      <!-- End Header Logo & Naviagtion -->
+</header>
+    <!-- End Header Section -->
+    <ui-view> 
+     <i>Loading ....</i>
+    </ui-view>
     <!-- Start Footer Section -->
-    <div id="footer-container"></div>
+    <div id="footer-container">
+        <footer id="footer">
+      <div class="container">
+        <!-- Start Copyright -->
+        <div class="copyright-section">
+          <div class="row">
+            <div class="col-md-6">
+              <p>&copy; <span class="copy-year"></span> <a href="http://www.morrisville.edu">Morrisville State College</a> - All Rights Reserved</p>
+            </div>
+            <!-- .col-md-6 -->
+            <div class="col-md-6">
+              <ul class="footer-nav">
+                <li>
+                  <a href="tutorials.html">Tutorials</a>
+                </li>
+                <li>
+                  <a href="https://github.com/kyleladd/mscschedulizer">GitHub</a>
+                </li>
+                <li>
+                  <a href="mailto:web@morrisville.edu">Contact</a>
+                </li>
+              </ul>
+            </div>
+            <!-- .col-md-6 -->
+          </div>
+          <!-- .row -->
+        </div>
+        <!-- End Copyright -->
+
+      </div>
+    </footer>
+    <!-- End Footer Section -->
+
+
+  </div>
+  <!-- End Full Body Container -->
+
+  <!-- Go To Top Link -->
+  <a href="#" class="back-to-top"><i class="fa fa-angle-up"></i></a></div>
   </div>
   <script type="text/javascript" src="js/script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="asset/angularjs/config.js"></script>
+  <script>
+    require(['main']);
+  </script>
 </body>
 
 </html>

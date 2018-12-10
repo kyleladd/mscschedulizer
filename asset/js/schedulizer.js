@@ -82,40 +82,40 @@ module.exports = {
         localStorage.setItem("user_course_adjustments", JSON.stringify(user_course_adjustments));
         mscSchedulizer.user_course_adjustments = user_course_adjustments;
     },
-    setSemester:function(semester){
-        try{
-            if(typeof semester !== 'undefined'){
-                var expiration = new Date();
-                expiration.setDate(expiration.getDate() + 1);
-                mscSchedulizer.semester.TermCode = semester;
-                mscSchedulizer.semester.expires = expiration;
-                mscSchedulizer.setSemesterVar(mscSchedulizer.semester);
-            }
-            else{
-                semester = JSON.parse(localStorage.getItem('semester')) || {};
-                if(new Date()>semester.expires){
-                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
-                }
-                else if(node_generic_functions.isEmpty(semester)){
-                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
-                }
-                else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
-                    mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
-                }
-            }
-        }
-        catch(err){
-            mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
-        }
-    },
-    setSemesterVar:function(semester){
-        localStorage.setItem("semester", JSON.stringify(semester));
-        mscSchedulizer.semester = semester;
-    },
-    setDepartmentVar:function(department){
-        localStorage.setItem("department", JSON.stringify(department));
-        mscSchedulizer.department = department;
-    },
+    // setSemester:function(semester){
+    //     try{
+    //         if(typeof semester !== 'undefined'){
+    //             var expiration = new Date();
+    //             expiration.setDate(expiration.getDate() + 1);
+    //             mscSchedulizer.semester.TermCode = semester;
+    //             mscSchedulizer.semester.expires = expiration;
+    //             mscSchedulizer.setSemesterVar(mscSchedulizer.semester);
+    //         }
+    //         else{
+    //             semester = JSON.parse(localStorage.getItem('semester')) || {};
+    //             if(new Date()>semester.expires){
+    //                 mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+    //             }
+    //             else if(node_generic_functions.isEmpty(semester)){
+    //                 mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+    //             }
+    //             else if(node_generic_functions.searchListDictionaries(mscSchedulizer.current_semester_list,{TermCode:mscSchedulizer.semester.TermCode},true)===-1){
+    //                 mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+    //             }
+    //         }
+    //     }
+    //     catch(err){
+    //         mscSchedulizer.setSemesterVar(mscSchedulizer.current_semester_list[0]);
+    //     }
+    // },
+    // setSemesterVar:function(semester){
+    //     localStorage.setItem("semester", JSON.stringify(semester));
+    //     mscSchedulizer.semester = semester;
+    // },
+    // setDepartmentVar:function(department){
+    //     localStorage.setItem("department", JSON.stringify(department));
+    //     mscSchedulizer.department = department;
+    // },
     queryData:function(queryString, preserveDuplicates){
       // http://code.stephenmorley.org/javascript/parsing-query-strings-for-get-data/
       var result = {};
@@ -158,23 +158,23 @@ module.exports = {
         }
         $("#"+mscSchedulizer_config.html_elements.course_selections_list).html(output);
     },
-    getDepartmentCourses: function(department){
-        department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
-        $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(courses){
-            var output = "";
-            // Remove sections that are administrative entry
-            courses = mscSchedulizer.removeAdministrativeSections(courses);
-            for (var i in courses) {
-                var course = courses[i];
-                //Change to just one html output set
-                output += "<li><a class='a_course' data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
-            }
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
-        })
-        .fail(function() {
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li>Unable to load courses.</li>");
-        });
-    },
+    // getDepartmentCourses: function(department){
+    //     department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
+    //     $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&semester="+mscSchedulizer.semester.TermCode , function(courses){
+    //         var output = "";
+    //         // Remove sections that are administrative entry
+    //         courses = mscSchedulizer.removeAdministrativeSections(courses);
+    //         for (var i in courses) {
+    //             var course = courses[i];
+    //             //Change to just one html output set
+    //             output += "<li><a class='a_course' data-value='"+escape(JSON.stringify({'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null}))+"'>"+course.DepartmentCode+" " + course.CourseNumber +" - " + course.CourseTitle +"</a></li>";
+    //         }
+    //         $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
+    //     })
+    //     .fail(function() {
+    //         $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li>Unable to load courses.</li>");
+    //     });
+    // },
     daysList: function(meeting, include_empty){
         include_empty = typeof include_empty !== 'undefined' ? include_empty : true;
         var result = [];
@@ -215,32 +215,32 @@ module.exports = {
         }
         return result;
     },
-    getDepartmentCoursesDetails: function(department){
-        department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
-        $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(courses){
-            // Remove sections that are administrative entry
-            courses = mscSchedulizer.removeAdministrativeSections(courses);
-            // Save courses to mscschedulizer variable in localstorage
-            localStorage.setItem("department_courses", JSON.stringify(courses));
-            mscSchedulizer.department_courses = courses;
+    // getDepartmentCoursesDetails: function(department){
+    //     department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
+    //     $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(courses){
+    //         // Remove sections that are administrative entry
+    //         courses = mscSchedulizer.removeAdministrativeSections(courses);
+    //         // Save courses to mscschedulizer variable in localstorage
+    //         localStorage.setItem("department_courses", JSON.stringify(courses));
+    //         mscSchedulizer.department_courses = courses;
 
-            var output = mscSchedulizer.getDepartmentCoursesOutput(courses);
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
-        })
-        .fail(function() {
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
-        })
-        .always(function() {
-            $('.course_details').basictable();
-            $('#modal_courseDescription').modal({show:false});
-            $('#modal_courseDescription').on('show.bs.modal', function (event) {
-                var trigger = $(event.relatedTarget); // Element that triggered the modal
-                var course = JSON.parse(unescape(trigger.data('course'))); // Extract info from data-* attributes
-                var modal = $(this);
-                modal.find('.modal-title').text(course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle);
-                modal.find('.modal-body').text((course.Description !== null ? course.Description : 'The course description is currently unavailable.'));
-            });
-        });
+    //         var output = mscSchedulizer.getDepartmentCoursesOutput(courses);
+    //         $("#"+mscSchedulizer_config.html_elements.department_class_list).html(output);
+    //     })
+    //     .fail(function() {
+    //         $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<p>Unable to load course listings.</p>");
+    //     })
+    //     .always(function() {
+    //         $('.course_details').basictable();
+    //         $('#modal_courseDescription').modal({show:false});
+    //         $('#modal_courseDescription').on('show.bs.modal', function (event) {
+    //             var trigger = $(event.relatedTarget); // Element that triggered the modal
+    //             var course = JSON.parse(unescape(trigger.data('course'))); // Extract info from data-* attributes
+    //             var modal = $(this);
+    //             modal.find('.modal-title').text(course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle);
+    //             modal.find('.modal-body').text((course.Description !== null ? course.Description : 'The course description is currently unavailable.'));
+    //         });
+    //     });
     },
     getDepartmentCoursesOutput: function(courses){
         var department_courses = JSON.parse(JSON.stringify(courses));
@@ -270,16 +270,16 @@ module.exports = {
         changedSection.removeClass('selected_section');
       }
     },
-    getSemestersList:function(callback){
-        $.getJSON(mscSchedulizer_config.api_host + "/semesters/", function(semesters){
-            mscSchedulizer.setCurrentSemesterListVar(semesters);
-            callback(semesters);
-        })
-        .fail(function() {
-            mscSchedulizer.setCurrentSemesterListVar(null);
-            callback(null);
-        });
-    },
+    // getSemestersList:function(callback){
+    //     $.getJSON(mscSchedulizer_config.api_host + "/semesters/", function(semesters){
+    //         mscSchedulizer.setCurrentSemesterListVar(semesters);
+    //         callback(semesters);
+    //     })
+    //     .fail(function() {
+    //         mscSchedulizer.setCurrentSemesterListVar(null);
+    //         callback(null);
+    //     });
+    // },
     getSemestersSelect:function(semesters_list){
         var output = "";
         for (var i in semesters_list){
@@ -293,46 +293,46 @@ module.exports = {
         }
         $("#"+mscSchedulizer_config.html_elements.semesters_select).html(output);
     },
-    getDepartments:function(callback){
-        $.getJSON(mscSchedulizer_config.api_host + "/departments/?semester="+mscSchedulizer.semester.TermCode, function(departments){
-            var output = "";
-            for (var i in departments) {
-                var department = departments[i];
-                output += "<option class='a_department' value='"+department.DepartmentCode + "' " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
-            }
-            $("#"+mscSchedulizer_config.html_elements.departments_select).html(output);
-            mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
-        })
-        .fail(function() {
-            $("#"+mscSchedulizer_config.html_elements.departments_select).html("<option>Unable to load departments.</option>");
-        })
-        .always(function() {
-            $('.selectpicker').selectpicker({dropupAuto:false});
-            $('.selectpicker').selectpicker('refresh');
-            $(".bootstrap-select .dropdown-menu").niceScroll({
-                scrollspeed: 100,
-                mousescrollstep: 38,
-                cursorwidth: 10,
-                cursorborder: 0,
-                cursorcolor: '#333',
-                autohidemode: false,
-                zindex: 999999999,
-                horizrailenabled: false,
-                cursorborderradius: 0,
-            });
-            callback();
-        });
-    },
-    getLargeSchedule:function(crns,callback){
-        $.getJSON(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+mscSchedulizer.semester.TermCode, function(schedule){
-            var schedules = [];
-            schedules.push(schedule);
-            callback(schedules);
-        })
-        .fail(function() {
-            callback([]);
-        });
-    },
+    // getDepartments:function(callback){
+    //     $.getJSON(mscSchedulizer_config.api_host + "/departments/?semester="+mscSchedulizer.semester.TermCode, function(departments){
+    //         var output = "";
+    //         for (var i in departments) {
+    //             var department = departments[i];
+    //             output += "<option class='a_department' value='"+department.DepartmentCode + "' " + (department.DepartmentCode === mscSchedulizer.department ? "selected=selected" : "") + ">" + department.DepartmentCode + ' ' + department.Name + "</option>";
+    //         }
+    //         $("#"+mscSchedulizer_config.html_elements.departments_select).html(output);
+    //         mscSchedulizer.setDepartmentVar($("#"+mscSchedulizer_config.html_elements.departments_select).val());
+    //     })
+    //     .fail(function() {
+    //         $("#"+mscSchedulizer_config.html_elements.departments_select).html("<option>Unable to load departments.</option>");
+    //     })
+    //     .always(function() {
+    //         $('.selectpicker').selectpicker({dropupAuto:false});
+    //         $('.selectpicker').selectpicker('refresh');
+    //         $(".bootstrap-select .dropdown-menu").niceScroll({
+    //             scrollspeed: 100,
+    //             mousescrollstep: 38,
+    //             cursorwidth: 10,
+    //             cursorborder: 0,
+    //             cursorcolor: '#333',
+    //             autohidemode: false,
+    //             zindex: 999999999,
+    //             horizrailenabled: false,
+    //             cursorborderradius: 0,
+    //         });
+    //         callback();
+    //     });
+    // },
+    // getLargeSchedule:function(crns,callback){
+    //     $.getJSON(mscSchedulizer_config.api_host + "/info/?crn=" + crns.join("&crn[]=") + "&semester="+mscSchedulizer.semester.TermCode, function(schedule){
+    //         var schedules = [];
+    //         schedules.push(schedule);
+    //         callback(schedules);
+    //     })
+    //     .fail(function() {
+    //         callback([]);
+    //     });
+    // },
     groupMeetings:function(meetings){
         groupedMeetings = [];
         for (var m in meetings) {
@@ -477,29 +477,29 @@ module.exports = {
         output = term_output + special_msc_message + output + (show_total_credits ? "Total Credits: " + total_credits : "");
         return output;
     },
-    getCourseInfos:function(callback,callback2){
-        // /info/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
-        var courses_list = "";
-        for (var i in mscSchedulizer.classes_selected) {
-            var course = mscSchedulizer.classes_selected[i];
-            courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
-        }
-        courses_list = courses_list.replace('&','?');
-        if(courses_list !== ""){
-            $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester=" + mscSchedulizer.semester.TermCode, function(courses){
-                mscSchedulizer.gen_courses = courses;
-                return callback(mscSchedulizer.gen_courses,callback2);
-            })
-            .fail(function() {
-                mscSchedulizer.gen_courses = [];
-                $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">Unable to load combinations.</span></p>");
-                // return callback(mscSchedulizer.gen_courses,callback2);
-            });
-        }
-        else{
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><strong>No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</strong></p>");
-        }
-    },
+    // getCourseInfos:function(callback,callback2){
+    //     // /info/?courses[]=343&courses[]=344&courses[]=345&courses[]=121
+    //     var courses_list = "";
+    //     for (var i in mscSchedulizer.classes_selected) {
+    //         var course = mscSchedulizer.classes_selected[i];
+    //         courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
+    //     }
+    //     courses_list = courses_list.replace('&','?');
+    //     if(courses_list !== ""){
+    //         $.getJSON(mscSchedulizer_config.api_host + "/info/" + courses_list + "&semester=" + mscSchedulizer.semester.TermCode, function(courses){
+    //             mscSchedulizer.gen_courses = courses;
+    //             return callback(mscSchedulizer.gen_courses,callback2);
+    //         })
+    //         .fail(function() {
+    //             mscSchedulizer.gen_courses = [];
+    //             $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">Unable to load combinations.</span></p>");
+    //             // return callback(mscSchedulizer.gen_courses,callback2);
+    //         });
+    //     }
+    //     else{
+    //         $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><strong>No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</strong></p>");
+    //     }
+    // },
     applyUserAdjustments: function(courses,adjustments){
         adjustments.Sections.forEach(function(section_adjustment){
             if(section_adjustment.type === "remove"){
