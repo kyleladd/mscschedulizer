@@ -7,11 +7,13 @@ define(['angular', 'angular-ui-select'], function (angular,uiselect) {
         // template: '<select ng-model="$ctrl.value" ng-change="$ctrl.changedValue($ctrl.value)"><option ng-repeat="option in $ctrl.options" value="{{option.TermCode}}">{{option.Description}}</option></select>',
         // template: '<select ng-model="$ctrl.semester"><option ng-repeat="option in $ctrl.semesters" value="{{option.TermCode}}">{{option.Description}}</option></select>',
         // template: '<input ng-model="$ctrl.semester" />',
-         // template: 'inner: <input type="text" ng-model="$ctrl.semester">',
-        template: '<select ng-model="$ctrl.value" ng-change="$ctrl.changedValue($ctrl.value)"><option ng-repeat="option in $ctrl.options" value="{{option.TermCode}}">{{option.Description}}</option></select>',
+        // template: 'inner: <input type="text" ng-model="$ctrl.semester">',
+        // template: '<select ng-model="$ctrl.value" ng-change="{{$ctrl.change({value:$ctrl.value})}}"><option ng-repeat="option in $ctrl.options" value="{{option.TermCode}}">{{option.Description}}</option></select>',
+        template: '<select ng-model="$ctrl.value" ng-change="{{$ctrl.changedValue($ctrl.value)}}"><option ng-repeat="option in $ctrl.semesters" value="{{option.TermCode}}">{{option.Description}}</option></select>',
         bindings: { 
-            semester: '=',
+            semester: '<',
             semesters: '<',
+            change:'&'
         },
         // bindings: { connection: '=' },
         controllerAs: '$ctrl',
@@ -26,8 +28,9 @@ define(['angular', 'angular-ui-select'], function (angular,uiselect) {
                 // $ctrl.options = $ctrl.semesters;
             };
             $ctrl.changedValue = function(value){
-                console.log("CHANGED value", value );
-                $ctrl.semester = value;
+                console.log("CHANGED value", value, $ctrl.value );
+                $ctrl.change({value:$ctrl.value});
+                // $ctrl.semester = value;
                 // $scope.$apply();
             };
             // $ctrl.$onChanges = function(changesObj){

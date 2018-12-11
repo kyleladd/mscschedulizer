@@ -20,7 +20,7 @@
           <h4>Semesters <span class="head-line"></span></h4>
           <!-- <semester-selector semester="self.semester" semesters="self.semesters" class="selectpicker col-xs-12"></semester-selector> -->
           Outer: <input ng-model="self.semester">
-          <semester-selector semester="self.semester" ng-if="self.semester"></semester-selector>
+          <semester-selector semester="self.semester" ng-if="self.semester" change="self.semesterChanged(value)" semesters="self.semesters"></semester-selector>
         </div>
 
         <!-- Tags Widget -->
