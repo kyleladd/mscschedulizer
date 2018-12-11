@@ -74,9 +74,9 @@ define([
           // self.semesters = [];
           self.semester = "";
           schedulizerService.getSemesters()
-          .then((data)=>{
-            console.log("semesters",data.data);
-            self.semesters = data.data;
+          .then((semesters)=>{
+            console.log("semesters",semesters);
+            self.semesters = semesters;
             self.semester = userService.get_semester();
             console.log("self.semester",self.semester);
             setInterval(function(){

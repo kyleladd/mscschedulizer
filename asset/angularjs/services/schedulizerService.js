@@ -12,6 +12,13 @@ define(['angular'], function (angular) {
             return $http.get(base_url + "/semesters/", { 
                 // url: base_url + "/semesters/",
                 cache: true
+            })
+            .then(function(data){
+                var semesters = data.data;
+                semesters.sort(function(a, b) { 
+                    return new Date(a.TermStart) - new Date(b.TermStart);
+                });
+                return semesters;
             });
         };
         factory.getDepartments = function(semester_termcode) {

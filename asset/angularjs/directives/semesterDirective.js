@@ -25,6 +25,13 @@ define(['angular', 'angular-ui-select'], function (angular,uiselect) {
                 $ctrl.value = ($ctrl.semester ? $ctrl.semester: "");
                 console.log("semester directive controller", $ctrl.value);
                 console.log("semesters",$ctrl.semesters);
+
+                if($ctrl.semesters.length > 0 && $ctrl.semesters.filter(function(s){
+                    return $ctrl.value === s.TermCode;
+                }).length === 0){
+                    console.log("defaulting to first semester");
+                    $ctrl.value = $ctrl.semesters[0].TermCode;
+                }
                 // $ctrl.options = $ctrl.semesters;
             };
             $ctrl.changedValue = function(value){
