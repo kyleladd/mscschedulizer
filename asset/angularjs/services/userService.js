@@ -1,6 +1,6 @@
 define(['angular', 'lscache'], function (angular,lscache) {
     var service = angular.module("userService", []);
-    service.factory('userService', ['$http', function ($http) {
+    service.factory('userService', ['$rootScope','$http', function ($rootScope,$http) {
         var factory = {
             classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
             favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
@@ -20,10 +20,13 @@ define(['angular', 'lscache'], function (angular,lscache) {
             get_semester: function(){
                 var semester = lscache.get("semester");
                 console.log("getting semester", semester);
-                return (semester ? semester : {TermCode: "", Description: "", TermStart: "", TermEnd: ""});
+                return (semester ? semester : "");
+                // return (semester ? semester : {TermCode: "", Description: "", TermStart: "", TermEnd: ""});
             },
             set_semester: function(semester){
+                console.log("settings semester", semester);
                 lscache.set("semester",semester,1*1440);
+                $rootScope.$broadcast('semester:set', semester);
             },
             setDepartment: function(department){
                 lscache.set("department",department);

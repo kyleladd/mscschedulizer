@@ -67,25 +67,49 @@ define([
     }]);
     app.component("selectClassesComponent",{
       templateUrl: '/templates/select-classes.html',
+      controllerAs: "self",
       controller: function($scope, userService, schedulizerService){
-        this.$onInit = function () {
-          // this.semesters = [];
-          // this.semester = {};
+        var self = this;
+        self.$onInit = function () {
+          // self.semesters = [];
+          self.semester = "";
           schedulizerService.getSemesters()
           .then((data)=>{
             console.log("semesters",data.data);
-            this.semesters = data.data;
-            this.semester = userService.get_semester();
-            console.log("this.semester",this.semester);
+            self.semesters = data.data;
+            self.semester = userService.get_semester();
+            console.log("self.semester",self.semester);
+            setInterval(function(){
+              console.log("SIsemester",self.semester);
+            }, 2000);
+            // self.semester="201901";
           });
         };
         console.log("SelectClassesCtrl");
         console.log("userService", userService);
-        
-        $scope.$watch('semester', function(newValue, oldValue){
-          console.log("watch semester",newValue);
-          userService.set_semester(newValue);
+        self.semesterChanged = function(){
+          console.log("going to load the departments component value");
+        };
+        // $scope.$watch(angular.bind(self, function () {
+        //   return self.semester;
+        // }), function (newVal) {
+        //   console.log('Semester changed to ' + newVal);
+        //   userService.set_semester(newVal);
+        // });
+        $scope.$watch(function () {
+           return self.semester;
+        },function(value){
+          console.log('Semester changed to ' + value);
+          userService.set_semester(value);
         });
+        // $scope.$watch('semester', function(newValue, oldValue){
+        //   console.log("watch semester",newValue);
+        //   userService.set_semester(newValue);
+        // }, true);
+        $scope.$on('semester:set', function(event, data){
+          console.log("setting semester based on event", data);
+            $scope.semester = data;
+        })
       }
     });
     // app.controller('SelectClassesCtrl', ['$scope', 'userService',function ($scope, userService) {
