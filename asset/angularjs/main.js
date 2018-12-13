@@ -7,14 +7,14 @@ define([
     'ui.router',
     './directives/semesterDirective',
     './services/userService',
-    './services/schedulizerService'
+    // './services/schedulizerService'
 ], function (angular) {
     'use strict';
     var app = angular.module('app', [
         'ui.router',
         'semesterDirective',
         'userService',
-        'schedulizerService'
+        // 'schedulizerService'
     ])
     .config(['$stateProvider','$urlRouterProvider', function ($stateProvider,$urlRouterProvider) {
        $stateProvider.state({
@@ -68,22 +68,11 @@ define([
     app.component("selectClassesComponent",{
       templateUrl: '/templates/select-classes.html',
       controllerAs: "self",
-      controller: function($scope, userService, schedulizerService){
+      controller: function($scope, userService){
         var self = this;
         self.$onInit = function () {
           // self.semesters = [];
-          self.semester = "";
-          schedulizerService.getSemesters()
-          .then((semesters)=>{
-            console.log("semesters",semesters);
-            self.semesters = semesters;
-            self.semester = userService.get_semester();
-            console.log("self.semester",self.semester);
-            setInterval(function(){
-              console.log("SIsemester",self.semester);
-            }, 2000);
-            // self.semester="201901";
-          });
+          self.semester = userService.get_semester();
         };
         console.log("SelectClassesCtrl");
         console.log("userService", userService);
