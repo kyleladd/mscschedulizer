@@ -1,17 +1,17 @@
 // app.factory('settings', ['$http', function($http) {
 //     return $http.get('/api/public/settings/get')
 // }]);
-define(['angular'], function (angular) {
+define(['angular','./cacheInterceptor'], function (angular) {
 
-    var service = angular.module("schedulizerService", []);
+    var service = angular.module("schedulizerService", ['cacheInterceptor']);
 
     service.factory('schedulizerService', ['$http', '$q', function ($http, $q) {
         var base_url = "https://schedulizer-api.morrisville.edu";
         var factory = {};
-        factory.getSemesters = function() {
+        factory.get_semesters = function() {
             return $http.get(base_url + "/semesters/", { 
                 // url: base_url + "/semesters/",
-                cache: true
+                ttl: 15,
             })
             .then(function(data){
                 var semesters = data.data;
@@ -21,15 +21,25 @@ define(['angular'], function (angular) {
                 return semesters;
             });
         };
-        factory.getDepartments = function(semester_termcode) {
+        factory.get_departments = function(semester_termcode) {
+            // debugger;
             if(!semester_termcode){
                 return $q.reject([]);
             }
-            return $http.get({
-                url: base_url + "/departments/",
-                params:{
-                    semester: semester_termcode
+            return $http.get(base_url + "/departments/",
+                {
+                    params:{
+                        semester: semester_termcode
+                    },
+                    ttl: 15,
                 }
+            )
+            .then(function(data){
+                var departments = data.data;
+                departments.sort(function(a, b) { 
+                    return new Date(a.Name) - new Date(b.Name);
+                });
+                return departments;
             });
         };
         factory.getDepartmentCourses = function(department, semester_termcode, detailed) {

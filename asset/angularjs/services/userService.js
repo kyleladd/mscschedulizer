@@ -28,9 +28,17 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 lscache.set("semester",semester,1*1440);
                 $rootScope.$broadcast('semester:set', semester);
             },
-            setDepartment: function(department){
-                lscache.set("department",department);
-            }
+            get_department: function(){
+                var department = lscache.get("department");
+                console.log("getting department", department);
+                return (department ? department : "");
+                // return (department ? department : {TermCode: "", Description: "", TermStart: "", TermEnd: ""});
+            },
+            set_department: function(department){
+                console.log("settings department", department);
+                lscache.set("department",department,1*1440);
+                $rootScope.$broadcast('department:set', department);
+            },
         };
         return factory;
     }]);

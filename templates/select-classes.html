@@ -18,10 +18,7 @@
 
         <div class="widget widget-categories">
           <h4>Semesters <span class="head-line"></span></h4>
-          <!-- <semester-selector semester="self.semester" semesters="self.semesters" class="selectpicker col-xs-12"></semester-selector> -->
-          Outer: <input ng-model="self.semester">
-          <!-- <semester-selector semester="self.semester" ng-if="self.semesters" change="self.semesterChanged(value)" semesters="self.semesters"></semester-selector> -->
-          <semester-selector semester="self.semester" change="self.semesterChanged(value)"></semester-selector>
+          <semester-selector semester="$ctrl.semester" change="$ctrl.semesterChanged(value)"></semester-selector>
         </div>
 
         <!-- Tags Widget -->
@@ -34,7 +31,7 @@
         <!-- Categories Widget -->
         <div class="widget widget-categories">
           <h4>Departments <span class="head-line"></span></h4>
-          <select id="departments" class="selectpicker col-xs-12" data-live-search="true"><!-- Data loaded from api --></select>
+          <department-selector department="$ctrl.department" semester="$ctrl.semester" change="$ctrl.departmentChanged(value)"></department-selector>
         </div>
 
       </div>

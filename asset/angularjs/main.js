@@ -6,6 +6,7 @@ define([
     'angular',
     'ui.router',
     './directives/semesterDirective',
+    './directives/departmentDirective',
     './services/userService',
     // './services/schedulizerService'
 ], function (angular) {
@@ -13,10 +14,12 @@ define([
     var app = angular.module('app', [
         'ui.router',
         'semesterDirective',
+        'departmentDirective',
         'userService',
         // 'schedulizerService'
     ])
-    .config(['$stateProvider','$urlRouterProvider', function ($stateProvider,$urlRouterProvider) {
+    .config(['$stateProvider','$urlRouterProvider', '$httpProvider', function ($stateProvider,$urlRouterProvider, $httpProvider) {
+       $httpProvider.interceptors.push('cacheInterceptor');
        $stateProvider.state({
           name: 'index',
           url: '/',
@@ -67,28 +70,35 @@ define([
     }]);
     app.component("selectClassesComponent",{
       templateUrl: '/templates/select-classes.html',
-      controllerAs: "self",
+      controllerAs: "$ctrl",
       controller: function($scope, userService){
-        var self = this;
-        self.$onInit = function () {
-          // self.semesters = [];
-          self.semester = userService.get_semester();
+        var $ctrl = this;
+        $ctrl.$onInit = function () {
+          // $ctrl.semesters = [];
+          $ctrl.semester = userService.get_semester();
+          $ctrl.department = userService.get_department();
         };
         console.log("SelectClassesCtrl");
         console.log("userService", userService);
-        self.semesterChanged = function(value){
+        $ctrl.semesterChanged = function(value){
           console.log('Semester changed to ' + value);
+          // $ctrl.semester = value;
           userService.set_semester(value);
           console.log("going to load the departments component value");
         };
-        // $scope.$watch(angular.bind(self, function () {
-        //   return self.semester;
+        $ctrl.departmentChanged = function(value){
+          console.log('department changed to ' + value);
+          userService.set_department(value);
+          console.log("going to load the departments component value");
+        };
+        // $scope.$watch(angular.bind($ctrl, function () {
+        //   return $ctrl.semester;
         // }), function (newVal) {
         //   console.log('Semester changed to ' + newVal);
         //   userService.set_semester(newVal);
         // });
         // $scope.$watch(function () {
-        //    return self.semester;
+        //    return $ctrl.semester;
         // },function(value){
         //   console.log('Semester changed to ' + value);
         //   userService.set_semester(value);
@@ -99,8 +109,16 @@ define([
         // }, true);
         $scope.$on('semester:set', function(event, data){
           console.log("setting semester based on event", data);
-            self.semester = data;
-        })
+            // $scope.$apply(function () {
+              $ctrl.semester = data;
+            // });
+        });
+        $scope.$on('department:set', function(event, data){
+          console.log("setting department based on event", data);
+            // $scope.$apply(function () {
+              $ctrl.department = data;
+            // });
+        });
       }
     });
     // app.controller('SelectClassesCtrl', ['$scope', 'userService',function ($scope, userService) {
