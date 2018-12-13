@@ -241,7 +241,7 @@ module.exports = {
     //             modal.find('.modal-body').text((course.Description !== null ? course.Description : 'The course description is currently unavailable.'));
     //         });
     //     });
-    },
+    // },
     getDepartmentCoursesOutput: function(courses){
         var department_courses = JSON.parse(JSON.stringify(courses));
         department_courses = mscSchedulizer.applyUserAdjustments(department_courses,mscSchedulizer.user_course_adjustments);

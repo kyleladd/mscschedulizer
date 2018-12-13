@@ -46,7 +46,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                 console.log("directive getting departments", $ctrl.semester, $ctrl.department);
                 schedulizerService.get_departments($ctrl.semester)
                 .then((departments)=>{
-                    debugger;
+                    // debugger;
                     console.log("departments",departments);
                     $ctrl.departments = departments;
                     console.log("$ctrl.department",$ctrl.department);
