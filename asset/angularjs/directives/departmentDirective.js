@@ -59,6 +59,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                     }).length === 0){
                         console.log("defaulting to first department");
                         $ctrl.department = $ctrl.departments[0].DepartmentCode;
+                        $ctrl.changedValue($ctrl.department);
                     }
                 });
             }

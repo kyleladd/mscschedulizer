@@ -154,8 +154,9 @@ define([
         //   $ctrl.semester = userService.get_semester();
         //   $ctrl.department = userService.get_department();
         // };
+        //TODO-KL not needed because semester is watched on change when passed into the department directive
         $ctrl.semesterChanged = function(value){
-          debugger;
+          // debugger;
           console.log('Semester changed to ' + value);
           userService.set_semester(value);
           console.log("going to load the departments component value");
@@ -170,7 +171,7 @@ define([
           console.log("userService", userService);
           $ctrl.$postLink = function ($scope,$element) {
             //add event listener to an element
-            debugger;
+            // debugger;
             $element.on('click', function(){console.log("clicked course listings")});
 
             //also we can apply jqLite dom manipulation operation on element
