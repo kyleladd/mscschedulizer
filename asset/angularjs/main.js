@@ -75,19 +75,20 @@ define([
         $ctrl.$onInit = function () {
           $ctrl.semester = userService.get_semester();
           $ctrl.department = userService.get_department();
+          console.log("select classes semester,department", $ctrl.semester, $ctrl.department);
         };
         console.log("SelectClassesCtrl");
         console.log("userService", userService);
-        $ctrl.semesterChanged = function(value){
-          console.log('Semester changed to ' + value);
-          userService.set_semester(value);
-          console.log("going to load the departments component value");
-        };
-        $ctrl.departmentChanged = function(value){
-          console.log('department changed to ' + value);
-          userService.set_department(value);
-          console.log("going to load the departments component value");
-        };
+        // $ctrl.semesterChanged = function(value){
+        //   console.log('Semester changed to ' + value);
+        //   userService.set_semester(value);
+        //   console.log("going to load the departments component value");
+        // };
+        // $ctrl.departmentChanged = function(value){
+        //   console.log('department changed to ' + value);
+        //   userService.set_department(value);
+        //   console.log("going to load the departments component value");
+        // };
         $scope.$on('semester:set', function(event, data){
           console.log("setting semester based on event", data);
           $ctrl.semester = data;
@@ -109,10 +110,52 @@ define([
         $ctrl.$onInit = function () {
           $ctrl.semester = userService.get_semester();
           $ctrl.department = userService.get_department();
+          console.log("course listings semester,department", $ctrl.semester, $ctrl.department);
         };
         console.log("SelectClassesCtrl");
         console.log("userService", userService);
+        // $ctrl.semesterChanged = function(value){
+        //   console.log('Semester changed to ' + value);
+        //   // userService.set_semester(value);
+        //   console.log("going to load the departments component value");
+        // };
+        // $ctrl.departmentChanged = function(value){
+        //   console.log('department changed to ' + value);
+        //   // userService.set_department(value);
+        //   console.log("going to load the departments component value");
+        // };
+        // $ctrl.$postLink = function ($scope,$element) {
+        //   //add event listener to an element
+        //   $element.on('click', function(){console.log("clicked course listings")});
+
+        //   //also we can apply jqLite dom manipulation operation on element
+        //   // angular.forEach($element.find('div'), function(elem){console.log(elem)})
+        // };
+        $scope.$on('semester:set', function(event, data){
+          console.log("setting semester based on event", data);
+          $ctrl.semester = data;
+        });
+        $scope.$on('department:set', function(event, data){
+          console.log("setting department based on event", data);
+          $ctrl.department = data;
+        });
+      }
+    });
+    app.component("sidebarComponent",{
+      templateUrl: '/templates/sidebar.html',
+      controllerAs: "$ctrl",
+      bindings: { 
+            semester: '<',
+            department:'<'
+        },
+      controller: function($scope, userService){
+        var $ctrl = this;
+        // $ctrl.$onInit = function () {
+        //   $ctrl.semester = userService.get_semester();
+        //   $ctrl.department = userService.get_department();
+        // };
         $ctrl.semesterChanged = function(value){
+          debugger;
           console.log('Semester changed to ' + value);
           userService.set_semester(value);
           console.log("going to load the departments component value");
@@ -122,14 +165,26 @@ define([
           userService.set_department(value);
           console.log("going to load the departments component value");
         };
-        $scope.$on('semester:set', function(event, data){
-          console.log("setting semester based on event", data);
-          $ctrl.semester = data;
-        });
-        $scope.$on('department:set', function(event, data){
-          console.log("setting department based on event", data);
-          $ctrl.department = data;
-        });
+        $ctrl.onInit = function(){
+          console.log("SelectClassesCtrl");
+          console.log("userService", userService);
+          $ctrl.$postLink = function ($scope,$element) {
+            //add event listener to an element
+            debugger;
+            $element.on('click', function(){console.log("clicked course listings")});
+
+            //also we can apply jqLite dom manipulation operation on element
+            // angular.forEach($element.find('div'), function(elem){console.log(elem)})
+          };
+          $scope.$on('semester:set', function(event, data){
+            console.log("setting semester based on event, sidebar comp", data);
+            $ctrl.semester = data;
+          });
+          $scope.$on('department:set', function(event, data){
+            console.log("setting department based on event, sidebar comp", data);
+            $ctrl.department = data;
+          });
+        }
       }
     });
     app.controller('VisualFilterCtrl', ['$scope',function ($scope) {

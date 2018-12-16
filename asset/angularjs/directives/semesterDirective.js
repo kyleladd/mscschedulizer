@@ -2,7 +2,7 @@
 define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerService'], function (angular,uiselect,ngsanitize,schedulizerService) {
     angular.module("semesterDirective", ['ui.select','ngSanitize','schedulizerService'])
     .component("semesterSelector",{
-        template: ' <ui-select ng-model="$ctrl.semester" id="ptype" theme="bootstrap" title="Select a Semester" ng-change="{{$ctrl.changedValue($ctrl.value)}}">\
+        template: ' <ui-select ng-model="$ctrl.semester" id="ptype" theme="bootstrap" title="Select a Semester" ng-change="$ctrl.changedValue($ctrl.semester)">\
                         <ui-select-match placeholder="Select a Semester">{{$select.selected.Description}}</ui-select-match>\
                         <ui-select-choices repeat="semester.TermCode as semester in $ctrl.semesters | filter: $select.search">\
                             <div ng-bind-html="semester.Description | highlight: $select.search"></div>\
@@ -31,6 +31,10 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
 
             };
             $ctrl.changedValue = function(value){
+                console.log("semester changed value", value, $ctrl.semester);
+                debugger;
+                $ctrl.change({value:value});
+                debugger;
                 $ctrl.change({value:$ctrl.semester});
             };
         }

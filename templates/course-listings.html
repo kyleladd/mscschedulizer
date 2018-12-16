@@ -4,23 +4,7 @@
     <div class="page-content">
       <div class="row sidebar-page">
         <!--Sidebar-->
-        <div class="col-sm-3 col-xs-12 sidebar left-sidebar">
-          <div class="widget widget-categories">
-            <h4>Semesters <span class="head-line"></span></h4>
-            <semester-selector semester="$ctrl.semester" change="$ctrl.semesterChanged(value)"></semester-selector>
-          </div>
-          <!-- Tags Widget -->
-          <div class="widget widget-tags">
-            <h4>Selections <span class="head-line"></span></h4>
-            <div class="tagcloud" id="course_selections">
-            </div>
-          </div>
-          <!-- Categories Widget -->
-          <div class="widget widget-categories">
-            <h4>Departments <span class="head-line"></span></h4>
-            <department-selector department="$ctrl.department" semester="$ctrl.semester" change="$ctrl.departmentChanged(value)"></department-selector>
-          </div>
-        </div>
+        <sidebar-component semester="$ctrl.semester" deparment="$ctrl.department"></sidebar-component>
         <!--End sidebar-->
         <!-- Page Content -->
         <div class="col-sm-9 col-xs-12 page-content">

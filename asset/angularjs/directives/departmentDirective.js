@@ -4,7 +4,7 @@
 define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerService'], function (angular,uiselect,ngsanitize,schedulizerService) {
     angular.module("departmentDirective", ['ui.select','ngSanitize','schedulizerService'])
     .component("departmentSelector",{
-        template: ' <ui-select ng-model="$ctrl.department" theme="bootstrap" title="Select a department" ng-change="{{$ctrl.changedValue($ctrl.value)}}">\
+        template: ' <ui-select ng-model="$ctrl.department" theme="bootstrap" title="Select a department" ng-change="$ctrl.changedValue($ctrl.value)">\
                         <ui-select-match placeholder="Select a department">{{$select.selected.Name}}</ui-select-match>\
                         <ui-select-choices repeat="department.DepartmentCode as department in $ctrl.departments | filter: $select.search">\
                             <div ng-bind-html="department.Name | highlight: $select.search"></div>\
@@ -20,10 +20,10 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
             var $ctrl = this;
             $ctrl.department = "";
             $ctrl.departments = [];
-            setInterval(function(){
-              console.log("SIsemester in department directive",$ctrl.semester);
-              console.log("$ctrl.attrs",$ctrl.attrs);
-            }, 2000);
+            // setInterval(function(){
+            //   console.log("SIsemester in department directive",$ctrl.semester);
+            //   console.log("$ctrl.attrs",$ctrl.attrs);
+            // }, 2000);
             $ctrl.$onInit = function () {
                 console.log("department directive controller");
                 $ctrl.get_departments();
