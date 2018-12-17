@@ -33,7 +33,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                 // }
             };
             $ctrl.changedValue = function(value){
-                debugger;
+                // debugger;
                 console.log("CHANGED value", value, $ctrl.department);
                 $ctrl.change({value:value});
             };
@@ -42,7 +42,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                 // console.log("department onchanges department",changesObj,changesObj.department.isFirstChange(),changesObj.department.currentValue,changesObj.directive);
                 // debugger;
                 // if(changesObj.semester && changesObj.department && changesObj.semester.currentValue && !changesObj.semester.isFirstChange() ){
-                    debugger;
+                    // debugger;
                 if(changesObj.semester && changesObj.semester.currentValue && $ctrl.department !== undefined){
                     $ctrl.get_departments();
                 }
@@ -60,7 +60,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                     $ctrl.departments = departments;
                     console.log("$ctrl.department",$ctrl.department);
                     $ctrl.department = ($ctrl.department ? $ctrl.department: "");
-                    debugger;
+                    // debugger;
                     console.log("department directive controller", $ctrl.department);
                     console.log("departments",$ctrl.departments);
 
@@ -69,9 +69,14 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                     }).length === 0){
                         console.log("defaulting to first department");
                         $ctrl.department = $ctrl.departments[0].DepartmentCode;
-                        $ctrl.changedValue($ctrl.department);
+                        // $ctrl.changedValue($ctrl.department);
                     }
+                    $ctrl.changedValue($ctrl.department);
                 });
+                // .catch((err,data)=>{
+                //     debugger;
+                //     $ctrl.departments=[];
+                // });
             }
         }
     }); 

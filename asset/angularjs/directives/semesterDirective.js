@@ -26,10 +26,11 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                         return $ctrl.semester === s.TermCode;
                     }).length === 0){
                         $ctrl.semester = $ctrl.semesters[0].TermCode;
-                        $ctrl.changedValue($ctrl.semester);
+                        // $ctrl.changedValue($ctrl.semester);
                     }
+                    $ctrl.changedValue($ctrl.semester);
                 });
-
+                // .catch(function(){});
             };
             $ctrl.changedValue = function(value){
                 console.log("semester changed value", value, $ctrl.semester);

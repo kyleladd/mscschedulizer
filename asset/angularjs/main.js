@@ -70,11 +70,13 @@ define([
     app.component("selectClassesComponent",{
       templateUrl: '/templates/select-classes.html',
       controllerAs: "$ctrl",
-      controller: function($scope, userService){
+      controller: function($scope, userService, schedulizerService){
         var $ctrl = this;
         $ctrl.$onInit = function () {
           $ctrl.department = userService.get_department();
           $ctrl.semester = userService.get_semester();
+          $ctrl.courses = [];
+          $ctrl.loading_courses = true;
           console.log("select classes semester,department", $ctrl.semester, $ctrl.department);
         };
         console.log("SelectClassesCtrl");
@@ -92,10 +94,23 @@ define([
         $scope.$on('semester:set', function(event, data){
           console.log("setting semester based on event", data);
           $ctrl.semester = data;
+          $ctrl.loading_courses = true;
         });
         $scope.$on('department:set', function(event, data){
           console.log("setting department based on event", data);
           $ctrl.department = data;
+          $ctrl.loading_courses = true;
+          schedulizerService.get_department_courses($ctrl.department,$ctrl.semester,false)
+          .then(function(courses){
+            $ctrl.courses = courses;
+            $ctrl.loading_courses = false;
+          });
+          // .catch(function(){
+
+          // })
+          // .always(function(){
+
+          // });
         });
       }
     });
@@ -105,14 +120,16 @@ define([
     app.component("courseListingsComponent",{
       templateUrl: '/templates/course-listings.html',
       controllerAs: "$ctrl",
-      controller: function($scope, userService){
+      controller: function($scope, userService, schedulizerService){
         var $ctrl = this;
         $ctrl.$onInit = function () {
           $ctrl.department = userService.get_department();
           $ctrl.semester = userService.get_semester();
+          $ctrl.courses = [];
+          $ctrl.loading_courses = true;
           console.log("course listings semester,department", $ctrl.semester, $ctrl.department);
         };
-        console.log("SelectClassesCtrl");
+        console.log("CourseListingsCtrl");
         console.log("userService", userService);
         // $ctrl.semesterChanged = function(value){
         //   console.log('Semester changed to ' + value);
@@ -134,10 +151,23 @@ define([
         $scope.$on('semester:set', function(event, data){
           console.log("setting semester based on event", data);
           $ctrl.semester = data;
+          $ctrl.loading_courses = true;
         });
         $scope.$on('department:set', function(event, data){
           console.log("setting department based on event", data);
           $ctrl.department = data;
+          $ctrl.loading_courses = true;
+          schedulizerService.get_department_courses($ctrl.department,$ctrl.semester,true)
+          .then(function(courses){
+            $ctrl.courses = courses;
+            $ctrl.loading_courses = false;
+          });
+          // .catch(function(){
+
+          // })
+          // .always(function(){
+
+          // });
         });
       }
     });
