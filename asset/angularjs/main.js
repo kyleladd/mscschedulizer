@@ -73,8 +73,8 @@ define([
       controller: function($scope, userService){
         var $ctrl = this;
         $ctrl.$onInit = function () {
-          $ctrl.semester = userService.get_semester();
           $ctrl.department = userService.get_department();
+          $ctrl.semester = userService.get_semester();
           console.log("select classes semester,department", $ctrl.semester, $ctrl.department);
         };
         console.log("SelectClassesCtrl");
@@ -108,8 +108,8 @@ define([
       controller: function($scope, userService){
         var $ctrl = this;
         $ctrl.$onInit = function () {
-          $ctrl.semester = userService.get_semester();
           $ctrl.department = userService.get_department();
+          $ctrl.semester = userService.get_semester();
           console.log("course listings semester,department", $ctrl.semester, $ctrl.department);
         };
         console.log("SelectClassesCtrl");
@@ -167,7 +167,7 @@ define([
           console.log("going to load the departments component value");
         };
         $ctrl.onInit = function(){
-          console.log("SelectClassesCtrl");
+          console.log("sidebarClassesCtrl");
           console.log("userService", userService);
           $ctrl.$postLink = function ($scope,$element) {
             //add event listener to an element
