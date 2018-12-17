@@ -1,4 +1,3 @@
-
 define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerService'], function (angular,uiselect,ngsanitize,schedulizerService) {
     angular.module("semesterDirective", ['ui.select','ngSanitize','schedulizerService'])
     .component("semesterSelector",{
@@ -34,10 +33,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
             };
             $ctrl.changedValue = function(value){
                 console.log("semester changed value", value, $ctrl.semester);
-                // debugger;
                 $ctrl.change({value:value});
-                // debugger;
-                // $ctrl.change({value:$ctrl.semester});
             };
         }
     }); 

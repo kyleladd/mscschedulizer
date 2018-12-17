@@ -7,6 +7,7 @@ define([
     'ui.router',
     './directives/semesterDirective',
     './directives/departmentDirective',
+    './directives/courseSelectionsDirective',
     './services/userService',
     // './services/schedulizerService'
 ], function (angular) {
@@ -15,6 +16,7 @@ define([
         'ui.router',
         'semesterDirective',
         'departmentDirective',
+        'courseSelectionsDirective',
         'userService',
         // 'schedulizerService'
     ])
@@ -77,7 +79,14 @@ define([
           $ctrl.semester = userService.get_semester();
           $ctrl.courses = [];
           $ctrl.loading_courses = true;
+          $ctrl.courses_selected = userService.get_courses_selected();
           console.log("select classes semester,department", $ctrl.semester, $ctrl.department);
+        };
+        $ctrl.select_course = function(course){
+          console.log("selecting course", course);
+          // if(){
+
+          // }
         };
         console.log("SelectClassesCtrl");
         console.log("userService", userService);
@@ -127,6 +136,7 @@ define([
           $ctrl.semester = userService.get_semester();
           $ctrl.courses = [];
           $ctrl.loading_courses = true;
+          $ctrl.coursesselected = userService.get_courses_selected();
           console.log("course listings semester,department", $ctrl.semester, $ctrl.department);
         };
         console.log("CourseListingsCtrl");
@@ -176,7 +186,8 @@ define([
       controllerAs: "$ctrl",
       bindings: { 
             semester: '<',
-            department:'<'
+            department:'<',
+            coursesselected: '<'
         },
       controller: function($scope, userService){
         var $ctrl = this;
@@ -215,6 +226,10 @@ define([
             console.log("setting department based on event, sidebar comp", data);
             $ctrl.department = data;
           });
+          // $scope.$on('courses_selected:set', function(event, data){
+          //   console.log("setting courses_selected based on event, sidebar comp", data);
+          //   $ctrl.courses_selected = data;
+          // });
         }
       }
     });

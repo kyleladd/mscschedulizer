@@ -2,7 +2,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
     var service = angular.module("userService", []);
     service.factory('userService', ['$rootScope','$http', function ($rootScope,$http) {
         var factory = {
-            // classes_selected: JSON.parse(localStorage.getItem('classes_selected')) || [],
+            // courses_selected: JSON.parse(localStorage.getItem('courses_selected')) || [],
             // favorite_schedules: JSON.parse(localStorage.getItem('favorite_schedules')) || [],
             // schedule_filters: JSON.parse(localStorage.getItem('schedule_filters')) || {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true,ShowInternational:false},
             // gen_courses: [],
@@ -39,16 +39,22 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 lscache.set("department",department,1*24*60);
                 $rootScope.$broadcast('department:set', department);
             },
-            get_classes_selected: function(){
-                var classes_selected = lscache.get("classes_selected");
-                console.log("getting classes_selected", classes_selected);
-                return (classes_selected ? classes_selected : []);
+            get_courses_selected: function(){
+                var courses_selected = lscache.get("courses_selected");
+                console.log("getting courses_selected", courses_selected);
+                return [{DepartmentCode: "ACCT", CourseTitle: "Accounting", Semester: "201812", SemesterObject: null,CourseNumber:123}]; //TODO-KL
+                return (courses_selected ? courses_selected : []);
             },
-            set_classes_selected: function(classes_selected){
-                console.log("settings classes_selected", classes_selected);
-                lscache.set("classes_selected",classes_selected,1*24*60);
-                $rootScope.$broadcast('classes_selected:set', classes_selected);
+            set_courses_selected: function(courses_selected){
+                console.log("settings courses_selected", courses_selected);
+                lscache.set("courses_selected",courses_selected,1*24*60);
+                $rootScope.$broadcast('courses_selected:set', courses_selected);
             },
+            // add_courses_selected: function(courses_selected){
+            //     console.log("settings courses_selected", courses_selected);
+            //     lscache.set("courses_selected",courses_selected,1*24*60);
+            //     $rootScope.$broadcast('courses_selected:set', courses_selected);
+            // },
             get_favorite_schedules: function(){
                 var favorite_schedules = lscache.get("favorite_schedules");
                 console.log("getting favorite_schedules", favorite_schedules);
@@ -57,7 +63,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
             set_favorite_schedules: function(favorite_schedules){
                 console.log("settings favorite_schedules", favorite_schedules);
                 lscache.set("favorite_schedules",favorite_schedules,1*24*60);
-                $rootScope.$broadcast('favorite_schedules:set', classes_selected);
+                $rootScope.$broadcast('favorite_schedules:set', courses_selected);
             },
             get_schedule_filters: function(){
                 var schedule_filters = lscache.get("schedule_filters");
@@ -67,7 +73,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
             set_schedule_filters: function(schedule_filters){
                 console.log("settings schedule_filters", schedule_filters);
                 lscache.set("schedule_filters",schedule_filters,1*24*60);
-                $rootScope.$broadcast('schedule_filters:set', classes_selected);
+                $rootScope.$broadcast('schedule_filters:set', courses_selected);
             },
             get_user_course_adjustments: function(){
                 var user_course_adjustments = lscache.get("user_course_adjustments");
@@ -77,7 +83,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
             set_user_course_adjustments: function(user_course_adjustments){
                 console.log("settings user_course_adjustments", user_course_adjustments);
                 lscache.set("user_course_adjustments",user_course_adjustments,1*24*60);
-                $rootScope.$broadcast('user_course_adjustments:set', classes_selected);
+                $rootScope.$broadcast('user_course_adjustments:set', courses_selected);
             }
         };
         return factory;
