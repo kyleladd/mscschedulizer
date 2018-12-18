@@ -18,7 +18,8 @@ require.config({
         'lodash':'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min',
         'ui.router':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.20/angular-ui-router.min',
         'angular-ui-select':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.min',
-        'lscache': 'https://cdnjs.cloudflare.com/ajax/libs/lscache/1.3.0/lscache.min'
+        'lscache': 'https://cdnjs.cloudflare.com/ajax/libs/lscache/1.3.0/lscache.min',
+        'node_generic_functions': '../../node_modules/node_generic_functions/genericfunctions'
     },
 
     /**
@@ -42,6 +43,9 @@ require.config({
              deps: ['ngAnimate', 'ngAria']
          },
          'mdDataTable':['angular','ngMaterial'],
+         // 'node_generic_functions':{
+         //    exports: 'node_generic_functions'
+         // },
          // 'mdDataTable': {
          //     deps: ['angular'],
          //     exports: 'mdDataTable'

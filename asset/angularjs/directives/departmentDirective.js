@@ -16,11 +16,8 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
         controller: function($scope,schedulizerService) {
             var $ctrl = this;
             $ctrl.departments = [];
-            $ctrl.$onInit = function () {
-                console.log("department directive controller");
-            };
+            $ctrl.$onInit = function () {};
             $ctrl.changedValue = function(value){
-                console.log("CHANGED value", value, $ctrl.department);
                 $ctrl.change({value:value});
             };
             $ctrl.$onChanges = function(changesObj){
@@ -29,24 +26,17 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                 }
             };
             $ctrl.get_departments = function(){
-                console.log("directive getting departments");
                 if(!$ctrl.semester){
                     return;
                 }
-                console.log("directive getting departments", $ctrl.semester, $ctrl.department);
                 schedulizerService.get_departments($ctrl.semester)
                 .then((departments)=>{
-                    console.log("departments",departments);
                     $ctrl.departments = departments;
-                    console.log("$ctrl.department",$ctrl.department);
                     $ctrl.department = ($ctrl.department ? $ctrl.department: "");
-                    console.log("department directive controller", $ctrl.department);
-                    console.log("departments",$ctrl.departments);
 
                     if($ctrl.departments.length > 0 && $ctrl.departments.filter(function(s){
                         return $ctrl.department === s.DepartmentCode;
                     }).length === 0){
-                        console.log("defaulting to first department");
                         $ctrl.department = $ctrl.departments[0].DepartmentCode;
                     }
                     $ctrl.changedValue($ctrl.department);

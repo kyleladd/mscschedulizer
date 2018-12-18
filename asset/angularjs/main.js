@@ -4,13 +4,14 @@
  */
 define([
     'angular',
+    'node_generic_functions',
     'ui.router',
     './directives/semesterDirective',
     './directives/departmentDirective',
     './directives/courseSelectionsDirective',
     './services/userService',
     // './services/schedulizerService'
-], function (angular) {
+], function (angular, node_generic_functions) {
     'use strict';
     var app = angular.module('app', [
         'ui.router',
@@ -65,9 +66,7 @@ define([
       $urlRouterProvider.otherwise("/");
      
     }]);//;
-    console.log("app",app);
     app.controller('IndexCtrl', ['$scope',function ($scope) {
-      console.log("IndexCtrl");
     }]);
     app.component("selectClassesComponent",{
       templateUrl: '/templates/select-classes.html',
@@ -80,33 +79,20 @@ define([
           $ctrl.courses = [];
           $ctrl.loading_courses = true;
           $ctrl.courses_selected = userService.get_courses_selected();
-          console.log("select classes semester,department", $ctrl.semester, $ctrl.department);
         };
         $ctrl.select_course = function(course){
-          console.log("selecting course", course);
-          // if(){
-
-          // }
+          //Add Course
+          var index = node_generic_functions.searchListDictionaries($ctrl.courses_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+          if (index === -1) {
+            $ctrl.courses_selected.push(course);
+            userService.set_courses_selected($ctrl.courses_selected);
+          }
         };
-        console.log("SelectClassesCtrl");
-        console.log("userService", userService);
-        // $ctrl.semesterChanged = function(value){
-        //   console.log('Semester changed to ' + value);
-        //   userService.set_semester(value);
-        //   console.log("going to load the departments component value");
-        // };
-        // $ctrl.departmentChanged = function(value){
-        //   console.log('department changed to ' + value);
-        //   userService.set_department(value);
-        //   console.log("going to load the departments component value");
-        // };
         $scope.$on('semester:set', function(event, data){
-          console.log("setting semester based on event", data);
           $ctrl.semester = data;
           $ctrl.loading_courses = true;
         });
         $scope.$on('department:set', function(event, data){
-          console.log("setting department based on event", data);
           $ctrl.department = data;
           $ctrl.loading_courses = true;
           schedulizerService.get_department_courses($ctrl.department,$ctrl.semester,false)
@@ -124,7 +110,6 @@ define([
       }
     });
     app.controller('GenerateCtrl', ['$scope',function ($scope) {
-      console.log("GenerateCtrl");
     }]);
     app.component("courseListingsComponent",{
       templateUrl: '/templates/course-listings.html',
@@ -136,35 +121,49 @@ define([
           $ctrl.semester = userService.get_semester();
           $ctrl.courses = [];
           $ctrl.loading_courses = true;
-          $ctrl.coursesselected = userService.get_courses_selected();
-          console.log("course listings semester,department", $ctrl.semester, $ctrl.department);
+          $ctrl.courses_selected = userService.get_courses_selected();
         };
-        console.log("CourseListingsCtrl");
-        console.log("userService", userService);
-        // $ctrl.semesterChanged = function(value){
-        //   console.log('Semester changed to ' + value);
-        //   // userService.set_semester(value);
-        //   console.log("going to load the departments component value");
+        //TODO-KL i think the difference between section and course selections is the crn is or is not null
+        $ctrl.select_course = function(course){
+          //Add Course
+          var index = node_generic_functions.searchListDictionaries($ctrl.courses_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+          if (index === -1) {
+            $ctrl.courses_selected.push(course);
+            userService.set_courses_selected($ctrl.courses_selected);
+          }
+        };
+        //TODO-KL
+        // $ctrl.select_course_section = function(course){
+        //   //Add Course
+        //   var index = node_generic_functions.searchListDictionaries($ctrl.courses_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+        //   if (index === -1) {
+        //     $ctrl.courses_selected.push(course);
+        //     userService.set_courses_selected($ctrl.courses_selected);
+        //   }
         // };
-        // $ctrl.departmentChanged = function(value){
-        //   console.log('department changed to ' + value);
-        //   // userService.set_department(value);
-        //   console.log("going to load the departments component value");
+        //TODO-KL
+        // $ctrl.remove_course_section = function(course){
+        //   //Add Course
+        //   var index = node_generic_functions.searchListDictionaries($ctrl.courses_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+        //   if (index === -1) {
+        //     $ctrl.courses_selected.push(course);
+        //     userService.set_courses_selected($ctrl.courses_selected);
+        //   }
         // };
-        // $ctrl.$postLink = function ($scope,$element) {
-        //   //add event listener to an element
-        //   $element.on('click', function(){console.log("clicked course listings")});
-
-        //   //also we can apply jqLite dom manipulation operation on element
-        //   // angular.forEach($element.find('div'), function(elem){console.log(elem)})
-        // };
+        //TODO-KL
+        $ctrl.remove_course = function(course){
+          //Add Course
+          var index = node_generic_functions.searchListDictionaries($ctrl.courses_selected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+          if (index === -1) {
+            $ctrl.courses_selected.splice(index,1);
+            userService.set_courses_selected($ctrl.courses_selected);
+          }
+        };
         $scope.$on('semester:set', function(event, data){
-          console.log("setting semester based on event", data);
           $ctrl.semester = data;
           $ctrl.loading_courses = true;
         });
         $scope.$on('department:set', function(event, data){
-          console.log("setting department based on event", data);
           $ctrl.department = data;
           $ctrl.loading_courses = true;
           schedulizerService.get_department_courses($ctrl.department,$ctrl.semester,true)
@@ -172,12 +171,6 @@ define([
             $ctrl.courses = courses;
             $ctrl.loading_courses = false;
           });
-          // .catch(function(){
-
-          // })
-          // .always(function(){
-
-          // });
         });
       }
     });
@@ -191,53 +184,38 @@ define([
         },
       controller: function($scope, userService){
         var $ctrl = this;
-        // $ctrl.$onInit = function () {
-        //   $ctrl.semester = userService.get_semester();
-        //   $ctrl.department = userService.get_department();
-        // };
         //TODO-KL not needed because semester is watched on change when passed into the department directive
         $ctrl.semesterChanged = function(value){
-          // debugger;
-          console.log('Semester changed to ' + value);
           userService.set_semester(value);
-          console.log("going to load the departments component value");
         };
         $ctrl.departmentChanged = function(value){
-          console.log('department changed to ' + value);
           userService.set_department(value);
-          console.log("going to load the departments component value");
+        };
+        $ctrl.selectionsChanged = function(value){
+          userService.set_courses_selected(value);
         };
         $ctrl.onInit = function(){
-          console.log("sidebarClassesCtrl");
-          console.log("userService", userService);
           $ctrl.$postLink = function ($scope,$element) {
             //add event listener to an element
             // debugger;
-            $element.on('click', function(){console.log("clicked course listings")});
 
             //also we can apply jqLite dom manipulation operation on element
-            // angular.forEach($element.find('div'), function(elem){console.log(elem)})
           };
           $scope.$on('semester:set', function(event, data){
-            console.log("setting semester based on event, sidebar comp", data);
             $ctrl.semester = data;
           });
           $scope.$on('department:set', function(event, data){
-            console.log("setting department based on event, sidebar comp", data);
             $ctrl.department = data;
           });
-          // $scope.$on('courses_selected:set', function(event, data){
-          //   console.log("setting courses_selected based on event, sidebar comp", data);
-          //   $ctrl.courses_selected = data;
-          // });
+          $scope.$on('courses_selected:set', function(event, data){
+            $ctrl.courses_selected = data;
+          });
         }
       }
     });
     app.controller('VisualFilterCtrl', ['$scope',function ($scope) {
-      console.log("VisualFilterCtrl");
     }]);
     app.controller('FavoritesCtrl', ['$scope',function ($scope) {
-      console.log("FavoritesCtrl");
     }]);
     angular.bootstrap(document, ['app']);
 });

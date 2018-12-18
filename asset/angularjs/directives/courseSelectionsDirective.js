@@ -1,9 +1,9 @@
-define(['angular', 'angular-ui-select', 'ngSanitize','../services/userService'], function (angular,uiselect,ngsanitize,userService) {
+define(['angular', 'angular-ui-select', 'ngSanitize','node_generic_functions','../services/userService'], function (angular,uiselect,ngsanitize,node_generic_functions,userService) {
     angular.module("courseSelectionsDirective", ['ngSanitize','userService'])
     .component("courseSelections",{
         template: ' \
         <div class="tagcloud" id="course_selections">\
-        	<a ng-repeat="course_selection in $ctrl.coursesselected" class=\"a_selection\">{{course_selection.DepartmentCode}} {{course_selection.CourseNumber}} ((course.CourseCRN!==null) ? " - " + course.CourseCRN : "") + " <i class=\"fa fa-times\"></i></a>\
+        	<a ng-repeat="course_selection in $ctrl.coursesselected" class="a_selection" ng-click="$ctrl.remove_course_selection(course_selection)">{{course_selection.DepartmentCode}} {{course_selection.CourseNumber}} {{course_selection.CourseCRN ? " - " + course_selection.CourseCRN : ""}} <i class="fa fa-times"></i></a>\
         </div>\
         ',
         bindings: { 
@@ -13,16 +13,20 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/userService'],
         controllerAs: '$ctrl',
         controller: function($scope,schedulizerService) {
             var $ctrl = this;
-            $ctrl.$onInit = function () {
-                console.log("course selections directive controller");
-            };
+            $ctrl.$onInit = function () {};
             $ctrl.changedValue = function(value){
-                console.log("CHANGED value", value, $ctrl.coursesselected);
                 $ctrl.change({value:value});
             };
             $ctrl.$onChanges = function(changesObj){
 
             };
+            $ctrl.remove_course_selection = function(course){
+                var index = node_generic_functions.searchListDictionaries($ctrl.coursesselected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,CourseTitle:course.CourseTitle,'CourseCRN':course.CourseCRN},true);
+                if (index !== -1) {
+                  $ctrl.coursesselected.splice(index,1);
+                  $ctrl.changedValue($ctrl.coursesselected);
+                }
+            }
         }
     }); 
 });

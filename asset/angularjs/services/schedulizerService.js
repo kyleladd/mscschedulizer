@@ -1,6 +1,3 @@
-// app.factory('settings', ['$http', function($http) {
-//     return $http.get('/api/public/settings/get')
-// }]);
 define(['angular','./cacheInterceptor'], function (angular) {
 
     var service = angular.module("schedulizerService", ['cacheInterceptor']);
@@ -10,7 +7,6 @@ define(['angular','./cacheInterceptor'], function (angular) {
         var factory = {};
         factory.get_semesters = function() {
             return $http.get(base_url + "/semesters/", { 
-                // url: base_url + "/semesters/",
                 ttl: 15,
             })
             .then(function(data){
@@ -22,7 +18,6 @@ define(['angular','./cacheInterceptor'], function (angular) {
             });
         };
         factory.get_departments = function(semester_termcode) {
-            // debugger;
             if(!semester_termcode){
                 return $q.reject("Semester term code required.");
             }

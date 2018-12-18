@@ -24,15 +24,14 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                     if($ctrl.semesters.length > 0 && $ctrl.semesters.filter(function(s){
                         return $ctrl.semester === s.TermCode;
                     }).length === 0){
+                        //TODO-KL Default to the one 6 months from now based on start and finish
                         $ctrl.semester = $ctrl.semesters[0].TermCode;
-                        // $ctrl.changedValue($ctrl.semester);
                     }
                     $ctrl.changedValue($ctrl.semester);
                 });
                 // .catch(function(){});
             };
             $ctrl.changedValue = function(value){
-                console.log("semester changed value", value, $ctrl.semester);
                 $ctrl.change({value:value});
             };
         }
