@@ -11,8 +11,8 @@
           <!-- Classic Heading -->
           <!-- <h4 class="classic-title"><span>Courses</span></h4> -->
           <filters-component filters="$ctrl.filters" change="$ctrl.updateFilters(value)"></filters-component>
-          <ul class="dept_class_list">
-            <li ng-if="$ctrl.loading_courses"><div class="loader"></div> <div class="status">Loading Course Listings...</div></li>
+          <ul class="dept_class_list" ng-if="$ctrl.loading_courses">
+            <li><div class="loader"></div> <div class="status">Loading Course Listings...</div></li>
           </ul>
           <div ng-if="!$ctrl.loading_courses">
               <course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="{{true}}" show-crn-selections="{{true}}" show-total-credits="{{true}}"></course-listings-component>

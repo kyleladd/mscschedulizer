@@ -2,9 +2,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','node_generic_functions','.
     angular.module("courseListingsDirective", ['ngSanitize','userService'])
     .component("courseListingsComponent",{
         template: ' \
-        <div class="tagcloud" id="course_selections">\
-        	<a ng-repeat="course_selection in $ctrl.coursesselected" class="a_selection" ng-click="$ctrl.remove_course_selection(course_selection)">{{course_selection.DepartmentCode}} {{course_selection.CourseNumber}} {{course_selection.CourseCRN ? " - " + course_selection.CourseCRN : ""}} <i class="fa fa-times"></i></a>\
-        </div>\
+        This is the detailed course listings\
         ',
         bindings: { 
             filters: '<',

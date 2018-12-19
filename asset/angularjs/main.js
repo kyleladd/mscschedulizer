@@ -13,6 +13,7 @@ define([
     './directives/courseSelectionsDirective',
     './directives/timeblocksDirective',
     './directives/tooltipDirective',
+    './directives/courseListingsDirective',
     './services/userService',
     // './services/schedulizerService'
 ], function (angular, node_generic_functions) {
@@ -22,6 +23,7 @@ define([
         'semesterDirective',
         'departmentDirective',
         'courseSelectionsDirective',
+        'courseListingsDirective',
         'timeblocksDirective',
         'tooltipDirective',
         'userService',
@@ -38,7 +40,7 @@ define([
        $stateProvider.state({
           name: 'select-classes',
           url: '/select-classes',
-          component: 'selectClassesComponent'
+          component: 'selectClassesPage'
           // templateUrl: '/templates/select-classes.html',
           // controller: 'SelectClassesCtrl'
         });
@@ -53,7 +55,7 @@ define([
           name: 'course-listings',
           // url: '/view1/{bowlingID}',
           url: "/course-listings",
-          component: 'courseListingsComponent'
+          component: 'courseListingsPage'
         });
        $stateProvider.state({
           name: 'visual-filter',
@@ -74,7 +76,7 @@ define([
     }]);//;
     app.controller('IndexCtrl', ['$scope',function ($scope) {
     }]);
-    app.component("selectClassesComponent",{
+    app.component("selectClassesPage",{
       templateUrl: '/templates/select-classes.html',
       controllerAs: "$ctrl",
       controller: function($scope, userService, schedulizerService){
@@ -117,7 +119,7 @@ define([
     });
     app.controller('GenerateCtrl', ['$scope',function ($scope) {
     }]);
-    app.component("courseListingsComponent",{
+    app.component("courseListingsPage",{
       templateUrl: '/templates/course-listings.html',
       controllerAs: "$ctrl",
       controller: function($scope, userService, schedulizerService){
