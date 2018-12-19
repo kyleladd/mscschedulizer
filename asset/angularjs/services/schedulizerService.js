@@ -76,6 +76,7 @@ define(['angular','./cacheInterceptor'], function (angular) {
                 url: base_url + "/info/" + "?semester=" + semester_termcode + courses_list,
             });
         };
+
         return factory;
     }]);
 

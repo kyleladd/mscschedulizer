@@ -28,6 +28,8 @@ require.config({
         'jquery.datepair':'../../js/jquery.datepair.min',
         'slicknav':'../../js/jquery.slicknav',
         'theme':'../../js/script',
+        'fullcalendar':'../../bower_components/fullcalendar/dist/fullcalendar',
+        'combinatorics':'../../node_modules/js-combinatorics/combinatorics',
     },
 
     /**
@@ -68,6 +70,7 @@ require.config({
         'datepair':['jquery'],
         'jquery.datepair':['jquery'],
         'slicknav':['jquery'],
+        'fullcalendar':['jquery'],
         'theme':['jquery','slicknav'],
     },
     // deps: [

@@ -175,46 +175,46 @@ module.exports = {
     //         $("#"+mscSchedulizer_config.html_elements.department_class_list).html("<li>Unable to load courses.</li>");
     //     });
     // },
-    daysList: function(meeting, include_empty){
-        include_empty = typeof include_empty !== 'undefined' ? include_empty : true;
-        var result = [];
-        if(Boolean(meeting.Monday)){
-            result.push("M");
-        }
-        else if(include_empty)
-        {
-            result.push(" ");
-        }
-        if(Boolean(meeting.Tuesday)){
-            result.push("T");
-        }
-        else if(include_empty)
-        {
-            result.push(" ");
-        }
-        if(Boolean(meeting.Wednesday)){
-            result.push("W");
-        }
-        else if(include_empty)
-        {
-            result.push(" ");
-        }
-        if(Boolean(meeting.Thursday)){
-            result.push("R");
-        }
-        else if(include_empty)
-        {
-            result.push(" ");
-        }
-        if(Boolean(meeting.Friday)){
-            result.push("F");
-        }
-        else if(include_empty)
-        {
-            result.push(" ");
-        }
-        return result;
-    },
+    // daysList: function(meeting, include_empty){
+    //     include_empty = typeof include_empty !== 'undefined' ? include_empty : true;
+    //     var result = [];
+    //     if(Boolean(meeting.Monday)){
+    //         result.push("M");
+    //     }
+    //     else if(include_empty)
+    //     {
+    //         result.push(" ");
+    //     }
+    //     if(Boolean(meeting.Tuesday)){
+    //         result.push("T");
+    //     }
+    //     else if(include_empty)
+    //     {
+    //         result.push(" ");
+    //     }
+    //     if(Boolean(meeting.Wednesday)){
+    //         result.push("W");
+    //     }
+    //     else if(include_empty)
+    //     {
+    //         result.push(" ");
+    //     }
+    //     if(Boolean(meeting.Thursday)){
+    //         result.push("R");
+    //     }
+    //     else if(include_empty)
+    //     {
+    //         result.push(" ");
+    //     }
+    //     if(Boolean(meeting.Friday)){
+    //         result.push("F");
+    //     }
+    //     else if(include_empty)
+    //     {
+    //         result.push(" ");
+    //     }
+    //     return result;
+    // },
     // getDepartmentCoursesDetails: function(department){
     //     department = typeof department !== 'undefined' ?  department : $("#"+mscSchedulizer_config.html_elements.departments_select).val();
     //     $.getJSON(mscSchedulizer_config.api_host + "/courses/?department_code=" + department + "&include_objects=1&semester="+mscSchedulizer.semester.TermCode, function(courses){
@@ -333,39 +333,39 @@ module.exports = {
     //         callback([]);
     //     });
     // },
-    groupMeetings:function(meetings){
-        groupedMeetings = [];
-        for (var m in meetings) {
-            var meeting = meetings[m];
-            var index = node_generic_functions.searchListDictionaries(groupedMeetings,{CourseCRN:meeting.CourseCRN,StartTime:meeting.StartTime,EndTime:meeting.EndTime},true);
-            if(index !== -1){
-                groupedMeetings[index] = mscSchedulizer.mergeDays(groupedMeetings[index],meeting);
-            }
-            else{
-                groupedMeetings.push(meeting);
-            }
-        }
-        return  groupedMeetings;
-    },
-    mergeDays:function(meeting1,meeting2){
-        var meeting = meeting1;
-        if(!Boolean(meeting.Monday) && Boolean(meeting2.Monday)){
-            meeting.Monday = 1;
-        }
-        if(!Boolean(meeting.Tuesday) && Boolean(meeting2.Tuesday)){
-            meeting.Tuesday = 1;
-        }
-        if(!Boolean(meeting.Wednesday) && Boolean(meeting2.Wednesday)){
-            meeting.Wednesday = 1;
-        }
-        if(!Boolean(meeting.Thursday) && Boolean(meeting2.Thursday)){
-            meeting.Thursday = 1;
-        }
-        if(!Boolean(meeting.Friday) && Boolean(meeting2.Friday)){
-            meeting.Friday = 1;
-        }
-        return meeting;
-    },
+    // groupMeetings:function(meetings){
+    //     groupedMeetings = [];
+    //     for (var m in meetings) {
+    //         var meeting = meetings[m];
+    //         var index = node_generic_functions.searchListDictionaries(groupedMeetings,{CourseCRN:meeting.CourseCRN,StartTime:meeting.StartTime,EndTime:meeting.EndTime},true);
+    //         if(index !== -1){
+    //             groupedMeetings[index] = mscSchedulizer.mergeDays(groupedMeetings[index],meeting);
+    //         }
+    //         else{
+    //             groupedMeetings.push(meeting);
+    //         }
+    //     }
+    //     return  groupedMeetings;
+    // },
+    // mergeDays:function(meeting1,meeting2){
+    //     var meeting = meeting1;
+    //     if(!Boolean(meeting.Monday) && Boolean(meeting2.Monday)){
+    //         meeting.Monday = 1;
+    //     }
+    //     if(!Boolean(meeting.Tuesday) && Boolean(meeting2.Tuesday)){
+    //         meeting.Tuesday = 1;
+    //     }
+    //     if(!Boolean(meeting.Wednesday) && Boolean(meeting2.Wednesday)){
+    //         meeting.Wednesday = 1;
+    //     }
+    //     if(!Boolean(meeting.Thursday) && Boolean(meeting2.Thursday)){
+    //         meeting.Thursday = 1;
+    //     }
+    //     if(!Boolean(meeting.Friday) && Boolean(meeting2.Friday)){
+    //         meeting.Friday = 1;
+    //     }
+    //     return meeting;
+    // },
     detailedCoursesOutput:function(courses,icon,show_crn_selections,show_total_credits){
         if(typeof icon === "undefined"){
             icon = true;
@@ -617,579 +617,579 @@ module.exports = {
         // }
       });
     },
-    getCombinations:function(courses,callback){
-        var sectionCombinations = [];
-        var courseslist = [];
-        var outputCombinations = [];
-        for (var i in courses) {
-          var course = courses[i];
-          var aSectionCombination = mscSchedulizer.getSectionCombinations(course.Sections);
-          sectionCombinations.push(aSectionCombination);
-          courseslist.push({DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
-        }
-        var scheduleCombinations = mscSchedulizer.getScheduleCombinations(sectionCombinations);
-        // For each schedule
-        for (var h = scheduleCombinations.length-1; h >= 0; h--) {
-            outputCombinations[h] = [];
-            //for each class in the schedule
-            for (var c = scheduleCombinations[h].length-1; c >= 0; c--) {
-                var coursekey = node_generic_functions.searchListDictionaries(courseslist,{DepartmentCode:scheduleCombinations[h][c][0].DepartmentCode,CourseNumber:scheduleCombinations[h][c][0].CourseNumber,CourseTitle:scheduleCombinations[h][c][0].CourseTitle});
-                // Deep copy around ByRef
-                outputCombinations[h][c] = JSON.parse(JSON.stringify(coursekey));
-                outputCombinations[h][c].Sections = JSON.parse(JSON.stringify(scheduleCombinations[h][c]));
-            }
-        }
-        mscSchedulizer.gen_schedules = outputCombinations;
-        callback(outputCombinations);
-    },
-    getSectionCombinations:function(course_sections){
-        var grouped_sections = mscSchedulizer.groupSections(course_sections);
-        // Use Identifiers to generate combinations
-        var all_cp = [];
-        // Sections should have uniform requirements per identifier
-        var identifier_requirements = {};
-        Object.keys(grouped_sections).forEach(function(campus) {
-            identifier_requirements[campus] = [];
-            Object.keys(grouped_sections[campus]).forEach(function(key) {
-                if(grouped_sections[campus][key].length > 0 && grouped_sections[campus][key][0].RequiredIdentifiers !== null){
-                    identifier_requirements[campus].push(grouped_sections[campus][key][0].RequiredIdentifiers.split(";").concat(grouped_sections[campus][key][0].Identifier).sort());
-                }
-                else if(grouped_sections[campus][key].length > 0){
-                    identifier_requirements[campus].push(grouped_sections[campus][key][0].Identifier === "" || grouped_sections[campus][key][0].Identifier === null ? ["empty"] : [grouped_sections[campus][key][0].Identifier]);
-                }
-            });
-        });
-        Object.keys(identifier_requirements).forEach(function(campus) {
-            var groupedIdentifierRequirements = [];
-            for (var ra = identifier_requirements[campus].length-1; ra >= 0; ra--) {
-                if(!mscSchedulizer.arrayContainsAnotherArray(identifier_requirements[campus][ra],groupedIdentifierRequirements)){
-                    groupedIdentifierRequirements.push(identifier_requirements[campus][ra]);
-                }
-            }
-            IdentifierCombinations:
-            for(var rq = groupedIdentifierRequirements.length-1; rq >= 0; rq--){
-                var cp_list = [];
-                for(var rqi = groupedIdentifierRequirements[rq].length-1; rqi >= 0; rqi--){
-                    if(typeof grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]] === "undefined"){
-                        mscSchedulizer.errors.generate_errors.push("Could not find course: " + course_sections[0].DepartmentCode + " " + course_sections[0].CourseNumber + " with identifier: " + groupedIdentifierRequirements[rq][rqi]);
-                        continue IdentifierCombinations;
-                    }
-                    cp_list.push(grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]]);
-                }
-                if(cp_list.length > 0 ){
-                    cp = Combinatorics.cartesianProduct.apply(null,cp_list);
-                    cp = cp.toArray();
-                    all_cp = all_cp.concat(cp);
-                }
-            }
-        });
+    // getCombinations:function(courses,callback){
+    //     var sectionCombinations = [];
+    //     var courseslist = [];
+    //     var outputCombinations = [];
+    //     for (var i in courses) {
+    //       var course = courses[i];
+    //       var aSectionCombination = mscSchedulizer.getSectionCombinations(course.Sections);
+    //       sectionCombinations.push(aSectionCombination);
+    //       courseslist.push({DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
+    //     }
+    //     var scheduleCombinations = mscSchedulizer.getScheduleCombinations(sectionCombinations);
+    //     // For each schedule
+    //     for (var h = scheduleCombinations.length-1; h >= 0; h--) {
+    //         outputCombinations[h] = [];
+    //         //for each class in the schedule
+    //         for (var c = scheduleCombinations[h].length-1; c >= 0; c--) {
+    //             var coursekey = node_generic_functions.searchListDictionaries(courseslist,{DepartmentCode:scheduleCombinations[h][c][0].DepartmentCode,CourseNumber:scheduleCombinations[h][c][0].CourseNumber,CourseTitle:scheduleCombinations[h][c][0].CourseTitle});
+    //             // Deep copy around ByRef
+    //             outputCombinations[h][c] = JSON.parse(JSON.stringify(coursekey));
+    //             outputCombinations[h][c].Sections = JSON.parse(JSON.stringify(scheduleCombinations[h][c]));
+    //         }
+    //     }
+    //     mscSchedulizer.gen_schedules = outputCombinations;
+    //     callback(outputCombinations);
+    // },
+    // getSectionCombinations:function(course_sections){
+    //     var grouped_sections = mscSchedulizer.groupSections(course_sections);
+    //     // Use Identifiers to generate combinations
+    //     var all_cp = [];
+    //     // Sections should have uniform requirements per identifier
+    //     var identifier_requirements = {};
+    //     Object.keys(grouped_sections).forEach(function(campus) {
+    //         identifier_requirements[campus] = [];
+    //         Object.keys(grouped_sections[campus]).forEach(function(key) {
+    //             if(grouped_sections[campus][key].length > 0 && grouped_sections[campus][key][0].RequiredIdentifiers !== null){
+    //                 identifier_requirements[campus].push(grouped_sections[campus][key][0].RequiredIdentifiers.split(";").concat(grouped_sections[campus][key][0].Identifier).sort());
+    //             }
+    //             else if(grouped_sections[campus][key].length > 0){
+    //                 identifier_requirements[campus].push(grouped_sections[campus][key][0].Identifier === "" || grouped_sections[campus][key][0].Identifier === null ? ["empty"] : [grouped_sections[campus][key][0].Identifier]);
+    //             }
+    //         });
+    //     });
+    //     Object.keys(identifier_requirements).forEach(function(campus) {
+    //         var groupedIdentifierRequirements = [];
+    //         for (var ra = identifier_requirements[campus].length-1; ra >= 0; ra--) {
+    //             if(!mscSchedulizer.arrayContainsAnotherArray(identifier_requirements[campus][ra],groupedIdentifierRequirements)){
+    //                 groupedIdentifierRequirements.push(identifier_requirements[campus][ra]);
+    //             }
+    //         }
+    //         IdentifierCombinations:
+    //         for(var rq = groupedIdentifierRequirements.length-1; rq >= 0; rq--){
+    //             var cp_list = [];
+    //             for(var rqi = groupedIdentifierRequirements[rq].length-1; rqi >= 0; rqi--){
+    //                 if(typeof grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]] === "undefined"){
+    //                     mscSchedulizer.errors.generate_errors.push("Could not find course: " + course_sections[0].DepartmentCode + " " + course_sections[0].CourseNumber + " with identifier: " + groupedIdentifierRequirements[rq][rqi]);
+    //                     continue IdentifierCombinations;
+    //                 }
+    //                 cp_list.push(grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]]);
+    //             }
+    //             if(cp_list.length > 0 ){
+    //                 cp = Combinatorics.cartesianProduct.apply(null,cp_list);
+    //                 cp = cp.toArray();
+    //                 all_cp = all_cp.concat(cp);
+    //             }
+    //         }
+    //     });
 
-        // Checking the CRN requirements within each combination search classes selected for the requirements for this course
-        var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
-        // crnrequirements = crnrequirements.filter(functiom(){return CourseCRN !== null});
-        if(crnrequirements.length > 0){
-            //Group the requirements by identifier
-            for (var c = crnrequirements.length-1; c >= 0; c--) {
-                if(crnrequirements[c].CourseCRN !==null){
-                    var requirement = node_generic_functions.searchListDictionaries(course_sections,{DepartmentCode:crnrequirements[c].DepartmentCode,CourseNumber:crnrequirements[c].CourseNumber,CourseTitle:crnrequirements[c].CourseTitle,CourseCRN:crnrequirements[c].CourseCRN},false,false);
-                    if(requirement !== null){
-                        crnrequirements[c] = requirement;
-                    }
-                }
-            }
-            var groupedRequirements = mscSchedulizer.groupSectionsByIdentifier(crnrequirements);
-            //for each requirement add to keys like campus required identifiers + identifiers - see groupsections function and do that for reqiuirement identifiers
-            // get all requirement data by searching list dictionaries of course_sections with crn requirement
-            //splice if combination does not include the number of required identifiers with CRN
-            for (var cp = all_cp.length-1; cp >= 0; cp--) {
-                var section_combination = all_cp[cp];
-                var groupedSectionCombination = mscSchedulizer.groupSectionsByIdentifier(section_combination);
-                // Be sure to test optional requirements BIOL 105
-                CourseSectionTypeLoop:
-                for (var gs in groupedSectionCombination){
-                    if (typeof groupedSectionCombination[gs] !== 'function') {
-                        // if this section type has a requirement of the same type
-                        if (typeof groupedRequirements[gs] !== 'undefined') {
-                            for (var r = groupedSectionCombination[gs].length-1; r >= 0; r--) {
-                                if(node_generic_functions.searchListDictionaries(groupedRequirements[gs],groupedSectionCombination[gs][r],false,false)!==null){
-                                    continue CourseSectionTypeLoop;
-                                }
-                            }
-                            all_cp.splice(cp, 1);
-                        }
-                    }
-                }
-            }
-        }
-        // Check to see if the combination has sections that overlap
-        //For each combination
-        for (var i = all_cp.length-1; i >= 0; i--) {
-            var combination = all_cp[i];
-            combinationloop:
-            for (var s = combination.length-1; s >= 1; s--) {
-                var section1 = combination[s];
-                for (var z = s-1; z >= 0; z--) {
-                    var section2 = combination[z];
-                    if(mscSchedulizer.doSectionsOverlap(section1,section2)){
-                        //If they do overlap, remove combination and break
-                        all_cp.splice(i, 1);
-                        //break out of section loop
-                        break combinationloop;
-                    }
-                }
-            }
-        }
-        return all_cp;
-    },
-    groupSectionsByIdentifier:function(course_sections){
-        //GROUP BY CAMPUS?????? - i don't think so otherwise 'or' would turn into 'and' requirement
+    //     // Checking the CRN requirements within each combination search classes selected for the requirements for this course
+    //     var crnrequirements = node_generic_functions.searchListDictionaries(mscSchedulizer.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
+    //     // crnrequirements = crnrequirements.filter(functiom(){return CourseCRN !== null});
+    //     if(crnrequirements.length > 0){
+    //         //Group the requirements by identifier
+    //         for (var c = crnrequirements.length-1; c >= 0; c--) {
+    //             if(crnrequirements[c].CourseCRN !==null){
+    //                 var requirement = node_generic_functions.searchListDictionaries(course_sections,{DepartmentCode:crnrequirements[c].DepartmentCode,CourseNumber:crnrequirements[c].CourseNumber,CourseTitle:crnrequirements[c].CourseTitle,CourseCRN:crnrequirements[c].CourseCRN},false,false);
+    //                 if(requirement !== null){
+    //                     crnrequirements[c] = requirement;
+    //                 }
+    //             }
+    //         }
+    //         var groupedRequirements = mscSchedulizer.groupSectionsByIdentifier(crnrequirements);
+    //         //for each requirement add to keys like campus required identifiers + identifiers - see groupsections function and do that for reqiuirement identifiers
+    //         // get all requirement data by searching list dictionaries of course_sections with crn requirement
+    //         //splice if combination does not include the number of required identifiers with CRN
+    //         for (var cp = all_cp.length-1; cp >= 0; cp--) {
+    //             var section_combination = all_cp[cp];
+    //             var groupedSectionCombination = mscSchedulizer.groupSectionsByIdentifier(section_combination);
+    //             // Be sure to test optional requirements BIOL 105
+    //             CourseSectionTypeLoop:
+    //             for (var gs in groupedSectionCombination){
+    //                 if (typeof groupedSectionCombination[gs] !== 'function') {
+    //                     // if this section type has a requirement of the same type
+    //                     if (typeof groupedRequirements[gs] !== 'undefined') {
+    //                         for (var r = groupedSectionCombination[gs].length-1; r >= 0; r--) {
+    //                             if(node_generic_functions.searchListDictionaries(groupedRequirements[gs],groupedSectionCombination[gs][r],false,false)!==null){
+    //                                 continue CourseSectionTypeLoop;
+    //                             }
+    //                         }
+    //                         all_cp.splice(cp, 1);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     // Check to see if the combination has sections that overlap
+    //     //For each combination
+    //     for (var i = all_cp.length-1; i >= 0; i--) {
+    //         var combination = all_cp[i];
+    //         combinationloop:
+    //         for (var s = combination.length-1; s >= 1; s--) {
+    //             var section1 = combination[s];
+    //             for (var z = s-1; z >= 0; z--) {
+    //                 var section2 = combination[z];
+    //                 if(mscSchedulizer.doSectionsOverlap(section1,section2)){
+    //                     //If they do overlap, remove combination and break
+    //                     all_cp.splice(i, 1);
+    //                     //break out of section loop
+    //                     break combinationloop;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return all_cp;
+    // },
+    // groupSectionsByIdentifier:function(course_sections){
+    //     //GROUP BY CAMPUS?????? - i don't think so otherwise 'or' would turn into 'and' requirement
 
-        // Sections are to be grouped by identifier
-        var grouped_sections = {};
-        for (var i in course_sections) {
-            if (typeof course_sections[i] !== 'function') {
-              var course_section = course_sections[i];
-              var identifier = course_section.Identifier;
-              if(identifier === "" || identifier === null){
-                identifier = "empty";
-              }
-              if (!(identifier in grouped_sections)){
-                grouped_sections[identifier] = [];
-              }
-              grouped_sections[identifier].push(course_section);
-          }
-        }
-        return grouped_sections;
-    },
-    getScheduleCombinations:function(section_combinations){
-        // Make sure each class has at least one available section (After filters)
-        if(section_combinations.length === 0){
-            return [];
-        }
-        for (var i = section_combinations.length-1; i >= 0; i--) {
-            if(section_combinations[i].length === 0){
-                return [];
-            }
-        }
+    //     // Sections are to be grouped by identifier
+    //     var grouped_sections = {};
+    //     for (var i in course_sections) {
+    //         if (typeof course_sections[i] !== 'function') {
+    //           var course_section = course_sections[i];
+    //           var identifier = course_section.Identifier;
+    //           if(identifier === "" || identifier === null){
+    //             identifier = "empty";
+    //           }
+    //           if (!(identifier in grouped_sections)){
+    //             grouped_sections[identifier] = [];
+    //           }
+    //           grouped_sections[identifier].push(course_section);
+    //       }
+    //     }
+    //     return grouped_sections;
+    // },
+    // getScheduleCombinations:function(section_combinations){
+    //     // Make sure each class has at least one available section (After filters)
+    //     if(section_combinations.length === 0){
+    //         return [];
+    //     }
+    //     for (var i = section_combinations.length-1; i >= 0; i--) {
+    //         if(section_combinations[i].length === 0){
+    //             return [];
+    //         }
+    //     }
 
-        var cp = Combinatorics.cartesianProduct.apply(null,section_combinations);
-        cp = cp.toArray();
-        //filter based on overlapping
-        // returns list of schedules containing
-        //  a list of classes containing
-        //   a list of sections
-        // /info/?courses[]=121&courses[]=127
+    //     var cp = Combinatorics.cartesianProduct.apply(null,section_combinations);
+    //     cp = cp.toArray();
+    //     //filter based on overlapping
+    //     // returns list of schedules containing
+    //     //  a list of classes containing
+    //     //   a list of sections
+    //     // /info/?courses[]=121&courses[]=127
 
-        //for each schedule
-        for (var h = cp.length-1; h >= 0; h--) {
-            //for each class in the schedule
-            classloop:
-            for (var c = cp[h].length-1; c >= 1; c--) {
-                var course = cp[h][c];
-                //for each section in the class
-                for (var s = course.length-1; s >= 0; s--) {
-                    var section1 = course[s];
-                    // Compare against all other class sections within schedule
-                    // don't need to compare against current class' sections because that was already done
-                    for (var oc = c-1; oc >= 0; oc--) {
-                        var acourse = cp[h][oc];
-                        for (var os = acourse.length-1; os >= 0; os--) {
-                            var section2 = acourse[os];
-                            if(mscSchedulizer.doSectionsOverlap(section1,section2)){
-                                //If they do overlap, remove combination and break
-                                cp.splice(h, 1);
-                                //Break out of course loop
-                                break classloop;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return cp;
-    },
-    groupSections:function(course_sections){
-        // Sections are to be grouped by Campus and by identifier
-        var grouped_sections = {};
-        for (var i in course_sections) {
-          var course_section = course_sections[i];
-          var identifier = course_section.Identifier;
-          var campus = course_section.Campus;
-          // Apply Filters To SECTION
-          if(!mscSchedulizer.applyFiltersToSection(course_section,mscSchedulizer.schedule_filters)){
-              if(identifier === "" || identifier === null){
-                identifier = "empty";
-              }
-              if (!(campus in grouped_sections)){
-                grouped_sections[campus] = [];
-              }
-              if (!(identifier in grouped_sections[campus])){
-                grouped_sections[campus][identifier] = [];
-              }
-              grouped_sections[campus][identifier].push(course_section);
-          }
-        }
-        return grouped_sections;
-    },
-    filtersDisplay:function(){
-        var result = "<div id=\""+mscSchedulizer_config.html_elements.checkbox_filters+"\">";
-        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, only schedule combinations where all sections are not full (current enrollment is less than max enrollment) will be shown.\"><label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer_config.html_elements.filters.not_full+"\"> Hide Full</label></span>";
-        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Morrisville Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer_config.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label></span>";
-        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Norwich Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label></span>";
-        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations that include online sections will be shown.\"><label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label></span>";
-        result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown.\"><label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label></span>";
-        result += "<span class=\"filtertooltiptrigger\" title=\"A visual view to filter course sections.\"><label><button id=\""+mscSchedulizer_config.html_elements.alt_view_filter+"\" class=\"btn btn-1\">Visual Filters</button></label></span>";
-        result += "</div>";
-        result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
-        result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
-        result += "</div>";
-        result += mscSchedulizer.modalTemplate('modal_alt_view_filters');
-        return result;
-    },
-    updateFilters:function(schedule_filters){
-        mscSchedulizer.schedule_filters = schedule_filters;
-        localStorage.setItem('schedule_filters', JSON.stringify(schedule_filters));
-        mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
-    },
-    updateFiltersDisplay:function(filters){
-        mscSchedulizer.checkboxFilterDisplay(filters.NotFull,mscSchedulizer_config.html_elements.filters.not_full);
-        mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Morrisville,mscSchedulizer_config.html_elements.filters.morrisville_campus);
-        mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Norwich,mscSchedulizer_config.html_elements.filters.norwich_campus);
-        mscSchedulizer.checkboxFilterDisplay(filters.ShowOnline,mscSchedulizer_config.html_elements.filters.show_online);
-        mscSchedulizer.checkboxFilterDisplay(filters.ShowInternational,mscSchedulizer_config.html_elements.filters.show_international);
-        $("#"+mscSchedulizer_config.html_elements.timeblock_filters).html(mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks));
-        mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
-    },
+    //     //for each schedule
+    //     for (var h = cp.length-1; h >= 0; h--) {
+    //         //for each class in the schedule
+    //         classloop:
+    //         for (var c = cp[h].length-1; c >= 1; c--) {
+    //             var course = cp[h][c];
+    //             //for each section in the class
+    //             for (var s = course.length-1; s >= 0; s--) {
+    //                 var section1 = course[s];
+    //                 // Compare against all other class sections within schedule
+    //                 // don't need to compare against current class' sections because that was already done
+    //                 for (var oc = c-1; oc >= 0; oc--) {
+    //                     var acourse = cp[h][oc];
+    //                     for (var os = acourse.length-1; os >= 0; os--) {
+    //                         var section2 = acourse[os];
+    //                         if(mscSchedulizer.doSectionsOverlap(section1,section2)){
+    //                             //If they do overlap, remove combination and break
+    //                             cp.splice(h, 1);
+    //                             //Break out of course loop
+    //                             break classloop;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return cp;
+    // },
+    // groupSections:function(course_sections){
+    //     // Sections are to be grouped by Campus and by identifier
+    //     var grouped_sections = {};
+    //     for (var i in course_sections) {
+    //       var course_section = course_sections[i];
+    //       var identifier = course_section.Identifier;
+    //       var campus = course_section.Campus;
+    //       // Apply Filters To SECTION
+    //       if(!mscSchedulizer.applyFiltersToSection(course_section,mscSchedulizer.schedule_filters)){
+    //           if(identifier === "" || identifier === null){
+    //             identifier = "empty";
+    //           }
+    //           if (!(campus in grouped_sections)){
+    //             grouped_sections[campus] = [];
+    //           }
+    //           if (!(identifier in grouped_sections[campus])){
+    //             grouped_sections[campus][identifier] = [];
+    //           }
+    //           grouped_sections[campus][identifier].push(course_section);
+    //       }
+    //     }
+    //     return grouped_sections;
+    // },
+    // filtersDisplay:function(){
+    //     var result = "<div id=\""+mscSchedulizer_config.html_elements.checkbox_filters+"\">";
+    //     result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, only schedule combinations where all sections are not full (current enrollment is less than max enrollment) will be shown.\"><label><input type=\"checkbox\" name=\"notFull\" id=\""+mscSchedulizer_config.html_elements.filters.not_full+"\"> Hide Full</label></span>";
+    //     result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Morrisville Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"morrisville\" id=\""+mscSchedulizer_config.html_elements.filters.morrisville_campus+"\"> Morrisville Campus</label></span>";
+    //     result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with Norwich Campus sections will be shown.\"><label><input type=\"checkbox\" name=\"norwich\" id=\""+mscSchedulizer_config.html_elements.filters.norwich_campus+"\"> Norwich Campus</label></span>";
+    //     result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations that include online sections will be shown.\"><label><input type=\"checkbox\" name=\"showOnline\" id=\""+mscSchedulizer_config.html_elements.filters.show_online+"\"> Online</label></span>";
+    //     result += "<span class=\"filtertooltiptrigger\" title=\"When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown.\"><label><input type=\"checkbox\" name=\"showInternational\" id=\""+mscSchedulizer_config.html_elements.filters.show_international+"\"> ONCAMPUS SUNY</label></span>";
+    //     result += "<span class=\"filtertooltiptrigger\" title=\"A visual view to filter course sections.\"><label><button id=\""+mscSchedulizer_config.html_elements.alt_view_filter+"\" class=\"btn btn-1\">Visual Filters</button></label></span>";
+    //     result += "</div>";
+    //     result += "<div id=\""+mscSchedulizer_config.html_elements.timeblock_filters+"\">";
+    //     result += mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks);
+    //     result += "</div>";
+    //     result += mscSchedulizer.modalTemplate('modal_alt_view_filters');
+    //     return result;
+    // },
+    // updateFilters:function(schedule_filters){
+    //     mscSchedulizer.schedule_filters = schedule_filters;
+    //     localStorage.setItem('schedule_filters', JSON.stringify(schedule_filters));
+    //     mscSchedulizer.updateFiltersDisplay(mscSchedulizer.schedule_filters);
+    // },
+    // updateFiltersDisplay:function(filters){
+    //     mscSchedulizer.checkboxFilterDisplay(filters.NotFull,mscSchedulizer_config.html_elements.filters.not_full);
+    //     mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Morrisville,mscSchedulizer_config.html_elements.filters.morrisville_campus);
+    //     mscSchedulizer.checkboxFilterDisplay(filters.Campuses.Norwich,mscSchedulizer_config.html_elements.filters.norwich_campus);
+    //     mscSchedulizer.checkboxFilterDisplay(filters.ShowOnline,mscSchedulizer_config.html_elements.filters.show_online);
+    //     mscSchedulizer.checkboxFilterDisplay(filters.ShowInternational,mscSchedulizer_config.html_elements.filters.show_international);
+    //     $("#"+mscSchedulizer_config.html_elements.timeblock_filters).html(mscSchedulizer.timeBlockDisplay(mscSchedulizer.schedule_filters.TimeBlocks));
+    //     mscSchedulizer.initTimeBlockPickers(filters.TimeBlocks);
+    // },
     updateAltViewModal: function(){
         $('#modal_alt_view_filters').find('.modal-title').text("Visual Filters");
         $('#modal_alt_view_filters').find('.modal-body').html("<div style=\"display:block;\">" + mscSchedulizer.altViewFilterOutput(mscSchedulizer.user_course_adjustments) + "</div>");
         $('#modal_alt_view_filters').find('.modal-footer').html("<a href=\"visual_filter.html\"><button type=\"button\" class=\"btn btn-secondary\">Add Filter</button></a> <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Close</button>");
     },
-    timeBlockDisplay:function(filters){
-        var result = "<span class=\"filtertooltiptrigger\" title=\"By adding time blocks filters, you can block out times that you do not want to have classes.\">Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a></span>";
-        for(var i=0; i<filters.length;i++)
-        {
-            result += "<div id=\"timeOnly_"+i+"\"><span id=\"weekCal_"+i+"\"></span> " +
-                    "<input type=\"text\" class=\"time start ui-timepicker-input\" autocomplete=\"off\"> to " +
-                    "<input type=\"text\" class=\"time end ui-timepicker-input\" autocomplete=\"off\">" +
-                "<a onclick=\"mscSchedulizer.updateDayTimeBlockFilter("+i+")\"> Apply </a> <a onclick=\"mscSchedulizer.removeTimeBlockFilter("+i+")\"> Remove</a></div>";
-        }
-        return result;
-    },
-    addTimeBlockFilter:function(){
-        mscSchedulizer.schedule_filters.TimeBlocks[mscSchedulizer.schedule_filters.TimeBlocks.length] = {StartTime:"0000",EndTime:"2330",Days:""};
-        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
-    },
-    removeTimeBlockFilter:function(index){
-        mscSchedulizer.schedule_filters.TimeBlocks.splice(index, 1);
-        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
-        if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
-            mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
-        }
-        else{
-            mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
-        }
-    },
-    updateDayTimeBlockFilter:function(index){
-        mscSchedulizer.schedule_filters.TimeBlocks[index] = {};
-        var timeOnlyExampleEl = document.getElementById("timeOnly_"+index);
-        var timeOnlyDatepair = new Datepair(timeOnlyExampleEl);
-        mscSchedulizer.schedule_filters.TimeBlocks[index].StartTime = node_generic_functions.padStr(node_generic_functions.convertToInttime(timeOnlyDatepair.startTimeInput.value).toString(),3);
-        mscSchedulizer.schedule_filters.TimeBlocks[index].EndTime = node_generic_functions.padStr(node_generic_functions.convertToInttime(timeOnlyDatepair.endTimeInput.value).toString(),3);
-        mscSchedulizer.schedule_filters.TimeBlocks[index].Days = $("#weekCal_"+index).weekLine('getSelected');
-        mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
-        if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
-            mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
-        }
-        else{
-            mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
-            $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
-        }
-    },
-    initTimeBlockPickers:function(filters){
-        for(var i=0; i<filters.length;i++){
-            $("#timeOnly_"+i+" .time").timepicker({
-              'showDuration': true,
-              'timeFormat': 'g:ia',
-              "minTime":"12:00am",
-              "maxTime":"11:30pm"
-            });
-            $("#weekCal_"+i).weekLine({theme:"jquery-ui",dayLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"]});
-            var timeOnlyExampleEl = document.getElementById("timeOnly_"+i);
-            var timeOnlyDatepair = new Datepair(timeOnlyExampleEl);
-                $("#timeOnly_"+i+" .start.time").timepicker('setTime',  moment(filters[i].StartTime,"Hmm").format('h:mma'));
-                $("#timeOnly_"+i+" .end.time").timepicker('setTime',  moment(filters[i].EndTime,"Hmm").format('h:mma'));
-                $("#weekCal_"+i).weekLine("setSelected", filters[i].Days);
-        }
-    },
-    checkboxFilterDisplay:function(filter,elementID){
-      if (filter)
-      {
-          document.getElementById(elementID).checked = true;
-      }
-      else
-      {
-          document.getElementById(elementID).checked = false;
-      }
-    },
-    concurrentEnrollmentFilter:function(section,filters){
-        if(section.SectionAttributes !== null){
-            var attributes = section.SectionAttributes.split(";");
-            if(node_generic_functions.inList("ETC", attributes) || node_generic_functions.inList("OCBB", attributes)){
-                return true;
-            }
-        }
-        return false;
-    },
-    removeAdministrativeSections:function(courses){
-      for (var c = courses.length-1; c >= 0; c--) {
-          if(typeof courses[c].Sections !== "undefined" && courses[c].Sections !== null){
-              for (var s = courses[c].Sections.length-1; s >= 0; s--) {
-                  // Apply filters to section function
-                  if(mscSchedulizer.requiredFilters(courses[c].Sections[s])){
-                      courses[c].Sections.splice(s, 1);
-                  }
-              }
-              if(courses[c].Sections.length === 0){
-                  courses.splice(c, 1);
-              }
-          }
-      }
-      return courses;
-    },
-    requiredFilters:function(section){
-      var filteredOut = false;
-      filteredOut = mscSchedulizer.concurrentEnrollmentFilter(section);
-      return filteredOut;
-    },
-    applyFiltersToSection:function(section,filters){
-        var filteredOut = false;
-        filteredOut = mscSchedulizer.requiredFilters(section);
-        if(typeof filters.Campuses !== "undefined" && filteredOut === false){
-            filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
-        }
-        // if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
-        //     filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
-        // }
-        if(typeof filters.TimeBlocks !== "undefined" && filters.TimeBlocks != [] && filteredOut === false){
-            filteredOut = mscSchedulizer.timeBlockFilter(section,filters.TimeBlocks);
-        }
-        if(typeof filters.NotFull !== "undefined" && filters.NotFull !== false && filteredOut === false){
-            filteredOut = mscSchedulizer.notFullFilter(section,filters.NotFull);
-        }
-        if((typeof filters.ShowOnline == "undefined" || filters.ShowOnline === false) && filteredOut === false){
-            filteredOut = mscSchedulizer.hideOnlineFilter(section,filters.ShowOnline);
-        }
-        if((typeof filters.ShowInternational === "undefined" || filters.ShowInternational === false) && filteredOut === false){
-            filteredOut = mscSchedulizer.hideInternationalFilter(section,filters.ShowInternational);
-        }
-        return filteredOut;
-    },
-    professorFilter:function(section,filter){
-        return false;
-    },
-    hideOnlineFilter:function(section,filters){
-        if(section.SectionAttributes !== null){
-            var attributes = section.SectionAttributes.split(";");
-            if(node_generic_functions.inList("ONLN", attributes)){
-                return true;
-            }
-        }
-        return false;
-    },
-    hideInternationalFilter:function(section,filters){
-        if(section.SectionNumber.indexOf("OL") === 0 || section.SectionNumber.indexOf("OC") === 0){
-            return true;
-        }
+    // timeBlockDisplay:function(filters){
+    //     var result = "<span class=\"filtertooltiptrigger\" title=\"By adding time blocks filters, you can block out times that you do not want to have classes.\">Time block filters: <a onclick=\"mscSchedulizer.addTimeBlockFilter()\">Add</a></span>";
+    //     for(var i=0; i<filters.length;i++)
+    //     {
+    //         result += "<div id=\"timeOnly_"+i+"\"><span id=\"weekCal_"+i+"\"></span> " +
+    //                 "<input type=\"text\" class=\"time start ui-timepicker-input\" autocomplete=\"off\"> to " +
+    //                 "<input type=\"text\" class=\"time end ui-timepicker-input\" autocomplete=\"off\">" +
+    //             "<a onclick=\"mscSchedulizer.updateDayTimeBlockFilter("+i+")\"> Apply </a> <a onclick=\"mscSchedulizer.removeTimeBlockFilter("+i+")\"> Remove</a></div>";
+    //     }
+    //     return result;
+    // },
+    // addTimeBlockFilter:function(){
+    //     mscSchedulizer.schedule_filters.TimeBlocks[mscSchedulizer.schedule_filters.TimeBlocks.length] = {StartTime:"0000",EndTime:"2330",Days:""};
+    //     mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+    // },
+    // removeTimeBlockFilter:function(index){
+    //     mscSchedulizer.schedule_filters.TimeBlocks.splice(index, 1);
+    //     mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+    //     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
+    //         mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
+    //     }
+    //     else{
+    //         mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+    //         $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+    //     }
+    // },
+    // updateDayTimeBlockFilter:function(index){
+    //     mscSchedulizer.schedule_filters.TimeBlocks[index] = {};
+    //     var timeOnlyExampleEl = document.getElementById("timeOnly_"+index);
+    //     var timeOnlyDatepair = new Datepair(timeOnlyExampleEl);
+    //     mscSchedulizer.schedule_filters.TimeBlocks[index].StartTime = node_generic_functions.padStr(node_generic_functions.convertToInttime(timeOnlyDatepair.startTimeInput.value).toString(),3);
+    //     mscSchedulizer.schedule_filters.TimeBlocks[index].EndTime = node_generic_functions.padStr(node_generic_functions.convertToInttime(timeOnlyDatepair.endTimeInput.value).toString(),3);
+    //     mscSchedulizer.schedule_filters.TimeBlocks[index].Days = $("#weekCal_"+index).weekLine('getSelected');
+    //     mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
+    //     if(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])){
+    //         mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
+    //     }
+    //     else{
+    //         mscSchedulizer.getCombinations(mscSchedulizer.gen_courses,mscSchedulizer.createSchedules);
+    //         $("#"+mscSchedulizer_config.html_elements.department_class_list).html(mscSchedulizer.getDepartmentCoursesOutput(mscSchedulizer.department_courses));
+    //     }
+    // },
+    // initTimeBlockPickers:function(filters){
+    //     for(var i=0; i<filters.length;i++){
+    //         $("#timeOnly_"+i+" .time").timepicker({
+    //           'showDuration': true,
+    //           'timeFormat': 'g:ia',
+    //           "minTime":"12:00am",
+    //           "maxTime":"11:30pm"
+    //         });
+    //         $("#weekCal_"+i).weekLine({theme:"jquery-ui",dayLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"]});
+    //         var timeOnlyExampleEl = document.getElementById("timeOnly_"+i);
+    //         var timeOnlyDatepair = new Datepair(timeOnlyExampleEl);
+    //             $("#timeOnly_"+i+" .start.time").timepicker('setTime',  moment(filters[i].StartTime,"Hmm").format('h:mma'));
+    //             $("#timeOnly_"+i+" .end.time").timepicker('setTime',  moment(filters[i].EndTime,"Hmm").format('h:mma'));
+    //             $("#weekCal_"+i).weekLine("setSelected", filters[i].Days);
+    //     }
+    // },
+    // checkboxFilterDisplay:function(filter,elementID){
+    //   if (filter)
+    //   {
+    //       document.getElementById(elementID).checked = true;
+    //   }
+    //   else
+    //   {
+    //       document.getElementById(elementID).checked = false;
+    //   }
+    // },
+    // concurrentEnrollmentFilter:function(section,filters){
+    //     if(section.SectionAttributes !== null){
+    //         var attributes = section.SectionAttributes.split(";");
+    //         if(node_generic_functions.inList("ETC", attributes) || node_generic_functions.inList("OCBB", attributes)){
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // },
+    // removeAdministrativeSections:function(courses){
+    //   for (var c = courses.length-1; c >= 0; c--) {
+    //       if(typeof courses[c].Sections !== "undefined" && courses[c].Sections !== null){
+    //           for (var s = courses[c].Sections.length-1; s >= 0; s--) {
+    //               // Apply filters to section function
+    //               if(mscSchedulizer.requiredFilters(courses[c].Sections[s])){
+    //                   courses[c].Sections.splice(s, 1);
+    //               }
+    //           }
+    //           if(courses[c].Sections.length === 0){
+    //               courses.splice(c, 1);
+    //           }
+    //       }
+    //   }
+    //   return courses;
+    // },
+    // requiredFilters:function(section){
+    //   var filteredOut = false;
+    //   filteredOut = mscSchedulizer.concurrentEnrollmentFilter(section);
+    //   return filteredOut;
+    // },
+    // applyFiltersToSection:function(section,filters){
+    //     var filteredOut = false;
+    //     filteredOut = mscSchedulizer.requiredFilters(section);
+    //     if(typeof filters.Campuses !== "undefined" && filteredOut === false){
+    //         filteredOut = mscSchedulizer.campusFilter(section,filters.Campuses);
+    //     }
+    //     // if(typeof filters.Professors !== "undefined" && filters.Professors != [] && filteredOut === false){
+    //     //     filteredOut = mscSchedulizer.professorFilter(section,filters.Professors);
+    //     // }
+    //     if(typeof filters.TimeBlocks !== "undefined" && filters.TimeBlocks != [] && filteredOut === false){
+    //         filteredOut = mscSchedulizer.timeBlockFilter(section,filters.TimeBlocks);
+    //     }
+    //     if(typeof filters.NotFull !== "undefined" && filters.NotFull !== false && filteredOut === false){
+    //         filteredOut = mscSchedulizer.notFullFilter(section,filters.NotFull);
+    //     }
+    //     if((typeof filters.ShowOnline == "undefined" || filters.ShowOnline === false) && filteredOut === false){
+    //         filteredOut = mscSchedulizer.hideOnlineFilter(section,filters.ShowOnline);
+    //     }
+    //     if((typeof filters.ShowInternational === "undefined" || filters.ShowInternational === false) && filteredOut === false){
+    //         filteredOut = mscSchedulizer.hideInternationalFilter(section,filters.ShowInternational);
+    //     }
+    //     return filteredOut;
+    // },
+    // professorFilter:function(section,filter){
+    //     return false;
+    // },
+    // hideOnlineFilter:function(section,filters){
+    //     if(section.SectionAttributes !== null){
+    //         var attributes = section.SectionAttributes.split(";");
+    //         if(node_generic_functions.inList("ONLN", attributes)){
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // },
+    // hideInternationalFilter:function(section,filters){
+    //     if(section.SectionNumber.indexOf("OL") === 0 || section.SectionNumber.indexOf("OC") === 0){
+    //         return true;
+    //     }
 
-        return false;
-    },
-    campusFilter:function(section,filter){
-        // Only filter out if it has a meeting location
-        try{
-            if(section.Meetings.length>0){
-                var count = 0;
-                for (var m in section.Meetings) {
-                    var meeting = section.Meetings[m];
-                    if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
-                        count++;
-                    }
-                }
-                if(count !== section.Meetings.length){
-                    if((filter.Morrisville === false && section.Campus == "M")||(filter.Norwich === false && section.Campus == "N")){
-                        return true;
-                    }
-                }
-            }
-        }
-        catch (err){}
-        return false;
-    },
-    timeBlockFilter:function(section,filter){
-        try{
-            for (var m in section.Meetings){
-                for (var i in filter) {
-                    if(mscSchedulizer.doTimesOverlap(filter[i],section.Meetings[m])===true){
-                        if(mscSchedulizer.doBlockDaysOverlap(section.Meetings[m],filter[i].Days.split(","))){
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        catch (err){}
-        return false;
-    },
-    notFullFilter:function(section,filter){
-        // 0 is NOT unlimited, 0 means manual registration
-        // if(section.MaxEnrollment!=0){
-            if(section.CurrentEnrollment>=section.MaxEnrollment){
-                return true;
-            }
-        // }
-        return false;
-    },
-    doBlockDaysOverlap:function(meeting1,days){
-        if(meeting1.Monday==1 && node_generic_functions.inList("Mon",days)){
-            return true;
-        }
-        else if(meeting1.Tuesday==1 && node_generic_functions.inList("Tue",days)){
-            return true;
-        }
-        else if(meeting1.Wednesday==1 && node_generic_functions.inList("Wed",days)){
-            return true;
-        }
-        else if(meeting1.Thursday==1 && node_generic_functions.inList("Thu",days)){
-            return true;
-        }
-        else if(meeting1.Friday==1 && node_generic_functions.inList("Fri",days)){
-            return true;
-        }
-        return false;
-    },
-    doDaysOverlap:function(meeting1,meeting2){
-        if(meeting1.Monday==1&&meeting2.Monday==1){
-            return true;
-        }
-        else if(meeting1.Tuesday==1&&meeting2.Tuesday==1){
-            return true;
-        }
-        else if(meeting1.Wednesday==1&&meeting2.Wednesday==1){
-            return true;
-        }
-        else if(meeting1.Thursday==1&&meeting2.Thursday==1){
-            return true;
-        }
-        else if(meeting1.Friday==1&&meeting2.Friday==1){
-            return true;
-        }
-        return false;
-    },
-    doTimesOverlap:function(timeblock1,timeblock2){
-        if((parseInt(timeblock1.StartTime) <= parseInt(timeblock2.StartTime) && parseInt(timeblock1.EndTime) > parseInt(timeblock2.StartTime))||((parseInt(timeblock2.StartTime) <= parseInt(timeblock1.StartTime) && parseInt(timeblock2.EndTime) > parseInt(timeblock1.StartTime)))){
-            return true;
-        }
-        return false;
-    },
-    doTermsOverlap:function(term1,term2){
-        if((term1.TermStart <= term2.TermStart && term1.TermEnd > term2.TermStart)||((term2.TermStart <= term1.TermStart && term2.TermEnd > term1.TermStart))){
-            return true;
-        }
-        return false;
-    },
-    doMeetingDatesOverlap:function(meeting1,meeting2){
-        // One-day meetings have the same start and end date, in which case they should overlap
-        if(meeting1.StartDate !== null && meeting1.EndDate !== null && meeting2.StartDate !== null && meeting2.EndDate !== null){
-          if((meeting1.StartDate <= meeting2.StartDate && meeting1.EndDate >= meeting2.StartDate)||((meeting2.StartDate <= meeting1.StartDate && meeting2.EndDate >= meeting1.StartDate))){
-              return true;
-          }
-        }
-        return false;
-    },
-    doMeetingsOverlap:function(section1meetings,section2meetings){
-        //for each meeting in section1
-        if(typeof section1meetings !== 'undefined' && typeof section2meetings !== 'undefined'){
-            for (var i = section1meetings.length-1; i >= 0; i--) {
-                var s1meeting = section1meetings[i];
-                //for each meeting in section2
-                for (var m = section2meetings.length-1; m >= 0; m--) {
-                    var s2meeting = section2meetings[m];
-                    if(mscSchedulizer.doTimesOverlap({StartTime:s1meeting.StartTime,EndTime:s1meeting.EndTime},{StartTime:s2meeting.StartTime,EndTime:s2meeting.EndTime})){
-                        if(mscSchedulizer.doDaysOverlap(s1meeting,s2meeting)){
-                            if(mscSchedulizer.doMeetingDatesOverlap(s1meeting,s2meeting)){
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    },
-    doSectionsOverlap:function(section1,section2){
-        if(mscSchedulizer.doMeetingsOverlap(section1.Meetings,section2.Meetings)){
-            return true;
-        }
-        return false;
-    },
-    convertDate:function(dayOfWeek){
-        var today = new Date();
-        var weekDate = new Date();
-        if(dayOfWeek == "M"){
-            weekDate.setDate(today.getDate() - today.getDay()+1);
-        }
-        else if(dayOfWeek == "T"){
-            weekDate.setDate(today.getDate() - today.getDay()+2);
-        }
-        else if(dayOfWeek == "W"){
-            weekDate.setDate(today.getDate() - today.getDay()+3);
-        }
-        else if(dayOfWeek == "R"){
-            weekDate.setDate(today.getDate() - today.getDay()+4);
-        }
-        else if(dayOfWeek == "F"){
-            weekDate.setDate(today.getDate() - today.getDay()+5);
-        }
-        return weekDate;
-    },
-    splitMeetings:function(meeting){
-        var meetups = [];
-        var m_date;
-        var st;
-        var et;
-        if(meeting.Monday == 1){
-            m_date = mscSchedulizer.convertDate("M");
-            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
-            meetups.push({StartTime: st,EndTime: et});
-        }
-        if(meeting.Tuesday == 1){
-            m_date = mscSchedulizer.convertDate("T");
-            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
-            meetups.push({StartTime: st,EndTime: et});
-        }
-        if(meeting.Wednesday == 1){
-            m_date = mscSchedulizer.convertDate("W");
-            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
-            meetups.push({StartTime: st,EndTime: et});
-        }
-        if(meeting.Thursday == 1){
-            m_date = mscSchedulizer.convertDate("R");
-            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
-            meetups.push({StartTime: st,EndTime: et});
-        }
-        if(meeting.Friday == 1){
-            m_date = mscSchedulizer.convertDate("F");
-            st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
-            et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
-            meetups.push({StartTime: st,EndTime: et});
-        }
-        return meetups;
-    },
+    //     return false;
+    // },
+    // campusFilter:function(section,filter){
+    //     // Only filter out if it has a meeting location
+    //     try{
+    //         if(section.Meetings.length>0){
+    //             var count = 0;
+    //             for (var m in section.Meetings) {
+    //                 var meeting = section.Meetings[m];
+    //                 if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
+    //                     count++;
+    //                 }
+    //             }
+    //             if(count !== section.Meetings.length){
+    //                 if((filter.Morrisville === false && section.Campus == "M")||(filter.Norwich === false && section.Campus == "N")){
+    //                     return true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     catch (err){}
+    //     return false;
+    // },
+    // timeBlockFilter:function(section,filter){
+    //     try{
+    //         for (var m in section.Meetings){
+    //             for (var i in filter) {
+    //                 if(mscSchedulizer.doTimesOverlap(filter[i],section.Meetings[m])===true){
+    //                     if(mscSchedulizer.doBlockDaysOverlap(section.Meetings[m],filter[i].Days.split(","))){
+    //                         return true;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     catch (err){}
+    //     return false;
+    // },
+    // notFullFilter:function(section,filter){
+    //     // 0 is NOT unlimited, 0 means manual registration
+    //     // if(section.MaxEnrollment!=0){
+    //         if(section.CurrentEnrollment>=section.MaxEnrollment){
+    //             return true;
+    //         }
+    //     // }
+    //     return false;
+    // },
+    // doBlockDaysOverlap:function(meeting1,days){
+    //     if(meeting1.Monday==1 && node_generic_functions.inList("Mon",days)){
+    //         return true;
+    //     }
+    //     else if(meeting1.Tuesday==1 && node_generic_functions.inList("Tue",days)){
+    //         return true;
+    //     }
+    //     else if(meeting1.Wednesday==1 && node_generic_functions.inList("Wed",days)){
+    //         return true;
+    //     }
+    //     else if(meeting1.Thursday==1 && node_generic_functions.inList("Thu",days)){
+    //         return true;
+    //     }
+    //     else if(meeting1.Friday==1 && node_generic_functions.inList("Fri",days)){
+    //         return true;
+    //     }
+    //     return false;
+    // },
+    // doDaysOverlap:function(meeting1,meeting2){
+    //     if(meeting1.Monday==1&&meeting2.Monday==1){
+    //         return true;
+    //     }
+    //     else if(meeting1.Tuesday==1&&meeting2.Tuesday==1){
+    //         return true;
+    //     }
+    //     else if(meeting1.Wednesday==1&&meeting2.Wednesday==1){
+    //         return true;
+    //     }
+    //     else if(meeting1.Thursday==1&&meeting2.Thursday==1){
+    //         return true;
+    //     }
+    //     else if(meeting1.Friday==1&&meeting2.Friday==1){
+    //         return true;
+    //     }
+    //     return false;
+    // },
+    // doTimesOverlap:function(timeblock1,timeblock2){
+    //     if((parseInt(timeblock1.StartTime) <= parseInt(timeblock2.StartTime) && parseInt(timeblock1.EndTime) > parseInt(timeblock2.StartTime))||((parseInt(timeblock2.StartTime) <= parseInt(timeblock1.StartTime) && parseInt(timeblock2.EndTime) > parseInt(timeblock1.StartTime)))){
+    //         return true;
+    //     }
+    //     return false;
+    // },
+    // doTermsOverlap:function(term1,term2){
+    //     if((term1.TermStart <= term2.TermStart && term1.TermEnd > term2.TermStart)||((term2.TermStart <= term1.TermStart && term2.TermEnd > term1.TermStart))){
+    //         return true;
+    //     }
+    //     return false;
+    // },
+    // doMeetingDatesOverlap:function(meeting1,meeting2){
+    //     // One-day meetings have the same start and end date, in which case they should overlap
+    //     if(meeting1.StartDate !== null && meeting1.EndDate !== null && meeting2.StartDate !== null && meeting2.EndDate !== null){
+    //       if((meeting1.StartDate <= meeting2.StartDate && meeting1.EndDate >= meeting2.StartDate)||((meeting2.StartDate <= meeting1.StartDate && meeting2.EndDate >= meeting1.StartDate))){
+    //           return true;
+    //       }
+    //     }
+    //     return false;
+    // },
+    // doMeetingsOverlap:function(section1meetings,section2meetings){
+    //     //for each meeting in section1
+    //     if(typeof section1meetings !== 'undefined' && typeof section2meetings !== 'undefined'){
+    //         for (var i = section1meetings.length-1; i >= 0; i--) {
+    //             var s1meeting = section1meetings[i];
+    //             //for each meeting in section2
+    //             for (var m = section2meetings.length-1; m >= 0; m--) {
+    //                 var s2meeting = section2meetings[m];
+    //                 if(mscSchedulizer.doTimesOverlap({StartTime:s1meeting.StartTime,EndTime:s1meeting.EndTime},{StartTime:s2meeting.StartTime,EndTime:s2meeting.EndTime})){
+    //                     if(mscSchedulizer.doDaysOverlap(s1meeting,s2meeting)){
+    //                         if(mscSchedulizer.doMeetingDatesOverlap(s1meeting,s2meeting)){
+    //                             return true;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return false;
+    // },
+    // doSectionsOverlap:function(section1,section2){
+    //     if(mscSchedulizer.doMeetingsOverlap(section1.Meetings,section2.Meetings)){
+    //         return true;
+    //     }
+    //     return false;
+    // },
+    // convertDate:function(dayOfWeek){
+    //     var today = new Date();
+    //     var weekDate = new Date();
+    //     if(dayOfWeek == "M"){
+    //         weekDate.setDate(today.getDate() - today.getDay()+1);
+    //     }
+    //     else if(dayOfWeek == "T"){
+    //         weekDate.setDate(today.getDate() - today.getDay()+2);
+    //     }
+    //     else if(dayOfWeek == "W"){
+    //         weekDate.setDate(today.getDate() - today.getDay()+3);
+    //     }
+    //     else if(dayOfWeek == "R"){
+    //         weekDate.setDate(today.getDate() - today.getDay()+4);
+    //     }
+    //     else if(dayOfWeek == "F"){
+    //         weekDate.setDate(today.getDate() - today.getDay()+5);
+    //     }
+    //     return weekDate;
+    // },
+    // splitMeetings:function(meeting){
+    //     var meetups = [];
+    //     var m_date;
+    //     var st;
+    //     var et;
+    //     if(meeting.Monday == 1){
+    //         m_date = mscSchedulizer.convertDate("M");
+    //         st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+    //         et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+    //         meetups.push({StartTime: st,EndTime: et});
+    //     }
+    //     if(meeting.Tuesday == 1){
+    //         m_date = mscSchedulizer.convertDate("T");
+    //         st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+    //         et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+    //         meetups.push({StartTime: st,EndTime: et});
+    //     }
+    //     if(meeting.Wednesday == 1){
+    //         m_date = mscSchedulizer.convertDate("W");
+    //         st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+    //         et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+    //         meetups.push({StartTime: st,EndTime: et});
+    //     }
+    //     if(meeting.Thursday == 1){
+    //         m_date = mscSchedulizer.convertDate("R");
+    //         st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+    //         et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+    //         meetups.push({StartTime: st,EndTime: et});
+    //     }
+    //     if(meeting.Friday == 1){
+    //         m_date = mscSchedulizer.convertDate("F");
+    //         st = moment(m_date).format("YYYY-MM-DD") + moment(meeting.StartTime,"H:mm").format("THH:mm");
+    //         et = moment(m_date).format("YYYY-MM-DD") + moment(meeting.EndTime,"H:mm").format("THH:mm");
+    //         meetups.push({StartTime: st,EndTime: et});
+    //     }
+    //     return meetups;
+    // },
     createSchedules:function(schedules,options){
         mscSchedulizer.num_loaded = 0;
         if(schedules !== null && schedules.length > 0 ){
@@ -1436,15 +1436,15 @@ module.exports = {
         }
        return crns;
     },
-    sortSections:function(a,b){
-        return node_generic_functions.alphaNumericSort(a.SectionNumber,b.SectionNumber);
-    },
-    sortMeetings:function(a, b) {
-        if(moment(a.StartTime,"Hmm").isValid() && moment(b.StartTime,"Hmm").isValid()){
-            return moment(a.StartTime,"Hmm") - moment(b.StartTime,"Hmm");
-        }
-        return 0;
-    },
+    // sortSections:function(a,b){
+    //     return node_generic_functions.alphaNumericSort(a.SectionNumber,b.SectionNumber);
+    // },
+    // sortMeetings:function(a, b) {
+    //     if(moment(a.StartTime,"Hmm").isValid() && moment(b.StartTime,"Hmm").isValid()){
+    //         return moment(a.StartTime,"Hmm") - moment(b.StartTime,"Hmm");
+    //     }
+    //     return 0;
+    // },
     /**
     * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
     * @param obj1
