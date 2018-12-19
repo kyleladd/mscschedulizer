@@ -49,7 +49,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
             },
             set_favorite_schedules: function(favorite_schedules){
                 lscache.set("favorite_schedules",favorite_schedules,1*24*60);
-                $rootScope.$broadcast('favorite_schedules:set', courses_selected);
+                $rootScope.$broadcast('favorite_schedules:set', favorite_schedules);
             },
             get_schedule_filters: function(){
                 var schedule_filters = lscache.get("schedule_filters");
@@ -57,7 +57,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
             },
             set_schedule_filters: function(schedule_filters){
                 lscache.set("schedule_filters",schedule_filters,1*24*60);
-                $rootScope.$broadcast('schedule_filters:set', courses_selected);
+                $rootScope.$broadcast('schedule_filters:set', schedule_filters);
             },
             get_user_course_adjustments: function(){
                 var user_course_adjustments = lscache.get("user_course_adjustments");
@@ -65,7 +65,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
             },
             set_user_course_adjustments: function(user_course_adjustments){
                 lscache.set("user_course_adjustments",user_course_adjustments,1*24*60);
-                $rootScope.$broadcast('user_course_adjustments:set', courses_selected);
+                $rootScope.$broadcast('user_course_adjustments:set', user_course_adjustments);
             }
         };
         return factory;

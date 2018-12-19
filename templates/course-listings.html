@@ -9,7 +9,8 @@
         <!-- Page Content -->
         <div class="col-sm-9 col-xs-12 page-content">
           <!-- Classic Heading -->
-          <h4 class="classic-title"><span>Courses</span></h4>
+          <!-- <h4 class="classic-title"><span>Courses</span></h4> -->
+          <filters-component filters="$ctrl.filters" change="$ctrl.updateFilters(value)"></filters-component>
           <ul id="dept_class_list">
             <li ng-if="$ctrl.loading_courses"><div class="loader"></div> <div class="status">Loading Course Listings...</div></li>
             <li ng-if="!$ctrl.loading_courses" ng-repeat="course in $ctrl.courses" ng-bind-html-unsafe="course.CourseTitle" >

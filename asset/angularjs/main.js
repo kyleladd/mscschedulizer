@@ -6,9 +6,13 @@ define([
     'angular',
     'node_generic_functions',
     'ui.router',
+    'bootstrap',
+    'theme',
     './directives/semesterDirective',
     './directives/departmentDirective',
     './directives/courseSelectionsDirective',
+    './directives/timeblocksDirective',
+    './directives/tooltipDirective',
     './services/userService',
     // './services/schedulizerService'
 ], function (angular, node_generic_functions) {
@@ -18,6 +22,8 @@ define([
         'semesterDirective',
         'departmentDirective',
         'courseSelectionsDirective',
+        'timeblocksDirective',
+        'tooltipDirective',
         'userService',
         // 'schedulizerService'
     ])
@@ -122,6 +128,7 @@ define([
           $ctrl.courses = [];
           $ctrl.loading_courses = true;
           $ctrl.courses_selected = userService.get_courses_selected();
+          $ctrl.filters = userService.get_schedule_filters();
         };
         //TODO-KL i think the difference between section and course selections is the crn is or is not null
         $ctrl.select_course = function(course){
@@ -159,6 +166,12 @@ define([
             userService.set_courses_selected($ctrl.courses_selected);
           }
         };
+        
+        $ctrl.updateFilters = function(value){
+          console.log("update filters within course listings",value);
+          //TODO-KL update display with updated filters
+          userService.set_schedule_filters(value);
+        };
         $scope.$on('semester:set', function(event, data){
           $ctrl.semester = data;
           $ctrl.loading_courses = true;
@@ -172,6 +185,10 @@ define([
             $ctrl.loading_courses = false;
           });
         });
+        $scope.$on('schedule_filters:set', function(event, data){
+          $ctrl.filters = data;
+          //TODO-KL - reapply filters to listings
+        });
       }
     });
     app.component("sidebarComponent",{
@@ -182,7 +199,7 @@ define([
             department:'<',
             coursesselected: '<'
         },
-      controller: function($scope, userService){
+      controller: function($scope, $element, userService){
         var $ctrl = this;
         //TODO-KL not needed because semester is watched on change when passed into the department directive
         $ctrl.semesterChanged = function(value){
@@ -195,22 +212,82 @@ define([
           userService.set_courses_selected(value);
         };
         $ctrl.onInit = function(){
-          $ctrl.$postLink = function ($scope,$element) {
-            //add event listener to an element
-            // debugger;
-
-            //also we can apply jqLite dom manipulation operation on element
-          };
-          $scope.$on('semester:set', function(event, data){
-            $ctrl.semester = data;
-          });
-          $scope.$on('department:set', function(event, data){
-            $ctrl.department = data;
-          });
-          $scope.$on('courses_selected:set', function(event, data){
-            $ctrl.courses_selected = data;
-          });
         }
+        $ctrl.$postLink = function () {
+          //TODO-KL might need to pass $element into controller, not this function
+          //add event listener to an element
+          // debugger;
+
+          //also we can apply jqLite dom manipulation operation on element
+        };
+        $scope.$on('semester:set', function(event, data){
+          $ctrl.semester = data;
+        });
+        $scope.$on('department:set', function(event, data){
+          $ctrl.department = data;
+        });
+        $scope.$on('courses_selected:set', function(event, data){
+          $ctrl.courses_selected = data;
+        });
+      }
+    });
+    app.component("filtersComponent",{
+      templateUrl: '/templates/filters.html',
+      controllerAs: "$ctrl",
+      bindings: { 
+        filters: '<',
+        change:'&'
+      },
+      controller: function($scope, userService){
+        var $ctrl = this;
+        
+        $ctrl.onInit = function(){
+        }
+        $ctrl.$postLink = function ($scope,$element) {
+          //add event listener to an element
+          // debugger;
+
+          //also we can apply jqLite dom manipulation operation on element
+        };
+        $ctrl.timeblockUpdated = function(timeblocks){
+          console.log("filters - timeblockupdated", timeblocks);
+          $ctrl.filters.TimeBlocks = timeblocks;
+          $ctrl.updateFilters();
+        };
+        $ctrl.updateFilters = function(){
+          console.log("updating my filters in filters component");
+          $ctrl.change({value:$ctrl.filters})
+        };
+        // $ctrl.changedValue = function(value){
+        //     $ctrl.change({value:value});
+        // };
+      }
+    });
+    app.component("altViewFilterModal",{
+      templateUrl: '/templates/alt-view-filters.html',
+      controllerAs: "$ctrl",
+      bindings: { 
+        user_course_adjustments: '<',
+        change:'&'
+      },
+      controller: function($scope, userService){
+        var $ctrl = this;
+        
+        $ctrl.onInit = function(){
+        }
+        $ctrl.$postLink = function ($scope,$element) {
+          //add event listener to an element
+          // debugger;
+
+          //also we can apply jqLite dom manipulation operation on element
+        };
+        $ctrl.updateFilters = function(){
+          console.log("updating my filters in filters component");
+          $ctrl.change({value:$ctrl.filters})
+        };
+        // $ctrl.changedValue = function(value){
+        //     $ctrl.change({value:value});
+        // };
       }
     });
     app.controller('VisualFilterCtrl', ['$scope',function ($scope) {
