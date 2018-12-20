@@ -402,6 +402,7 @@ module.exports = {
             if(course.Sections.length === 0){
               output += "<tr><td colspan=\"9\">All sections have been filtered out.</td></tr>";
             }
+            //TODO-KL Not sure how to do this in angularjs
             for (var s in course.Sections) {
                 var section = course.Sections[s];
                 var groupedmeetings = mscSchedulizer.groupMeetings(section.Meetings);
@@ -447,6 +448,7 @@ module.exports = {
                         "<thead><tr class=\"field-name\">" +
                         "<td>Term Code</td><td>Start Date</td><td>End Date</td>" +
                         "</tr></thead>";
+        //TODO-KL terms is going to have to be a variable in the controller
         terms.sort(function(a, b) {
             return a.TermCode - b.TermCode;
         });
@@ -500,24 +502,24 @@ module.exports = {
     //         $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><strong>No courses selected. <a href=\"select-classes.html\">Click here to select courses</a>.</strong></p>");
     //     }
     // },
-    applyUserAdjustments: function(courses,adjustments){
-        adjustments.Sections.forEach(function(section_adjustment){
-            if(section_adjustment.type === "remove"){
-                for (var c = courses.length-1; c >= 0; c--) {
-                    for (var s = courses[c].Sections.length-1; s >= 0; s--) {
-                        // Apply filters to section function
-                        if(courses[c].Sections[s].CourseCRN === section_adjustment.Section.CourseCRN){
-                            courses[c].Sections.splice(s, 1);
-                        }
-                        if(courses[c].Sections.length === 0){
-                            courses.splice(c, 1);
-                        }
-                    }
-                }
-            }
-        });
-        return courses;
-    },
+    // applyUserAdjustments: function(courses,adjustments){
+    //     adjustments.Sections.forEach(function(section_adjustment){
+    //         if(section_adjustment.type === "remove"){
+    //             for (var c = courses.length-1; c >= 0; c--) {
+    //                 for (var s = courses[c].Sections.length-1; s >= 0; s--) {
+    //                     // Apply filters to section function
+    //                     if(courses[c].Sections[s].CourseCRN === section_adjustment.Section.CourseCRN){
+    //                         courses[c].Sections.splice(s, 1);
+    //                     }
+    //                     if(courses[c].Sections.length === 0){
+    //                         courses.splice(c, 1);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     });
+    //     return courses;
+    // },
     altViewFilterOutput: function(adjustments){
         var output = "";
         if(adjustments.Courses.length === 0 && adjustments.Sections.length === 0 && adjustments.Meetings.length === 0){

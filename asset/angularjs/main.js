@@ -189,6 +189,7 @@ define([
         });
         $scope.$on('schedule_filters:set', function(event, data){
           $ctrl.filters = data;
+          console.log("filters data applied", $ctrl.filters);
           //TODO-KL - reapply filters to listings
         });
       }

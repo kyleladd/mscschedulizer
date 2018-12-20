@@ -1,11 +1,25 @@
 define(['angular','node_generic_functions','moment','combinatorics'], function (angular, node_generic_functions, moment, Combinatorics) {
 
-    var service = angular.module("schedulizerService", []);
+    var service = angular.module("schedulizerHelperService", []);
 
     service.factory('schedulizerHelperService', function () {
         var base_url = "https://schedulizer-api.morrisville.edu";
         var factory = {};
-
+        
+        factory.applyUserModificationsToCourses = function(courses, user_course_adjustments, user_schedule_filters){
+            var department_courses = JSON.parse(JSON.stringify(courses));
+            department_courses = factory.applyUserAdjustments(department_courses,user_course_adjustments);
+            //Filter out sections based on user's filters
+            for (var c = department_courses.length-1; c >= 0; c--) {
+                for (var s = department_courses[c].Sections.length-1; s >= 0; s--) {
+                    // Apply filters to section function
+                    if(factory.applyFiltersToSection(department_courses[c].Sections[s],user_schedule_filters)){
+                        department_courses[c].Sections.splice(s, 1);
+                    }
+                }
+            }
+            return department_courses;
+        };
         factory.groupMeetings = function(meetings){
             groupedMeetings = [];
             for (var m in meetings) {
@@ -482,6 +496,25 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
                 }
             }
             return all_cp;
+        };
+
+        factory.applyUserAdjustments = function(courses,adjustments){
+            adjustments.Sections.forEach(function(section_adjustment){
+                if(section_adjustment.type === "remove"){
+                    for (var c = courses.length-1; c >= 0; c--) {
+                        for (var s = courses[c].Sections.length-1; s >= 0; s--) {
+                            // Apply filters to section function
+                            if(courses[c].Sections[s].CourseCRN === section_adjustment.Section.CourseCRN){
+                                courses[c].Sections.splice(s, 1);
+                            }
+                            if(courses[c].Sections.length === 0){
+                                courses.splice(c, 1);
+                            }
+                        }
+                    }
+                }
+            });
+            return courses;
         };
 
         factory.groupSectionsByIdentifier = function(course_sections){

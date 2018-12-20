@@ -4,7 +4,7 @@
     <div class="page-content">
       <div class="row sidebar-page">
         <!--Sidebar-->
-        <sidebar-component semester="$ctrl.semester" department="$ctrl.department"></sidebar-component>
+        <sidebar-component semester="$ctrl.semester" department="$ctrl.department" coursesselected="$ctrl.courses_selected"></sidebar-component>
         <!--End sidebar-->
         <!-- Page Content -->
         <div class="col-sm-9 col-xs-12 page-content">
@@ -15,7 +15,7 @@
             <li><div class="loader"></div> <div class="status">Loading Course Listings...</div></li>
           </ul>
           <div ng-if="!$ctrl.loading_courses">
-              <course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="{{true}}" show-crn-selections="{{true}}" show-total-credits="{{true}}"></course-listings-component>
+              <course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="true" show-crn-selections="true" show-total-credits="true"></course-listings-component>
           </div>
         </div>
         <!-- End Page Content-->

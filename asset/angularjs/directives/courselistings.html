@@ -1,0 +1,23 @@
+<div ng-repeat="course in $ctrl.courses">
+
+	<h4 class='classic-title'>
+		<span>
+			<a class="a_course" ng-if="$ctrl.icons">
+				<i class="fa {{($ctrl.node_generic_functions.searchListDictionaries($ctrl.courseSelections,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null},true) !== -1) ? 'fa-minus-circle' : 'fa-plus-circle'}}"></i>
+			</a>
+			<!--TODO-KL Modal Template  and trigger-->
+			<span class='modal-trigger'data-toggle='modal' data-target='#modal_courseDescription'> {{course.DepartmentCode}} {{course.CourseNumber}} - {{course.CourseTitle}}</span>
+		</span>
+	</h4>
+	<table class="course_details table">
+		<thead><tr class="field-name"><td>P/T</td><td>Campus</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>
+		<tbody>
+			<tr ng-if="course.Sections.length === 0">
+				<td colspan="9">All sections have been filtered out.</td>
+			</tr>
+			<!-- <tr ng-repeat="section in course.Sections" class="a_course_section {{($ctrl.node_generic_functions.searchListDictionaries($ctrl.courseSelections,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':section.CourseCRN},true)!==-1) ? 'selected_section' : ''}}"><td>{{section.Term }}</td><td>{{ section.Campus }}</td><td>{{ section.CourseCRN }}</td><td>{{ section.SectionNumber }}</td><td>{{ section.Credits }}</td><td>{{ section.CurrentEnrollment }}/{{ section.MaxEnrollment }}</td><td>{{ meeting.days.join(" ") }}&nbsp;</td><td>{{ meeting.startTime }} - {{ meeting.endTime }}</td><td>{{ section.Instructor }}</td></tr> -->
+
+			<tr ng-repeat="grouped_meeting in $ctrl.groupedSectionMeetings(course)" class="a_course_section {{($ctrl.node_generic_functions.searchListDictionaries($ctrl.courseSelections,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':grouped_meeting.Section.CourseCRN},true)!==-1) ? 'selected_section' : ''}}"><td>{{grouped_meeting.Section.Term }}</td><td>{{ grouped_meeting.Section.Campus }}</td><td>{{ grouped_meeting.Section.CourseCRN }}</td><td>{{ grouped_meeting.Section.SectionNumber }}</td><td>{{ grouped_meeting.Section.Credits }}</td><td>{{ grouped_meeting.Section.CurrentEnrollment }}/{{ grouped_meeting.Section.MaxEnrollment }}</td><td>{{ grouped_meeting.days.join(" ") }}&nbsp;</td><td>{{ grouped_meeting.startTime }} - {{ grouped_meeting.endTime }}</td><td>{{ grouped_meeting.Section.Instructor }}</td></tr>
+		</tbody>
+	</table>
+</div>
