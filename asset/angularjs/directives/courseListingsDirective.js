@@ -20,8 +20,10 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             var $ctrl = this;
             $ctrl.$onInit = function () {
                 $ctrl.department_courses = angular.copy($ctrl.courses);
+                $ctrl.userCourseAdjustments = {Courses:[],Sections:[],Meetings:[]};
+                $ctrl.showCrnSelections = false;//TODO-KL
                 //TODO-KL pass in user modifications
-                $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, [], $ctrl.filters);
+                $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
             };
             $ctrl.changedValue = function(value){
                 $ctrl.change({value:value});
@@ -39,11 +41,14 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                   $ctrl.changedValue($ctrl.coursesselected);
                 }
             };
+            $ctrl.clicked = function(){
+                console.log("clicked");
+            };
             //We need to listen to the event because ngchanges will not be triggered on a deepcopy, only if the ref changes or is a primative
             $scope.$on('schedule_filters:set', function(event, data){
               $ctrl.filters = data;
               console.log("filters data applied to course listings directive", $ctrl.filters);
-              $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, {Courses:[],Sections:[],Meetings:[]}, $ctrl.filters);
+              $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
               //TODO-KL - reapply filters to listings
             });
             $ctrl.schedulizerHelperService = schedulizerHelperService;
