@@ -65,11 +65,11 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
               $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
               //TODO-KL - reapply filters to listings
             });
-            $scope.$on('courses_selected:set', function(event, data){
-              $ctrl.courseSelections = data;
-              console.log("courseSelections data applied to course listings directive", $ctrl.courseSelections);
-              //TODO-KL - reapply filters to listings
-            });
+            // $scope.$on('courses_selected:set', function(event, data){
+            //   $ctrl.courseSelections = data;
+            //   console.log("courseSelections data applied to course listings directive", $ctrl.courseSelections);
+            //   //TODO-KL - reapply filters to listings
+            // });
             $ctrl.schedulizerHelperService = schedulizerHelperService;
             $ctrl.node_generic_functions = node_generic_functions;
             $ctrl.groupedSectionMeetings = function(course){
