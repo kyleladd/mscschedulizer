@@ -174,6 +174,11 @@ define([
           //TODO-KL update display with updated filters
           userService.set_schedule_filters(value);
         };
+        $ctrl.selectionsChanged = function(value){
+          console.log("update courses_selected within course listings",value);
+          //TODO-KL update display with updated filters
+          userService.set_courses_selected(value);
+        };
         $scope.$on('semester:set', function(event, data){
           $ctrl.semester = data;
           $ctrl.loading_courses = true;
@@ -190,6 +195,12 @@ define([
         $scope.$on('schedule_filters:set', function(event, data){
           $ctrl.filters = data;
           console.log("filters data applied", $ctrl.filters);
+          //TODO-KL - reapply filters to listings
+        });
+
+        $scope.$on('courses_selected:set', function(event, data){
+          $ctrl.courses_selected = data;
+          console.log("courses_selected data applied", $ctrl.courses_selected);
           //TODO-KL - reapply filters to listings
         });
       }
