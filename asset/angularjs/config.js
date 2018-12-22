@@ -4,6 +4,7 @@
  * or 3rd party libraries
  */
 require.config({
+    baseUrl: '/asset/angularjs/',
     paths: {
         // 'domReady': '../lib/requirejs-domready/domReady',
         'jquery':'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min',
