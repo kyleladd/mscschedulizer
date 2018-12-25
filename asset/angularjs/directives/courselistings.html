@@ -6,7 +6,7 @@
 				<i class="fa {{($ctrl.node_generic_functions.searchListDictionaries($ctrl.courseSelections,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':null},true) !== -1) ? 'fa-minus-circle' : 'fa-plus-circle'}}"></i>
 			</a>
 			<!--TODO-KL Modal Template  and trigger-->
-			<span class='modal-trigger'data-toggle='modal' data-target='#modal_courseDescription'> {{course.DepartmentCode}} {{course.CourseNumber}} - {{course.CourseTitle}}</span>
+			<span class='modal-trigger' ng-click="$ctrl.openModal(course)"> {{course.DepartmentCode}} {{course.CourseNumber}} - {{course.CourseTitle}}</span>
 		</span>
 	</h4>
 	<table class="course_details table">

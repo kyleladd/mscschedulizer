@@ -1,5 +1,5 @@
-define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService) {
-    angular.module("courseListingsDirective", ['ngSanitize','schedulizerHelperService'])
+define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService','ui.bootstrap','../components/modalComponent'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService) {
+    angular.module("courseListingsDirective", ['ngSanitize','schedulizerHelperService','ui.bootstrap','uibootstrapmodalcomponent'])
     .component("courseListingsComponent",{
         templateUrl:'/asset/angularjs/directives/courselistings.html',
         bindings: { 
@@ -16,7 +16,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             change:'&'
         },
         controllerAs: '$ctrl',
-        controller: function($scope,schedulizerHelperService) {
+        controller: function($scope,$uibModal,schedulizerHelperService) {
             var $ctrl = this;
             $ctrl.$onInit = function () {
                 $ctrl.department_courses = angular.copy($ctrl.courses);
@@ -114,6 +114,20 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                     }
                 }
                 return grouped_meeting_sections;
+            };
+            $ctrl.openModal = function(course){
+                var modalInstance = $uibModal.open({
+                  animation: true,
+                  component: 'modalComponent',
+                  resolve: {
+                    title: function(){
+                        return course.DepartmentCode + ' ' + course.CourseNumber + ' - ' + course.CourseTitle
+                    },
+                    body: function(){
+                        return course.Description;
+                    }
+                  }
+                });
             };
         }
     }); 
