@@ -1,4 +1,5 @@
 $(document).ready(function ($) {
+	console.log("script domready");
 	"use strict";	
 	////	Hidder Header	
 	var headerEle = function () {
@@ -97,20 +98,31 @@ $(document).ready(function ($) {
 			/*	Nav Menu & Search
 			/*----------------------------------------------------*/
 			
-			$(".nav > li:has(ul)").addClass("drop");
-			$(".nav > li.drop > ul").addClass("dropdown");
-			$(".nav > li.drop > ul.dropdown ul").addClass("sup-dropdown");
+			// $(".nav > li:has(ul)").addClass("drop");
+			// $(".nav > li.drop > ul").addClass("dropdown");
+			// $(".nav > li.drop > ul.dropdown ul").addClass("sup-dropdown");
 			
-			$('.show-search').click(function() {
-				$('.search-form').fadeIn(300);
-				$('.search-form input').focus();
-			});
-			$('.search-form input').blur(function() {
-				$('.search-form').fadeOut(300);
-			});
+			// $('.show-search').click(function() {
+			// 	$('.search-form').fadeIn(300);
+			// 	$('.search-form input').focus();
+			// });
+			// $('.search-form input').blur(function() {
+			// 	$('.search-form').fadeOut(300);
+			// });
 			/**
 			 * Slick Nav 
 			 */
+			 // debugger;
+			 console.log("init slicknav");
+			// $('.wpb-mobile-menu').slicknav({
+			//   prependTo: '.navbar-header',
+			//   parentTag: 'margo',
+			//   allowParentLinks: true,
+			//   duplicate: true,
+			//   label: '',
+			//   closedSymbol: '<i class="fa fa-angle-right"></i>',
+			//   openedSymbol: '<i class="fa fa-angle-down"></i>',
+			// });
 			$('.wpb-mobile-menu').slicknav({
 			  prependTo: '.navbar-header',
 			  parentTag: 'margo',
@@ -120,6 +132,17 @@ $(document).ready(function ($) {
 			  closedSymbol: '<i class="fa fa-angle-right"></i>',
 			  openedSymbol: '<i class="fa fa-angle-down"></i>',
 			});
+			// $('#main-nav').slicknav({
+			//   prependTo: '.navbar-header',
+			//   // parentTag: 'margo',
+			//   allowParentLinks: true,
+			//   duplicate: true,
+			//   label: '',
+			//   closedSymbol: '<i class="fa fa-angle-right"></i>',
+			//   openedSymbol: '<i class="fa fa-angle-down"></i>',
+			// });
+			// debugger;
+			// $('.wpb-mobile-menu').slicknav();
 			headerEle();
 		};
 		initNav();
