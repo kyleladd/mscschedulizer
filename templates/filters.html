@@ -1,20 +1,20 @@
 <div id="checkbox_filters">
-	<span title="When enabled, only schedule combinations where all sections are not full (current enrollment is less than max enrollment) will be shown." tooltip>
+	<span uib-tooltip="When enabled, only schedule combinations where all sections are not full (current enrollment is less than max enrollment) will be shown.">
 		<label><input type="checkbox" name="notFull" id="notFullFilter" ng-model="$ctrl.filters.NotFull" ng-change="$ctrl.updateFilters()"> Hide Full</label>
 	</span>
-	<span title="When enabled, schedule combinations with Morrisville Campus sections will be shown." tooltip>
+	<span uib-tooltip="When enabled, schedule combinations with Morrisville Campus sections will be shown.">
 		<label><input type="checkbox" name="morrisville" id="morrisville_campus_filter" ng-model="$ctrl.filters.Campuses.Morrisville" ng-change="$ctrl.updateFilters()"> Morrisville Campus</label>
 	</span>
-	<span title="When enabled, schedule combinations with Norwich Campus sections will be shown." tooltip>
+	<span uib-tooltip="When enabled, schedule combinations with Norwich Campus sections will be shown.">
 		<label><input type="checkbox" name="norwich" id="norwich_campus_filter" ng-model="$ctrl.filters.Campuses.Norwich" ng-change="$ctrl.updateFilters()"> Norwich Campus</label>
 	</span>
-	<span title="When enabled, schedule combinations that include online sections will be shown." tooltip>
+	<span uib-tooltip="When enabled, schedule combinations that include online sections will be shown.">
 		<label><input type="checkbox" name="showOnline" id="showOnlineFilter" ng-model="$ctrl.filters.ShowOnline" ng-change="$ctrl.updateFilters()"> Online</label>
 	</span>
-	<span title="When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown." tooltip>
+	<span uib-tooltip="When enabled, schedule combinations with ONCAMPUS SUNY sections will be shown.">
 		<label><input type="checkbox" name="showInternational" id="showInternationalFilter" ng-model="$ctrl.filters.ShowInternational" ng-change="$ctrl.updateFilters()"> ONCAMPUS SUNY</label>
 	</span>
-	<span title="A visual view to filter course sections." tooltip>
+	<span uib-tooltip="A visual view to filter course sections.">
 		<label><button id="altViewFilter" class="btn btn-1">Visual Filters</button></label>
 		<!--TODO-KL Modal-->
 	</span>

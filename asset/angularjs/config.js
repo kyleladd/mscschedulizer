@@ -22,7 +22,8 @@ require.config({
         'lscache': 'https://cdnjs.cloudflare.com/ajax/libs/lscache/1.3.0/lscache.min',
         'node_generic_functions': '/node_modules/node_generic_functions/genericfunctions',
         'moment':'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min',
-        'bootstrap':'/asset/js/bootstrap.min',
+        // 'bootstrap':'/asset/js/bootstrap.min',
+        'ui.bootstrap':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min',
         'jquery.timepicker':'/js/jquery.timepicker',
         'jquery.weekLine':'/js/jquery.weekLine.min',
         'datepair':'/js/datepair.min',
@@ -54,6 +55,7 @@ require.config({
             deps: ['ngAnimate', 'ngAria']
         },
         'mdDataTable':['angular','ngMaterial'],
+        'ui.bootstrap': ['angular'],
         'bootstrap': ['jquery'],
         // 'node_generic_functions':{
         //    exports: 'node_generic_functions'

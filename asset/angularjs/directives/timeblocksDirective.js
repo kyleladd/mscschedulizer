@@ -1,7 +1,7 @@
-define(['angular','./tooltipDirective','./timeblockDirective'], function (angular) {
-    angular.module("timeblocksDirective", ["tooltipDirective","timeblockDirective"])
+define(['angular','ui.bootstrap','./timeblockDirective'], function (angular) {
+    angular.module("timeblocksDirective", ["timeblockDirective","ui.bootstrap"])
     .component("timeBlocksComponent",{
-        template: '<span title="By adding time blocks filters, you can block out times that you do not want to have classes." tooltip>Time block filters: <a ng-click="$ctrl.addTimeBlockFilter()">Add</a></span>\
+        template: '<span uib-tooltip="By adding time blocks filters, you can block out times that you do not want to have classes.">Time block filters: <a ng-click="$ctrl.addTimeBlockFilter()">Add</a></span>\
         <div ng-repeat="timeblock in $ctrl.timeblocks">\
             <time-block-component timeblock="timeblock" change="$ctrl.onUpdate(value, $index)" on-remove="$ctrl.onRemove(value, $index)"></time-block-component>\
         </div>',

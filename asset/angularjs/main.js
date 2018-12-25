@@ -6,13 +6,13 @@ define([
     'angular',
     'node_generic_functions',
     'ui.router',
-    'bootstrap',
+    'ui.bootstrap',
     'theme',
     './directives/semesterDirective',
     './directives/departmentDirective',
     './directives/courseSelectionsDirective',
     './directives/timeblocksDirective',
-    './directives/tooltipDirective',
+    // './directives/tooltipDirective',
     './directives/courseListingsDirective',
     './services/userService',
     // './services/schedulizerService'
@@ -25,7 +25,8 @@ define([
         'courseSelectionsDirective',
         'courseListingsDirective',
         'timeblocksDirective',
-        'tooltipDirective',
+        // 'tooltipDirective',
+        'ui.bootstrap',
         'userService',
         // 'schedulizerService'
     ])
