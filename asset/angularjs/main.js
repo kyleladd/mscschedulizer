@@ -15,7 +15,8 @@ define([
     // './directives/tooltipDirective',
     './directives/courseListingsDirective',
     './services/userService',
-    // './services/schedulizerService'
+    './services/schedulizerService',
+    './services/schedulizerHelperService'
 ], function (angular, node_generic_functions) {
     'use strict';
     var app = angular.module('app', [
@@ -28,7 +29,8 @@ define([
         // 'tooltipDirective',
         'ui.bootstrap',
         'userService',
-        // 'schedulizerService'
+        'schedulizerService',
+        'schedulizerHelperService'
     ])
     .config(['$stateProvider','$urlRouterProvider', '$httpProvider', function ($stateProvider,$urlRouterProvider, $httpProvider) {
        $httpProvider.interceptors.push('cacheInterceptor');
@@ -49,8 +51,9 @@ define([
           name: 'generate',
           // url: '/view1/{bowlingID}',
           url: "/generate",
-          templateUrl: '/templates/generate.html',
-          controller: 'GenerateCtrl'
+          // templateUrl: '/templates/generate.html',
+          // controller: 'GenerateCtrl'
+          component: 'generatePage'
         });
        $stateProvider.state({
           name: 'course-listings',
@@ -118,8 +121,33 @@ define([
         });
       }
     });
-    app.controller('GenerateCtrl', ['$scope',function ($scope) {
-    }]);
+    app.component("generatePage",{
+      templateUrl: '/templates/generate.html',
+      controllerAs: "$ctrl",
+      controller: function($scope, userService, schedulizerService, schedulizerHelperService){
+        console.log("this is the generate page");
+        var $ctrl = this;
+        $ctrl.$onInit = function () {
+          $ctrl.semester = userService.get_semester();
+          $ctrl.courses = [];
+          $ctrl.loading_courses = true;
+          $ctrl.courses_selected = userService.get_courses_selected();
+          $ctrl.filters = userService.get_schedule_filters();
+          $ctrl.user_course_adjustments = userService.get_user_course_adjustments();
+          schedulizerService.get_course_infos($ctrl.courses_selected,$ctrl.semester)
+          .then(function(courses){
+            //todo-kl probably need to save that request off elsewhere
+            $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses(courses, $ctrl.user_course_adjustments, $ctrl.filters);
+            console.log("course infos", $ctrl.courses);
+
+          })
+          .catch(function (data) {
+            // Handle error here
+
+          });
+        };
+      }
+    });
     app.component("courseListingsPage",{
       templateUrl: '/templates/course-listings.html',
       controllerAs: "$ctrl",

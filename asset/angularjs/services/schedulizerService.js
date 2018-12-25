@@ -17,6 +17,7 @@ define(['angular','./cacheInterceptor'], function (angular) {
                 return semesters;
             });
         };
+
         factory.get_departments = function(semester_termcode) {
             if(!semester_termcode){
                 return $q.reject("Semester term code required.");
@@ -37,6 +38,7 @@ define(['angular','./cacheInterceptor'], function (angular) {
                 return departments;
             });
         };
+
         factory.get_department_courses = function(department, semester_termcode, detailed) {
             if(!department || !semester_termcode){
                 return $q.reject("Semester term code and department code required.");
@@ -57,23 +59,26 @@ define(['angular','./cacheInterceptor'], function (angular) {
                 return courses;
             });
         };
+
         factory.get_schedule = function(crns, semester_termcode) {
             if(!crns || !semester_termcode){
                 return $q.reject("A semester term code and course crns are required"); //TODO-KL Double check intended response obj or list
             }
             return $http.get(base_url + "/info/?crn=" + crns.join("&crn[]=") + "&semester=" + semester_termcode);
         };
+        
         factory.get_course_infos = function(courses, semester_termcode) {
-            if(!courses || ! semester_termcode){
-                return $q.reject("Semester term code and courses required.");
+            if(!courses){
+                return $q.reject("Courses required.");
             }
             var courses_list = "";
             for (var i in courses) {
                 var course = courses[i];
                 courses_list += "&courses[]=" + course.DepartmentCode + ' ' + course.CourseNumber + ' ' + encodeURIComponent(course.CourseTitle);
             }
-            return $http.get({
-                url: base_url + "/info/" + "?semester=" + semester_termcode + courses_list,
+            return $http.get(base_url + "/info/" + "?semester=" + semester_termcode + courses_list)
+            .then(function(data){
+                return data.data;
             });
         };
 

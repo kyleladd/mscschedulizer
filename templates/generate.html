@@ -6,8 +6,11 @@
           <div class="col-md-12">
             <!-- Classic Heading -->
             <h4 class="classic-title"><span>Schedules</span></h4>
-            <div id="filters"></div>
-            <div id="schedules"><div class="loader loader-large"></div> <div class="status">Loading Schedules...</div></div>
+            <filters-component filters="$ctrl.filters" change="$ctrl.updateFilters(value)"></filters-component>
+            <div ng-if="$ctrl.loading_courses"><div class="loader loader-large"></div> <div class="status">Loading Schedules...</div></div>
+            <div ng-if="!$ctrl.loading_courses">
+                <course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="true" show-crn-selections="true" show-total-credits="true" change="$ctrl.selectionsChanged(value)"></course-listings-component>
+            </div>
           </div>
         </div>
     </div>

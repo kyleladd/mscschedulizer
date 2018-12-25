@@ -30,7 +30,8 @@ require.config({
         'jquery.datepair':'/js/jquery.datepair.min',
         'slicknav':'/js/jquery.slicknav',
         'theme':'/js/script',
-        'fullcalendar':'/bower_components/fullcalendar/dist/fullcalendar',
+        // 'fullcalendar':'/bower_components/fullcalendar/dist/fullcalendar.min',
+        'fullcalendar':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-calendar/1.0.0/calendar.min',
         'combinatorics':'/node_modules/js-combinatorics/combinatorics',
     },
 
@@ -73,7 +74,7 @@ require.config({
         'datepair':['jquery'],
         'jquery.datepair':['jquery'],
         'slicknav':['jquery'],
-        'fullcalendar':['jquery'],
+        'fullcalendar':['jquery','moment','angular'],
         'theme':['jquery','slicknav'],
     },
     // deps: [
