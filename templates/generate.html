@@ -9,7 +9,9 @@
             <filters-component filters="$ctrl.filters" change="$ctrl.updateFilters(value)"></filters-component>
             <div ng-if="$ctrl.loading_courses"><div class="loader loader-large"></div> <div class="status">Loading Schedules...</div></div>
             <div ng-if="!$ctrl.loading_courses">
-                <course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="true" show-crn-selections="true" show-total-credits="true" change="$ctrl.selectionsChanged(value)"></course-listings-component>
+                <div infinite-scroll="$ctrl.showMoreSchedules()" infinite-scroll-distance="1">
+                  <schedule-component ng-repeat='schedule in $ctrl.displayed_schedules' schedule="schedule"></schedule-component>
+                </div>
             </div>
           </div>
         </div>

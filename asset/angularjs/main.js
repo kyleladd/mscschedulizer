@@ -7,12 +7,14 @@ define([
     'node_generic_functions',
     'ui.router',
     'ui.bootstrap',
+    'infinite-scroll',
     'theme',
     './directives/semesterDirective',
     './directives/departmentDirective',
     './directives/courseSelectionsDirective',
     './directives/timeblocksDirective',
     // './directives/tooltipDirective',
+    './directives/scheduleDirective',
     './directives/courseListingsDirective',
     './services/userService',
     './services/schedulizerService',
@@ -21,10 +23,12 @@ define([
     'use strict';
     var app = angular.module('app', [
         'ui.router',
+        'infinite-scroll',
         'semesterDirective',
         'departmentDirective',
         'courseSelectionsDirective',
         'courseListingsDirective',
+        'scheduleDirective',
         'timeblocksDirective',
         // 'tooltipDirective',
         'ui.bootstrap',
@@ -127,12 +131,13 @@ define([
       controller: function($scope, userService, schedulizerService, schedulizerHelperService){
         console.log("this is the generate page");
         var $ctrl = this;
-        $ctrl.$onInit = function () {
-          $ctrl.semester = userService.get_semester();
-          $ctrl.courses = [];
+        $ctrl.courses = [];
           $ctrl.unmodified_courses = [];
           $ctrl.gen_course_combinations = [];
           $ctrl.loading_courses = true;
+          $ctrl.displayed_schedules = [];
+        $ctrl.$onInit = function () {
+          $ctrl.semester = userService.get_semester();
           $ctrl.courses_selected = userService.get_courses_selected();
           $ctrl.filters = userService.get_schedule_filters();
           $ctrl.user_course_adjustments = userService.get_user_course_adjustments();
@@ -150,6 +155,17 @@ define([
             // Handle error here
             console.log("error", data);
           });
+        };
+        $ctrl.showMoreSchedules = function(){
+          //TODO-KL should probably load 10 schedules at a time
+          console.log("showing more schedules");
+          debugger;
+          var last_index = $ctrl.displayed_schedules.length - 1;
+          var item_to_load = $ctrl.gen_course_combinations[last_index + 1];
+          console.log("item to load", item_to_load);
+          if(item_to_load){
+            $ctrl.displayed_schedules.push(item_to_load);
+          }
         };
       }
     });
@@ -239,6 +255,46 @@ define([
         });
       }
     });
+    // app.component("generateComponent",{
+    //   templateUrl: '/templates/generate-component.html',
+    //   controllerAs: "$ctrl",
+    //   bindings: { 
+    //         // semester: '<',
+    //         // department:'<',
+    //         // coursesselected: '<'
+    //     },
+    //   controller: function($scope, $element, userService){
+    //     var $ctrl = this;
+    //     //TODO-KL not needed because semester is watched on change when passed into the department directive
+    //     $ctrl.semesterChanged = function(value){
+    //       userService.set_semester(value);
+    //     };
+    //     $ctrl.departmentChanged = function(value){
+    //       userService.set_department(value);
+    //     };
+    //     $ctrl.selectionsChanged = function(value){
+    //       userService.set_courses_selected(value);
+    //     };
+    //     $ctrl.onInit = function(){
+    //     };
+    //     $ctrl.$postLink = function () {
+    //       //TODO-KL might need to pass $element into controller, not this function
+    //       //add event listener to an element
+    //       // debugger;
+
+    //       //also we can apply jqLite dom manipulation operation on element
+    //     };
+    //     $scope.$on('semester:set', function(event, data){
+    //       $ctrl.semester = data;
+    //     });
+    //     $scope.$on('department:set', function(event, data){
+    //       $ctrl.department = data;
+    //     });
+    //     $scope.$on('courses_selected:set', function(event, data){
+    //       $ctrl.courses_selected = data;
+    //     });
+    //   }
+    // });
     app.component("sidebarComponent",{
       templateUrl: '/templates/sidebar.html',
       controllerAs: "$ctrl",
