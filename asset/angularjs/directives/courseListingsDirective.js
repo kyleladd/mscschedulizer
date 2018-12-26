@@ -1,4 +1,4 @@
-define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService','ui.bootstrap','../components/modalComponent'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService) {
+define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService','ui.bootstrap','basictable','../components/modalComponent'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService) {
     angular.module("courseListingsDirective", ['ngSanitize','schedulizerHelperService','ui.bootstrap','uibootstrapmodalcomponent'])
     .component("courseListingsComponent",{
         templateUrl:'/asset/angularjs/directives/courselistings.html',
@@ -16,7 +16,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             change:'&'
         },
         controllerAs: '$ctrl',
-        controller: function($scope,$uibModal,schedulizerHelperService) {
+        controller: function($scope,$uibModal,$element,$timeout,schedulizerHelperService) {
             var $ctrl = this;
             $ctrl.$onInit = function () {
                 $ctrl.department_courses = angular.copy($ctrl.courses);
@@ -33,6 +33,30 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             };
             $ctrl.$doCheck =function(changes) {
                 console.log("docheck",changes);
+            };
+
+            $ctrl.$postLink = function () {
+                console.log("postlink course listings");
+                console.log($element);
+                $timeout(function() {
+                    console.log("TIMEOUT RUNNING WORKS");
+                    $($element).find("table").basictable();
+                    console.log("basictable called",$($element).find("table"));
+                });
+                angular.element(document).ready(function () {
+                    console.log("ANGULAR DOCUMENT READY STILL RUNS TOO EARLY ON THE DOCUMENT");
+                    // $($element).find("table").basictable();
+                    // console.log("basictable called",$($element).find("table"));
+                });
+                angular.element($element).ready(function () {
+                    console.log("ANGULAR element ready WORKS, but not all the time - ex when screen is wide and then is shrinked", $element);
+                    // $($element).find("table").basictable();
+                    // console.log("basictable called",$($element).find("table"));
+                });
+                // setTimeout(function(){
+                //     $($element).find("table").basictable();
+                //     console.log("basictable called",$($element).find("table"));
+                // },5000);
             };
             // $ctrl.remove_course_selection = function(course){
             //     var index = node_generic_functions.searchListDictionaries($ctrl.coursesselected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,CourseTitle:course.CourseTitle,'CourseCRN':course.CourseCRN},true);

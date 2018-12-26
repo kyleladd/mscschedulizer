@@ -23,7 +23,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 // return (semester ? semester : {TermCode: "", Description: "", TermStart: "", TermEnd: ""});
             },
             set_semester: function(semester){
-                lscache.set("semester",semester,1*24*60);
+                lscache.set("semester",semester,7*24*60);
                 $rootScope.$broadcast('semester:set', semester);
             },
             get_department: function(){
@@ -32,7 +32,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 // return (department ? department : {TermCode: "", Description: "", TermStart: "", TermEnd: ""});
             },
             set_department: function(department){
-                lscache.set("department",department,1*24*60);
+                lscache.set("department",department,7*24*60);
                 $rootScope.$broadcast('department:set', department);
             },
             get_courses_selected: function(){
@@ -40,7 +40,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 return (courses_selected ? courses_selected : []);
             },
             set_courses_selected: function(courses_selected){
-                lscache.set("courses_selected",courses_selected,1*24*60);
+                lscache.set("courses_selected",courses_selected,7*24*60);
                 $rootScope.$broadcast('courses_selected:set', courses_selected);
             },
             get_favorite_schedules: function(){
@@ -48,7 +48,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 return (favorite_schedules ? favorite_schedules : []);
             },
             set_favorite_schedules: function(favorite_schedules){
-                lscache.set("favorite_schedules",favorite_schedules,1*24*60);
+                lscache.set("favorite_schedules",favorite_schedules,7*24*60);
                 $rootScope.$broadcast('favorite_schedules:set', favorite_schedules);
             },
             get_schedule_filters: function(){
@@ -56,7 +56,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 return (schedule_filters ? schedule_filters : {TimeBlocks:[],Professors:[],Campuses:{Morrisville:true,Norwich:false},NotFull:false,ShowOnline:true,ShowInternational:false});
             },
             set_schedule_filters: function(schedule_filters){
-                lscache.set("schedule_filters",schedule_filters,1*24*60);
+                lscache.set("schedule_filters",schedule_filters,7*24*60);
                 $rootScope.$broadcast('schedule_filters:set', schedule_filters);
             },
             get_user_course_adjustments: function(){
@@ -64,7 +64,7 @@ define(['angular', 'lscache'], function (angular,lscache) {
                 return (user_course_adjustments ? user_course_adjustments : {Courses:[],Sections:[],Meetings:[]});
             },
             set_user_course_adjustments: function(user_course_adjustments){
-                lscache.set("user_course_adjustments",user_course_adjustments,1*24*60);
+                lscache.set("user_course_adjustments",user_course_adjustments,7*24*60);
                 $rootScope.$broadcast('user_course_adjustments:set', user_course_adjustments);
             }
         };

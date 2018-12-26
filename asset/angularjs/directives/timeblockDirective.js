@@ -13,23 +13,26 @@ define(['angular','jquery','moment','node_generic_functions','jquery.timepicker'
             onRemove:'&'
         },
         controllerAs: '$ctrl',
-        controller: function($scope, $element) {
+        controller: function($scope, $element, $timeout) {
             var $ctrl = this;
             $ctrl.$onInit = function () {
             };
             $ctrl.$postLink = function () {
-                console.log($element);
-                $($element).find(".timeonly .time").timepicker({
-                  'showDuration': true,
-                  'timeFormat': 'g:ia',
-                  "minTime":"12:00am",
-                  "maxTime":"11:30pm"
+                // angular.element($element).ready(function () {
+                $timeout(function() {
+                    console.log($element);
+                    $($element).find(".timeonly .time").timepicker({
+                      'showDuration': true,
+                      'timeFormat': 'g:ia',
+                      "minTime":"12:00am",
+                      "maxTime":"11:30pm"
+                    });
+                    var timeOnlyDatepair = new Datepair($($element).find(".timeonly").get(0));
+                    $($element).find(".weekCal").weekLine({theme:"jquery-ui",dayLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"]});
+                    $($element).find(".timeonly .start.time").timepicker('setTime',  moment($ctrl.timeblock.StartTime,"Hmm").format('h:mma'));
+                    $($element).find(".timeonly .end.time").timepicker('setTime',  moment($ctrl.timeblock.EndTime,"Hmm").format('h:mma'));
+                    $($element).find(".weekCal").weekLine("setSelected", $ctrl.timeblock.Days);
                 });
-                var timeOnlyDatepair = new Datepair($($element).find(".timeonly").get(0));
-                $($element).find(".weekCal").weekLine({theme:"jquery-ui",dayLabels: ["Mon", "Tue", "Wed", "Thu", "Fri"]});
-                $($element).find(".timeonly .start.time").timepicker('setTime',  moment($ctrl.timeblock.StartTime,"Hmm").format('h:mma'));
-                $($element).find(".timeonly .end.time").timepicker('setTime',  moment($ctrl.timeblock.EndTime,"Hmm").format('h:mma'));
-                $($element).find(".weekCal").weekLine("setSelected", $ctrl.timeblock.Days);
             };
             $ctrl.changedValue = function(value){
                 console.log("timeblock changed",value);

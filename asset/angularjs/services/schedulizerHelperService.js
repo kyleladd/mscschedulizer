@@ -372,13 +372,13 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             return meetups;
         };
 
-        factory.getCombinations = function(courses,callback){
+        factory.getCombinations = function(courses, user_selections, filters){
             var sectionCombinations = [];
             var courseslist = [];
             var outputCombinations = [];
             for (var i in courses) {
               var course = courses[i];
-              var aSectionCombination = factory.getSectionCombinations(course.Sections);
+              var aSectionCombination = factory.getSectionCombinations(course.Sections, user_selections, filters);
               sectionCombinations.push(aSectionCombination);
               courseslist.push({DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
             }
@@ -394,12 +394,13 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
                     outputCombinations[h][c].Sections = JSON.parse(JSON.stringify(scheduleCombinations[h][c]));
                 }
             }
-            factory.gen_schedules = outputCombinations;
-            callback(outputCombinations);
+            //TODO-KL factory call
+            // factory.gen_schedules = outputCombinations;
+            return outputCombinations;
         };
 
-        factory.getSectionCombinations = function(course_sections){
-            var grouped_sections = factory.groupSections(course_sections);
+        factory.getSectionCombinations = function(course_sections, user_selections, filters){
+            var grouped_sections = factory.groupSections(course_sections, filters);
             // Use Identifiers to generate combinations
             var all_cp = [];
             // Sections should have uniform requirements per identifier
@@ -418,7 +419,7 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             Object.keys(identifier_requirements).forEach(function(campus) {
                 var groupedIdentifierRequirements = [];
                 for (var ra = identifier_requirements[campus].length-1; ra >= 0; ra--) {
-                    if(!factory.arrayContainsAnotherArray(identifier_requirements[campus][ra],groupedIdentifierRequirements)){
+                    if(!node_generic_functions.arrayContainsAnotherArray(identifier_requirements[campus][ra],groupedIdentifierRequirements)){
                         groupedIdentifierRequirements.push(identifier_requirements[campus][ra]);
                     }
                 }
@@ -427,7 +428,8 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
                     var cp_list = [];
                     for(var rqi = groupedIdentifierRequirements[rq].length-1; rqi >= 0; rqi--){
                         if(typeof grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]] === "undefined"){
-                            factory.errors.generate_errors.push("Could not find course: " + course_sections[0].DepartmentCode + " " + course_sections[0].CourseNumber + " with identifier: " + groupedIdentifierRequirements[rq][rqi]);
+                            //TODO-KL angularjs
+                            // factory.errors.generate_errors.push("Could not find course: " + course_sections[0].DepartmentCode + " " + course_sections[0].CourseNumber + " with identifier: " + groupedIdentifierRequirements[rq][rqi]);
                             continue IdentifierCombinations;
                         }
                         cp_list.push(grouped_sections[campus][groupedIdentifierRequirements[rq][rqi]]);
@@ -441,7 +443,8 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             });
 
             // Checking the CRN requirements within each combination search classes selected for the requirements for this course
-            var crnrequirements = node_generic_functions.searchListDictionaries(factory.classes_selected,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
+            //TODO-KL factory call
+            var crnrequirements = node_generic_functions.searchListDictionaries(user_selections,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
             // crnrequirements = crnrequirements.filter(functiom(){return CourseCRN !== null});
             if(crnrequirements.length > 0){
                 //Group the requirements by identifier
@@ -586,7 +589,7 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             return cp;
         };
 
-        factory.groupSections = function(course_sections){
+        factory.groupSections = function(course_sections, filters){
             // Sections are to be grouped by Campus and by identifier
             var grouped_sections = {};
             for (var i in course_sections) {
@@ -594,7 +597,8 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
               var identifier = course_section.Identifier;
               var campus = course_section.Campus;
               // Apply Filters To SECTION
-              if(!factory.applyFiltersToSection(course_section,factory.schedule_filters)){
+              //TODO-KL factory call
+              if(!factory.applyFiltersToSection(course_section, filters)){
                   if(identifier === "" || identifier === null){
                     identifier = "empty";
                   }

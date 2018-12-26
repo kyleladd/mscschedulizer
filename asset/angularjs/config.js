@@ -22,6 +22,7 @@ require.config({
         'lscache': 'https://cdnjs.cloudflare.com/ajax/libs/lscache/1.3.0/lscache.min',
         'node_generic_functions': '/node_modules/node_generic_functions/genericfunctions',
         'moment':'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min',
+        'basictable': '/bower_components/basictable/jquery.basictable.min',
         // 'bootstrap':'/asset/js/bootstrap.min',
         'ui.bootstrap':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min',
         'jquery.timepicker':'/js/jquery.timepicker',
@@ -66,6 +67,7 @@ require.config({
         //     exports: 'mdDataTable'
 
         // },
+        'basictable':['jquery'],
         'ngRoute': ['angular'],
         'ui.router': ['angular'],
         'angular-ui-select': ['angular'],

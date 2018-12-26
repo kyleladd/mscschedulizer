@@ -130,20 +130,25 @@ define([
         $ctrl.$onInit = function () {
           $ctrl.semester = userService.get_semester();
           $ctrl.courses = [];
+          $ctrl.unmodified_courses = [];
+          $ctrl.gen_course_combinations = [];
           $ctrl.loading_courses = true;
           $ctrl.courses_selected = userService.get_courses_selected();
           $ctrl.filters = userService.get_schedule_filters();
           $ctrl.user_course_adjustments = userService.get_user_course_adjustments();
           schedulizerService.get_course_infos($ctrl.courses_selected,$ctrl.semester)
           .then(function(courses){
+            $ctrl.unmodified_courses = courses;
             //todo-kl probably need to save that request off elsewhere
-            $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses(courses, $ctrl.user_course_adjustments, $ctrl.filters);
+            $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.unmodified_courses, $ctrl.user_course_adjustments, $ctrl.filters);
             console.log("course infos", $ctrl.courses);
-
+            $ctrl.gen_course_combinations = schedulizerHelperService.getCombinations($ctrl.courses, $ctrl.courses_selected, $ctrl.filters);
+            $ctrl.loading_courses = false;
+            console.log("generated combinations", $ctrl.gen_course_combinations);
           })
           .catch(function (data) {
             // Handle error here
-
+            console.log("error", data);
           });
         };
       }
@@ -255,7 +260,7 @@ define([
           userService.set_courses_selected(value);
         };
         $ctrl.onInit = function(){
-        }
+        };
         $ctrl.$postLink = function () {
           //TODO-KL might need to pass $element into controller, not this function
           //add event listener to an element
