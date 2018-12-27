@@ -150,6 +150,7 @@ define([
             $ctrl.gen_course_combinations = schedulizerHelperService.getCombinations($ctrl.courses, $ctrl.courses_selected, $ctrl.filters);
             $ctrl.loading_courses = false;
             console.log("generated combinations", $ctrl.gen_course_combinations);
+            $ctrl.displayed_schedules = $ctrl.gen_course_combinations.slice(0, 10);
           })
           .catch(function (data) {
             // Handle error here
@@ -159,11 +160,12 @@ define([
         $ctrl.showMoreSchedules = function(){
           //TODO-KL should probably load 10 schedules at a time
           console.log("showing more schedules");
-          debugger;
+          // debugger;
           var last_index = $ctrl.displayed_schedules.length - 1;
-          var item_to_load = $ctrl.gen_course_combinations[last_index + 1];
+          // var item_to_load = $ctrl.gen_course_combinations[last_index + 1];
+          var item_to_load = $ctrl.gen_course_combinations.slice(last_index + 1,last_index + 2);
           console.log("item to load", item_to_load);
-          if(item_to_load){
+          if(item_to_load && item_to_load.length > 0){
             $ctrl.displayed_schedules.push(item_to_load);
           }
         };
