@@ -11,11 +11,10 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             $ctrl.$onInit = function () {
                 $ctrl.schedule = schedulizerHelperService.calcScheduleDetails($ctrl.schedule, userService.colors);
                 $ctrl.events = [];
+                console.log("Courses without meeting",$ctrl.schedule.courseWithoutMeeting.length);
             };
             $ctrl.$postLink = function () {
-                // angular.element($element).ready(function () {
                 $timeout(function() {
-                    console.log("schedule directive",$element, $ctrl.schedule);
                     $ctrl.options = node_generic_functions.merge_options(
                     {
                         editable: false,
@@ -35,26 +34,25 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                         allDaySlot: false,
                         events: $ctrl.schedule.events,
                         eventRender: function (event, element) {
-                            // element.attr("data-event-id",event._id); //for converting fullcal js object to html element
+                            element.attr("data-event-id",event._id); //for converting fullcal js object to html element
                         },
                         eventMouseover: function( event, jsEvent, view ) {
-                          // var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
-                          //   return el.section.CourseCRN === event.section.CourseCRN;
-                          // });
-                          // for(var i in matching_section_events){
-                          //   $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
-                          // }
+                          var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+                            return el.section.CourseCRN === event.section.CourseCRN;
+                          });
+                          for(var i in matching_section_events){
+                            $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
+                          }
                         },
                         eventMouseout: function( event, jsEvent, view ) {
-                          // var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
-                          //   return el.section.CourseCRN === event.section.CourseCRN;
-                          // });
-                          // for(var i in matching_section_events){
-                          //   $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
-                          // }
+                          var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+                            return el.section.CourseCRN === event.section.CourseCRN;
+                          });
+                          for(var i in matching_section_events){
+                            $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
+                          }
                         }
                     },{});//options
-                    // $('#schedule_' + num).fullCalendar(final_options);
                 });
             };
         }

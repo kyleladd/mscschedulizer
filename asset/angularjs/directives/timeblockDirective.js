@@ -18,9 +18,7 @@ define(['angular','jquery','moment','node_generic_functions','jquery.timepicker'
             $ctrl.$onInit = function () {
             };
             $ctrl.$postLink = function () {
-                // angular.element($element).ready(function () {
                 $timeout(function() {
-                    console.log($element);
                     $($element).find(".timeonly .time").timepicker({
                       'showDuration': true,
                       'timeFormat': 'g:ia',
@@ -35,7 +33,6 @@ define(['angular','jquery','moment','node_generic_functions','jquery.timepicker'
                 });
             };
             $ctrl.changedValue = function(value){
-                console.log("timeblock changed",value);
                 $ctrl.change({value:value});
             };
             $ctrl.updateDayTimeBlockFilter = function(value){
@@ -46,7 +43,6 @@ define(['angular','jquery','moment','node_generic_functions','jquery.timepicker'
                 $ctrl.changedValue($ctrl.timeblock);
             }
             $ctrl.removeTimeBlockFilter = function(timeblock){
-                console.log("timeblock remove",timeblock);
                 $ctrl.onRemove({value:timeblock});
             }
         }

@@ -22,41 +22,20 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                 $ctrl.department_courses = angular.copy($ctrl.courses);
                 $ctrl.userCourseAdjustments = {Courses:[],Sections:[],Meetings:[]};
                 $ctrl.showCrnSelections = true;//TODO-KL
-                //TODO-KL pass in user modifications
                 $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
             };
             $ctrl.changedValue = function(value){
                 $ctrl.change({value:value});
             };
             $ctrl.$onChanges = function(changesObj){
-                console.log("changes",changesObj);
             };
             $ctrl.$doCheck =function(changes) {
-                console.log("docheck",changes);
             };
 
             $ctrl.$postLink = function () {
-                console.log("postlink course listings");
-                console.log($element);
                 $timeout(function() {
-                    console.log("TIMEOUT RUNNING WORKS");
                     $($element).find("table").basictable();
-                    console.log("basictable called",$($element).find("table"));
                 });
-                angular.element(document).ready(function () {
-                    console.log("ANGULAR DOCUMENT READY STILL RUNS TOO EARLY ON THE DOCUMENT");
-                    // $($element).find("table").basictable();
-                    // console.log("basictable called",$($element).find("table"));
-                });
-                angular.element($element).ready(function () {
-                    console.log("ANGULAR element ready WORKS, but not all the time - ex when screen is wide and then is shrinked", $element);
-                    // $($element).find("table").basictable();
-                    // console.log("basictable called",$($element).find("table"));
-                });
-                // setTimeout(function(){
-                //     $($element).find("table").basictable();
-                //     console.log("basictable called",$($element).find("table"));
-                // },5000);
             };
             // $ctrl.remove_course_selection = function(course){
             //     var index = node_generic_functions.searchListDictionaries($ctrl.coursesselected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,CourseTitle:course.CourseTitle,'CourseCRN':course.CourseCRN},true);
@@ -66,13 +45,11 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             //     }
             // };
             $ctrl.selected_course_section = function(course, crn){
-                console.log("clicked section");
                 var copy = angular.copy(course);
                 copy.CourseCRN = crn;
                 $ctrl.selected_course(copy);
             };
             $ctrl.selected_course = function(course){
-                console.log("clicked");
                 var index = node_generic_functions.searchListDictionaries($ctrl.courseSelections,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,'CourseTitle':course.CourseTitle,'CourseCRN':course.CourseCRN},true);
                 if (index === -1) {
                     $ctrl.courseSelections.push(course);
@@ -85,15 +62,9 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             //We need to listen to the event because ngchanges will not be triggered on a deepcopy, only if the ref changes or is a primative
             $scope.$on('schedule_filters:set', function(event, data){
               $ctrl.filters = data;
-              console.log("filters data applied to course listings directive", $ctrl.filters);
               $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
               //TODO-KL - reapply filters to listings
             });
-            // $scope.$on('courses_selected:set', function(event, data){
-            //   $ctrl.courseSelections = data;
-            //   console.log("courseSelections data applied to course listings directive", $ctrl.courseSelections);
-            //   //TODO-KL - reapply filters to listings
-            // });
             $ctrl.schedulizerHelperService = schedulizerHelperService;
             $ctrl.node_generic_functions = node_generic_functions;
             $ctrl.groupedSectionMeetings = function(course){

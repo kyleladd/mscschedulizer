@@ -1,2 +1,8 @@
-<!-- <p style="min-height:200px; border:solid 1px blue;">This is the schedule directive</p> -->
-<div ui-calendar="$ctrl.options" ng-model="$ctrl.events" ng-cloak>
+<div ui-calendar="$ctrl.options" ng-model="$ctrl.events" ng-cloak></div>
+<div ng-if="$ctrl.schedule.courseWithoutMeeting.length > 0">
+	<div class='nomeetings'><h3>Online/TBD</h3>
+		<div ng-repeat="course in $ctrl.schedule.courseWithoutMeeting track by $index">
+			{{ course.DepartmentCode }} {{ course.CourseNumber }}<span ng-if="!$last">, </span>
+		</div>
+	</div>
+</div>

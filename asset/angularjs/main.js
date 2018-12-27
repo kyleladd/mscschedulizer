@@ -151,7 +151,6 @@ define([
             $ctrl.loading_courses = false;
             console.log("generated combinations", $ctrl.gen_course_combinations);
             $ctrl.displayed_schedules = $ctrl.gen_course_combinations.slice(0, 10);
-            debugger;
           })
           .catch(function (data) {
             // Handle error here
@@ -159,18 +158,11 @@ define([
           });
         };
         $ctrl.showMoreSchedules = function(){
-          //TODO-KL should probably load 10 schedules at a time
-          console.log("showing more schedules");
-          // debugger;
           var last_index = $ctrl.displayed_schedules.length - 1;
-          // var item_to_load = $ctrl.gen_course_combinations[last_index + 1];
           var item_to_load = $ctrl.gen_course_combinations.slice(last_index + 1,last_index + 2);
-          console.log("item to load", item_to_load);
-          // debugger;
           if(item_to_load && item_to_load.length > 0){
             $ctrl.displayed_schedules.push(item_to_load[0]);
           }
-          debugger;
         };
       }
     });
@@ -260,46 +252,6 @@ define([
         });
       }
     });
-    // app.component("generateComponent",{
-    //   templateUrl: '/templates/generate-component.html',
-    //   controllerAs: "$ctrl",
-    //   bindings: { 
-    //         // semester: '<',
-    //         // department:'<',
-    //         // coursesselected: '<'
-    //     },
-    //   controller: function($scope, $element, userService){
-    //     var $ctrl = this;
-    //     //TODO-KL not needed because semester is watched on change when passed into the department directive
-    //     $ctrl.semesterChanged = function(value){
-    //       userService.set_semester(value);
-    //     };
-    //     $ctrl.departmentChanged = function(value){
-    //       userService.set_department(value);
-    //     };
-    //     $ctrl.selectionsChanged = function(value){
-    //       userService.set_courses_selected(value);
-    //     };
-    //     $ctrl.onInit = function(){
-    //     };
-    //     $ctrl.$postLink = function () {
-    //       //TODO-KL might need to pass $element into controller, not this function
-    //       //add event listener to an element
-    //       // debugger;
-
-    //       //also we can apply jqLite dom manipulation operation on element
-    //     };
-    //     $scope.$on('semester:set', function(event, data){
-    //       $ctrl.semester = data;
-    //     });
-    //     $scope.$on('department:set', function(event, data){
-    //       $ctrl.department = data;
-    //     });
-    //     $scope.$on('courses_selected:set', function(event, data){
-    //       $ctrl.courses_selected = data;
-    //     });
-    //   }
-    // });
     app.component("sidebarComponent",{
       templateUrl: '/templates/sidebar.html',
       controllerAs: "$ctrl",
@@ -325,7 +277,6 @@ define([
         $ctrl.$postLink = function () {
           //TODO-KL might need to pass $element into controller, not this function
           //add event listener to an element
-          // debugger;
 
           //also we can apply jqLite dom manipulation operation on element
         };
@@ -354,7 +305,6 @@ define([
         }
         $ctrl.$postLink = function ($scope,$element) {
           //add event listener to an element
-          // debugger;
 
           //also we can apply jqLite dom manipulation operation on element
         };
@@ -386,7 +336,6 @@ define([
         }
         $ctrl.$postLink = function ($scope,$element) {
           //add event listener to an element
-          // debugger;
 
           //also we can apply jqLite dom manipulation operation on element
         };
