@@ -627,6 +627,54 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             return 0;
         };
 
+        factory.calcScheduleDetails = function(schedule, colors){
+            var events = [];
+            var noMeetings = [];
+            var earlyStartTime = 2400;
+            var lateEndTime = 0;
+            for (var c in schedule) {
+                var course = schedule[c];
+                var allSectionsHaveMeeting = true;
+                for (var s in course.Sections) {
+                    var section = course.Sections[s];
+                    if(section.Meetings.length === 0){
+                        allSectionsHaveMeeting = false;
+                    }
+                    for (var m in section.Meetings) {
+                        var meeting = section.Meetings[m];
+                        if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
+                            allSectionsHaveMeeting = false;
+                        }
+                        if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
+                            earlyStartTime = meeting.StartTime;
+                        }
+                        if(parseInt(meeting.EndTime) > parseInt(lateEndTime)){
+                            lateEndTime = meeting.EndTime;
+                        }
+                        //Meeting could be on multiple days, needs to be split into separate events
+                        var meetups = factory.splitMeetings(meeting);
+                        for (var u in meetups) {
+                            var meetup = meetups[u];
+                            events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: colors[c],course:course,section:section,meeting:meeting});
+                        }
+                    }
+                }
+                if(!allSectionsHaveMeeting){
+                    noMeetings.push(course);
+                }
+            }
+            if(parseInt(earlyStartTime)>parseInt(lateEndTime)){
+                //schedule does not have any meeting times
+                earlyStartTime = 0;
+                lateEndTime = 100;
+            }
+            schedule.earlyStartTime = earlyStartTime;
+            schedule.lateEndTime = lateEndTime;
+            schedule.events = events;
+            schedule.courseWithoutMeeting = noMeetings;
+            return schedule;
+        };
+
         return factory;
     });
 

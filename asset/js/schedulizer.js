@@ -558,6 +558,7 @@ module.exports = {
             output+="</tbody></table>";
         return output;
     },
+    //TODO-KL visual filter
     loadAll:function(courses,options,callback){
         if(typeof options === "undefined"){
             options = {editable:true};
@@ -566,6 +567,7 @@ module.exports = {
         mscSchedulizer.gen_schedules = outputCombinations;
         callback(outputCombinations, options);
     },
+    //TODO-KL this is on the visual filter
     loadFullSchedule: function(schedule){
       var courses = JSON.parse(JSON.stringify(schedule[0])); //avoid byref
       for (var c = courses.length-1; c >= 0; c--) {
@@ -1193,12 +1195,13 @@ module.exports = {
     //     }
     //     return meetups;
     // },
+
     createSchedules:function(schedules,options){
         mscSchedulizer.num_loaded = 0;
         if(schedules !== null && schedules.length > 0 ){
-            var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
-            if(schedules.length != 1){outputSchedules += "s";}
-            outputSchedules +="</span>";
+            // var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
+            // if(schedules.length != 1){outputSchedules += "s";}
+            // outputSchedules +="</span>";
             outputSchedules += mscSchedulizer.modalTemplate("modal_courseDetails","modal-lg");
             for (var i in schedules) {
                 var schedule = schedules[i];
