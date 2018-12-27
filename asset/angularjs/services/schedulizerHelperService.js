@@ -632,6 +632,8 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             var noMeetings = [];
             var earlyStartTime = 2400;
             var lateEndTime = 0;
+            // debugger;
+
             for (var c in schedule) {
                 var course = schedule[c];
                 var allSectionsHaveMeeting = true;
@@ -653,6 +655,9 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
                         }
                         //Meeting could be on multiple days, needs to be split into separate events
                         var meetups = factory.splitMeetings(meeting);
+                        if(meetups.length === 0){
+                            // debugger;
+                        }
                         for (var u in meetups) {
                             var meetup = meetups[u];
                             events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: colors[c],course:course,section:section,meeting:meeting});
@@ -672,6 +677,10 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             schedule.lateEndTime = lateEndTime;
             schedule.events = events;
             schedule.courseWithoutMeeting = noMeetings;
+            console.log("schedule with calc fields",schedule);
+            if(events.length === 0){
+                // debugger;
+            }
             return schedule;
         };
 

@@ -11,7 +11,7 @@
             <div ng-if="!$ctrl.loading_courses">
               <span ng-if="!$ctrl.gen_course_combinations" class="notice">No schedules. Adjust your selections and/or filters.</span>
               <span ng-if="$ctrl.gen_course_combinations" class="notice">{{$ctrl.gen_course_combinations.length}} schedule{{$ctrl.gen_course_combinations.length > 1 ? 's' : ''}}</span>
-                <div infinite-scroll="$ctrl.showMoreSchedules()" infinite-scroll-distance="1">
+                <div infinite-scroll="$ctrl.showMoreSchedules()" infinite-scroll-distance="2">
                   <schedule-component ng-repeat='schedule in $ctrl.displayed_schedules' schedule="schedule"></schedule-component>
                 </div>
             </div>

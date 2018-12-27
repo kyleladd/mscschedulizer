@@ -32,8 +32,8 @@ require.config({
         'slicknav':'/js/jquery.slicknav',
         'theme':'/js/script',
         'infinite-scroll':'https://cdnjs.cloudflare.com/ajax/libs/ngInfiniteScroll/1.3.0/ng-infinite-scroll.min',
-        // 'fullcalendar':'/bower_components/fullcalendar/dist/fullcalendar.min',
-        'fullcalendar':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-calendar/1.0.0/calendar.min',
+        'fullcalendar':'/bower_components/fullcalendar/dist/fullcalendar.min',
+        'ui.calendar':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-calendar/1.0.0/calendar.min',
         'combinatorics':'/node_modules/js-combinatorics/combinatorics',
     },
 
@@ -78,7 +78,8 @@ require.config({
         'datepair':['jquery'],
         'jquery.datepair':['jquery'],
         'slicknav':['jquery'],
-        'fullcalendar':['jquery','moment','angular'],
+        'fullcalendar':['jquery','moment'],
+        'ui.calendar': ['angular','fullcalendar'],
         'theme':['jquery','slicknav'],
     },
     // deps: [

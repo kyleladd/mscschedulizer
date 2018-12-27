@@ -151,6 +151,7 @@ define([
             $ctrl.loading_courses = false;
             console.log("generated combinations", $ctrl.gen_course_combinations);
             $ctrl.displayed_schedules = $ctrl.gen_course_combinations.slice(0, 10);
+            debugger;
           })
           .catch(function (data) {
             // Handle error here
@@ -165,9 +166,11 @@ define([
           // var item_to_load = $ctrl.gen_course_combinations[last_index + 1];
           var item_to_load = $ctrl.gen_course_combinations.slice(last_index + 1,last_index + 2);
           console.log("item to load", item_to_load);
+          // debugger;
           if(item_to_load && item_to_load.length > 0){
-            $ctrl.displayed_schedules.push(item_to_load);
+            $ctrl.displayed_schedules.push(item_to_load[0]);
           }
+          debugger;
         };
       }
     });

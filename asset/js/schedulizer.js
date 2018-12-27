@@ -1196,78 +1196,78 @@ module.exports = {
     //     return meetups;
     // },
 
-    createSchedules:function(schedules,options){
-        mscSchedulizer.num_loaded = 0;
-        if(schedules !== null && schedules.length > 0 ){
-            // var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
-            // if(schedules.length != 1){outputSchedules += "s";}
-            // outputSchedules +="</span>";
-            outputSchedules += mscSchedulizer.modalTemplate("modal_courseDetails","modal-lg");
-            for (var i in schedules) {
-                var schedule = schedules[i];
-                var events = [];
-                var noMeetings = [];
-                var earlyStartTime = 2400;
-                var lateEndTime = 0;
-                for (var c in schedule) {
-                    var course = schedule[c];
-                    var allSectionsHaveMeeting = true;
-                    for (var s in course.Sections) {
-                        var section = course.Sections[s];
-                        if(section.Meetings.length === 0){
-                            allSectionsHaveMeeting = false;
-                        }
-                        for (var m in section.Meetings) {
-                            var meeting = section.Meetings[m];
-                            if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
-                                allSectionsHaveMeeting = false;
-                            }
-                            if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
-                                earlyStartTime = meeting.StartTime;
-                            }
-                            if(parseInt(meeting.EndTime) > parseInt(lateEndTime)){
-                                lateEndTime = meeting.EndTime;
-                            }
-                            //Meeting could be on multiple days, needs to be split into separate events
-                            var meetups = mscSchedulizer.splitMeetings(meeting);
-                            for (var u in meetups) {
-                                var meetup = meetups[u];
-                                events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer_config.colors[c],course:course,section:section,meeting:meeting});
-                            }
-                        }
-                    }
-                    if(!allSectionsHaveMeeting){
-                        noMeetings.push(course);
-                    }
-                }
-                if(parseInt(earlyStartTime)>parseInt(lateEndTime)){
-                    //Schedule does not have any meeting times
-                    earlyStartTime = 0;
-                    lateEndTime = 100;
-                }
-                schedule.earlyStartTime = earlyStartTime;
-                schedule.lateEndTime = lateEndTime;
-                schedule.events = events;
-                schedule.courseWithoutMeeting = noMeetings;
-                outputSchedules += "<div id=\"schedule_" + i + "\" class=\"schedule_combination\"></div>";
-            }
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html(outputSchedules);
+    // createSchedules:function(schedules,options){
+    //     mscSchedulizer.num_loaded = 0;
+    //     if(schedules !== null && schedules.length > 0 ){
+    //         // var outputSchedules = "<span class=\"notice\">"+schedules.length + " schedule";
+    //         // if(schedules.length != 1){outputSchedules += "s";}
+    //         // outputSchedules +="</span>";
+    //         outputSchedules += mscSchedulizer.modalTemplate("modal_courseDetails","modal-lg");
+    //         for (var i in schedules) {
+    //             var schedule = schedules[i];
+    //             var events = [];
+    //             var noMeetings = [];
+    //             var earlyStartTime = 2400;
+    //             var lateEndTime = 0;
+    //             for (var c in schedule) {
+    //                 var course = schedule[c];
+    //                 var allSectionsHaveMeeting = true;
+    //                 for (var s in course.Sections) {
+    //                     var section = course.Sections[s];
+    //                     if(section.Meetings.length === 0){
+    //                         allSectionsHaveMeeting = false;
+    //                     }
+    //                     for (var m in section.Meetings) {
+    //                         var meeting = section.Meetings[m];
+    //                         if(meeting.StartTime === null || meeting.EndTime === null || (meeting.Monday === 0 && meeting.Tuesday === 0 && meeting.Wednesday === 0 && meeting.Thursday === 0 && meeting.Friday === 0)){
+    //                             allSectionsHaveMeeting = false;
+    //                         }
+    //                         if(parseInt(meeting.StartTime) < parseInt(earlyStartTime)){
+    //                             earlyStartTime = meeting.StartTime;
+    //                         }
+    //                         if(parseInt(meeting.EndTime) > parseInt(lateEndTime)){
+    //                             lateEndTime = meeting.EndTime;
+    //                         }
+    //                         //Meeting could be on multiple days, needs to be split into separate events
+    //                         var meetups = mscSchedulizer.splitMeetings(meeting);
+    //                         for (var u in meetups) {
+    //                             var meetup = meetups[u];
+    //                             events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: mscSchedulizer_config.colors[c],course:course,section:section,meeting:meeting});
+    //                         }
+    //                     }
+    //                 }
+    //                 if(!allSectionsHaveMeeting){
+    //                     noMeetings.push(course);
+    //                 }
+    //             }
+    //             if(parseInt(earlyStartTime)>parseInt(lateEndTime)){
+    //                 //Schedule does not have any meeting times
+    //                 earlyStartTime = 0;
+    //                 lateEndTime = 100;
+    //             }
+    //             schedule.earlyStartTime = earlyStartTime;
+    //             schedule.lateEndTime = lateEndTime;
+    //             schedule.events = events;
+    //             schedule.courseWithoutMeeting = noMeetings;
+    //             outputSchedules += "<div id=\"schedule_" + i + "\" class=\"schedule_combination\"></div>";
+    //         }
+    //         $("#"+mscSchedulizer_config.html_elements.schedules_container).html(outputSchedules);
 
-            $('#modal_courseDetails').modal({show:false});
-            $('#modal_courseDetails').on('show.bs.modal', function (event) {
-                var trigger = $(event.relatedTarget); // Element that triggered the modal
-                var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
-                var modal = $(this);
-                modal.find('.modal-title').text("Schedule Details");
-                modal.find('.modal-body').html('<div style=\'display:block;\'>' + (typeof options !== "undefined" && options.export === true ? mscSchedulizer.exportLink(schedule) : "") + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false,true));
-                $('.course_details').basictable();
-            });
-            mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
-        }
-        else{
-            $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + ((!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])) && !(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["favorites.html"]))) ? "<a href=\"visual_filter.html\">Try the visual filter</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
-        }
-    },
+    //         $('#modal_courseDetails').modal({show:false});
+    //         $('#modal_courseDetails').on('show.bs.modal', function (event) {
+    //             var trigger = $(event.relatedTarget); // Element that triggered the modal
+    //             var schedule = JSON.parse(unescape(trigger.data('schedule'))); // Extract info from data-* attributes
+    //             var modal = $(this);
+    //             modal.find('.modal-title').text("Schedule Details");
+    //             modal.find('.modal-body').html('<div style=\'display:block;\'>' + (typeof options !== "undefined" && options.export === true ? mscSchedulizer.exportLink(schedule) : "") + '</div>' + mscSchedulizer.detailedCoursesOutput(schedule,false,false,true));
+    //             $('.course_details').basictable();
+    //         });
+    //         mscSchedulizer.initSchedules(schedules,mscSchedulizer.num_loaded,mscSchedulizer_config.numToLoad,options);
+    //     }
+    //     else{
+    //         $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + ((!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])) && !(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["favorites.html"]))) ? "<a href=\"visual_filter.html\">Try the visual filter</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
+    //     }
+    // },
     initSchedules:function(schedules,start,count,options){
         if(typeof options === 'undefined'){
             options = {};
@@ -1314,13 +1314,13 @@ module.exports = {
                     }
                 },options);
                 $('#schedule_' + num).fullCalendar(final_options);
-                var additionalOutput = "";
-                if(schedules[num].courseWithoutMeeting.length > 0){
-                    additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
-                }
-                additionalOutput += mscSchedulizer.optionsOutput(schedules[num],final_options);
-                $('#schedule_' + num).append(additionalOutput);
-                mscSchedulizer.num_loaded++;
+                // var additionalOutput = "";
+                // if(schedules[num].courseWithoutMeeting.length > 0){
+                //     additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
+                // }
+                // additionalOutput += mscSchedulizer.optionsOutput(schedules[num],final_options);
+                // $('#schedule_' + num).append(additionalOutput);
+                // mscSchedulizer.num_loaded++;
             }
         }
     },
