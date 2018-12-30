@@ -53,6 +53,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                           }
                         }
                     },{});//options
+                    $($element).removeClass("hidden")
                 });
             };
         }

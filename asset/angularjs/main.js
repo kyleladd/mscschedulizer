@@ -145,17 +145,20 @@ define([
           .then(function(courses){
             $ctrl.unmodified_courses = courses;
             //todo-kl probably need to save that request off elsewhere
-            $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.unmodified_courses, $ctrl.user_course_adjustments, $ctrl.filters);
-            console.log("course infos", $ctrl.courses);
-            $ctrl.gen_course_combinations = schedulizerHelperService.getCombinations($ctrl.courses, $ctrl.courses_selected, $ctrl.filters);
-            $ctrl.loading_courses = false;
-            console.log("generated combinations", $ctrl.gen_course_combinations);
-            $ctrl.displayed_schedules = $ctrl.gen_course_combinations.slice(0, 10);
+            $ctrl.generateResults();
           })
           .catch(function (data) {
             // Handle error here
             console.log("error", data);
           });
+        };
+        $ctrl.generateResults = function(){
+          $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.unmodified_courses, $ctrl.user_course_adjustments, $ctrl.filters);
+          console.log("course infos", $ctrl.courses);
+          $ctrl.gen_course_combinations = schedulizerHelperService.getCombinations($ctrl.courses, $ctrl.courses_selected, $ctrl.filters);
+          $ctrl.loading_courses = false;
+          console.log("generated combinations", $ctrl.gen_course_combinations);
+          $ctrl.displayed_schedules = $ctrl.gen_course_combinations.slice(0, 10);
         };
         $ctrl.showMoreSchedules = function(){
           var last_index = $ctrl.displayed_schedules.length - 1;
@@ -164,6 +167,17 @@ define([
             $ctrl.displayed_schedules.push(item_to_load[0]);
           }
         };
+        $ctrl.updateFilters = function(value){
+          console.log("update filters within course listings",value);
+          //TODO-KL update display with updated filters
+          userService.set_schedule_filters(value);
+        };
+        $scope.$on('schedule_filters:set', function(event, data){
+          $ctrl.filters = data;
+          console.log("filters data applied", $ctrl.filters);
+          //TODO-KL - reapply filters to listings
+          $ctrl.generateResults();
+        });
       }
     });
     app.component("courseListingsPage",{
