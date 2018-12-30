@@ -1,5 +1,4 @@
 $(document).ready(function ($) {
-	console.log("script domready");
 	"use strict";	
 	////	Hidder Header	
 	var headerEle = function () {
@@ -93,56 +92,20 @@ $(document).ready(function ($) {
 			/**
 			 * Navigation Menu
 			 */
-			document.getElementById("main-nav-mobile").innerHTML = document.getElementById("main-nav").innerHTML;
+			// document.getElementById("main-nav-mobile").innerHTML = document.getElementById("main-nav").innerHTML;
 			/*----------------------------------------------------*/
 			/*	Nav Menu & Search
 			/*----------------------------------------------------*/
-			
-			// $(".nav > li:has(ul)").addClass("drop");
-			// $(".nav > li.drop > ul").addClass("dropdown");
-			// $(".nav > li.drop > ul.dropdown ul").addClass("sup-dropdown");
-			
-			// $('.show-search').click(function() {
-			// 	$('.search-form').fadeIn(300);
-			// 	$('.search-form input').focus();
-			// });
-			// $('.search-form input').blur(function() {
-			// 	$('.search-form').fadeOut(300);
-			// });
-			/**
-			 * Slick Nav 
-			 */
-			 // debugger;
-			 console.log("init slicknav");
-			// $('.wpb-mobile-menu').slicknav({
-			//   prependTo: '.navbar-header',
-			//   parentTag: 'margo',
-			//   allowParentLinks: true,
-			//   duplicate: true,
-			//   label: '',
-			//   closedSymbol: '<i class="fa fa-angle-right"></i>',
-			//   openedSymbol: '<i class="fa fa-angle-down"></i>',
-			// });
-			$('.wpb-mobile-menu').slicknav({
+			$('#main-nav').slicknav({
 			  prependTo: '.navbar-header',
 			  parentTag: 'margo',
 			  allowParentLinks: true,
-			  duplicate: false,
+			  duplicate: true,
 			  label: '',
 			  closedSymbol: '<i class="fa fa-angle-right"></i>',
 			  openedSymbol: '<i class="fa fa-angle-down"></i>',
+			  closeOnClick: true
 			});
-			// $('#main-nav').slicknav({
-			//   prependTo: '.navbar-header',
-			//   // parentTag: 'margo',
-			//   allowParentLinks: true,
-			//   duplicate: true,
-			//   label: '',
-			//   closedSymbol: '<i class="fa fa-angle-right"></i>',
-			//   openedSymbol: '<i class="fa fa-angle-down"></i>',
-			// });
-			// debugger;
-			// $('.wpb-mobile-menu').slicknav();
 			headerEle();
 		};
 		initNav();

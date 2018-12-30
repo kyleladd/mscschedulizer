@@ -3167,6 +3167,12 @@ ul.icons-list li i {
 	-o-transition: transform 0.2s ease 0s, color 0.2s ease 0s;
 	-ms-transition: transform 0.2s ease 0s, color 0.2s ease 0s;    
 }
+@media (max-width: 767px) {
+	.navbar-brand{
+		position:absolute;
+		padding-left: 10px;
+	}
+}
 
 
 @media only screen 
