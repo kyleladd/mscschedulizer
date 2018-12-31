@@ -244,13 +244,11 @@ define([
         });
         $scope.$on('schedule_filters:set', function(event, data){
           $ctrl.filters = data;
-          console.log("filters data applied", $ctrl.filters);
           //TODO-KL - reapply filters to listings
         });
 
         $scope.$on('courses_selected:set', function(event, data){
           $ctrl.courses_selected = data;
-          console.log("courses_selected data applied", $ctrl.courses_selected);
           //TODO-KL - reapply filters to listings
         });
       }
@@ -277,12 +275,6 @@ define([
         };
         $ctrl.onInit = function(){
         };
-        $ctrl.$postLink = function () {
-          //TODO-KL might need to pass $element into controller, not this function
-          //add event listener to an element
-
-          //also we can apply jqLite dom manipulation operation on element
-        };
         $scope.$on('semester:set', function(event, data){
           $ctrl.semester = data;
         });
@@ -303,26 +295,13 @@ define([
       },
       controller: function($scope, userService){
         var $ctrl = this;
-        
-        $ctrl.onInit = function(){
-        }
-        $ctrl.$postLink = function ($scope,$element) {
-          //add event listener to an element
-
-          //also we can apply jqLite dom manipulation operation on element
-        };
         $ctrl.timeblockUpdated = function(timeblocks){
-          console.log("filters - timeblockupdated", timeblocks);
           $ctrl.filters.TimeBlocks = timeblocks;
           $ctrl.updateFilters();
         };
         $ctrl.updateFilters = function(){
-          console.log("updating my filters in filters component");
           $ctrl.change({value:$ctrl.filters})
         };
-        // $ctrl.changedValue = function(value){
-        //     $ctrl.change({value:value});
-        // };
       }
     });
     app.component("altViewFilterModal",{
@@ -334,21 +313,9 @@ define([
       },
       controller: function($scope, userService){
         var $ctrl = this;
-        
-        $ctrl.onInit = function(){
-        }
-        $ctrl.$postLink = function ($scope,$element) {
-          //add event listener to an element
-
-          //also we can apply jqLite dom manipulation operation on element
-        };
         $ctrl.updateFilters = function(){
-          console.log("updating my filters in filters component");
           $ctrl.change({value:$ctrl.filters})
         };
-        // $ctrl.changedValue = function(value){
-        //     $ctrl.change({value:value});
-        // };
       }
     });
     app.controller('VisualFilterCtrl', ['$scope',function ($scope) {

@@ -18,10 +18,6 @@ define(['angular'], function (angular) {
     replace:true,
     controller: function () {
       var $ctrl = this;
-      console.log("modal component");
-      $ctrl.$onInit = function () {
-      };
-
       $ctrl.close = function () {
         $ctrl.close({$value: 'close'});
       };

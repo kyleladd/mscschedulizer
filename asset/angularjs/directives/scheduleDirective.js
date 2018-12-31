@@ -67,7 +67,6 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
         controllerAs: '$ctrl',
         controller: function($scope,$element,$timeout,$uibModal,userService,schedulizerHelperService) {
             var $ctrl = this;
-            console.log("options component", $ctrl);
             $ctrl.$onInit = function () {
                 $ctrl.schedule = schedulizerHelperService.calcScheduleDetails($ctrl.schedule, userService.colors);
                 $ctrl.events = [];
@@ -84,7 +83,6 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                 });
             };
             $ctrl.openScheduleDetailsModal = function(schedule){
-                console.log("opening modal",schedule, schedule.length);
                 var modalInstance = $uibModal.open({
                   animation: true,
                   component: 'courseListingsModalComponent',
@@ -94,7 +92,6 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                     },
                     body: function(){
                         var body = "hello<course-listings-component courses=\"$ctrl.schedule\" icons=\"false\" show-crn-selections=\"false\" show-total-credits=\"true\"></course-listings-component>";
-                        console.log("body", body);
                         return body;
                     },
                     schedule: function(){

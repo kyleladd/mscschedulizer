@@ -18,9 +18,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
         controllerAs: '$ctrl',
         controller: function($scope,$uibModal,$element,$timeout,schedulizerHelperService) {
             var $ctrl = this;
-            console.log("course listings");
             $ctrl.$onInit = function () {
-                console.log("courses",$ctrl.courses);
                 $ctrl.department_courses = angular.copy($ctrl.courses);
                 $ctrl.userCourseAdjustments = {Courses:[],Sections:[],Meetings:[]};
                 $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
@@ -28,23 +26,11 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             $ctrl.changedValue = function(value){
                 $ctrl.change({value:value});
             };
-            $ctrl.$onChanges = function(changesObj){
-            };
-            $ctrl.$doCheck =function(changes) {
-            };
-
             $ctrl.$postLink = function () {
                 $timeout(function() {
                     $($element).find("table").basictable();
                 });
             };
-            // $ctrl.remove_course_selection = function(course){
-            //     var index = node_generic_functions.searchListDictionaries($ctrl.coursesselected,{'DepartmentCode':course.DepartmentCode,'CourseNumber':course.CourseNumber,CourseTitle:course.CourseTitle,'CourseCRN':course.CourseCRN},true);
-            //     if (index !== -1) {
-            //       $ctrl.coursesselected.splice(index,1);
-            //       $ctrl.changedValue($ctrl.coursesselected);
-            //     }
-            // };
             $ctrl.selected_course_section = function(course, crn){
                 var copy = angular.copy(course);
                 copy.CourseCRN = crn;

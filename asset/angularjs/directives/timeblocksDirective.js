@@ -12,24 +12,17 @@ define(['angular','ui.bootstrap','./timeblockDirective'], function (angular) {
         controllerAs: '$ctrl',
         controller: function($scope) {
             var $ctrl = this;
-            $ctrl.$onInit = function () {
-            };
             $ctrl.changedValue = function(value){
-                console.log("timeblocks changed value",value);
                 $ctrl.change({value:value});
-                console.log("change should have been called",$ctrl.change({value:value}));
             };
             $ctrl.addTimeBlockFilter = function(){
-                console.log("timeblocks add");
                 $ctrl.timeblocks.push({StartTime:"0000",EndTime:"2330",Days:""});
             };
             $ctrl.onUpdate = function(timeblock, index){
-                console.log("timeblocks on update",timeblock, index);
                 $ctrl.timeblocks[index] = timeblock;
                 $ctrl.changedValue($ctrl.timeblocks);
             };
             $ctrl.onRemove = function(timeblock, index){
-                console.log("timeblocks on remove",timeblock,index);
                 $ctrl.timeblocks.splice(index,1);
                 $ctrl.changedValue($ctrl.timeblocks);
             }

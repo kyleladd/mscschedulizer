@@ -416,8 +416,6 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
                     outputCombinations[h][c].Sections = JSON.parse(JSON.stringify(scheduleCombinations[h][c]));
                 }
             }
-            //TODO-KL factory call
-            // factory.gen_schedules = outputCombinations;
             return outputCombinations;
         };
 
@@ -465,7 +463,6 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             });
 
             // Checking the CRN requirements within each combination search classes selected for the requirements for this course
-            //TODO-KL factory call
             var crnrequirements = node_generic_functions.searchListDictionaries(user_selections,{DepartmentCode:course_sections[0].DepartmentCode,CourseNumber:course_sections[0].CourseNumber,CourseTitle:course_sections[0].CourseTitle},false,true);
             // crnrequirements = crnrequirements.filter(functiom(){return CourseCRN !== null});
             if(crnrequirements.length > 0){
@@ -619,7 +616,6 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
               var identifier = course_section.Identifier;
               var campus = course_section.Campus;
               // Apply Filters To SECTION
-              //TODO-KL factory call
               if(!factory.applyFiltersToSection(course_section, filters)){
                   if(identifier === "" || identifier === null){
                     identifier = "empty";

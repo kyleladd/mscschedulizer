@@ -15,8 +15,6 @@ define(['angular','jquery','moment','node_generic_functions','jquery.timepicker'
         controllerAs: '$ctrl',
         controller: function($scope, $element, $timeout) {
             var $ctrl = this;
-            $ctrl.$onInit = function () {
-            };
             $ctrl.$postLink = function () {
                 $timeout(function() {
                     $($element).find(".timeonly .time").timepicker({

@@ -16,7 +16,6 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
         controller: function($scope,schedulizerService) {
             var $ctrl = this;
             $ctrl.departments = [];
-            $ctrl.$onInit = function () {};
             $ctrl.changedValue = function(value){
                 $ctrl.change({value:value});
             };

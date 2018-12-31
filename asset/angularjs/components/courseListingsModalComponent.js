@@ -17,13 +17,10 @@ define(['angular','../directives/courseListingsDirective'], function (angular) {
     },
     controller: function () {
       var $ctrl = this;
-      console.log("course listings modal component");
       $ctrl.$onInit = function () {
-        console.log("ctrl.schedule",$ctrl.schedule, $ctrl, $ctrl.resolve.schedule);
         if($ctrl.schedule === undefined && $ctrl.resolve !== undefined && $ctrl.resolve.schedule !== undefined){
           $ctrl.schedule = $ctrl.resolve.schedule;
         }
-        console.log("ctrl.schedule overriden",$ctrl.schedule);
       };
 
       $ctrl.close = function () {
