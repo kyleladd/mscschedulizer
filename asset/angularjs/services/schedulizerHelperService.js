@@ -650,7 +650,6 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             var noMeetings = [];
             var earlyStartTime = 2400;
             var lateEndTime = 0;
-            // debugger;
 
             for (var c in schedule) {
                 var course = schedule[c];
@@ -673,9 +672,6 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
                         }
                         //Meeting could be on multiple days, needs to be split into separate events
                         var meetups = factory.splitMeetings(meeting);
-                        if(meetups.length === 0){
-                            // debugger;
-                        }
                         for (var u in meetups) {
                             var meetup = meetups[u];
                             events.push({title:course.DepartmentCode + " " + course.CourseNumber,start:meetup.StartTime,end:meetup.EndTime,color: colors[c],course:course,section:section,meeting:meeting});
@@ -696,6 +692,10 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             schedule.events = events;
             schedule.courseWithoutMeeting = noMeetings;
             return schedule;
+        };
+
+        factory.findFavorite = function(favorites, schedule){
+            return node_generic_functions.searchListObjects(favorites,schedule);
         };
 
         return factory;

@@ -1,6 +1,4 @@
 <!doctype html>
-<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><html lang="en" class="no-js"> <![endif]-->
 <html lang="en">
 
 <head>
@@ -12,91 +10,76 @@
   <meta charset="utf-8">
   
   <link rel="icon" type="image/png" href="favicon.png">
-  
+
   <!-- Responsive Metatag -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   <!-- Bootstrap CSS  -->
-  <link rel="stylesheet" href="asset/css/bootstrap.min.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="/asset/css/bootstrap.min.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.min.css" type="text/css" media="screen">
 
   <!-- Font Awesome CSS -->
-  <link rel="stylesheet" href="styles/font-awesome.min.css" type="text/css" media="screen">
+  <link rel="stylesheet" href="/styles/font-awesome.min.css" type="text/css" media="screen">
 
-  <!-- FullCalendar -->
-  <link rel='stylesheet' type="text/css" href='bower_components/fullcalendar/dist/fullcalendar.min.css' />
+  <link rel='stylesheet' type="text/css" href='/bower_components/fullcalendar/dist/fullcalendar.min.css' />
 
   <!-- Slicknav -->
-  <link rel="stylesheet" type="text/css" href="styles/slicknav.min.css" media="screen">
-
+  <link rel="stylesheet" type="text/css" href="/styles/slicknav.min.css" media="screen">
   <!-- Timepicker -->
-  <link rel="stylesheet" type="text/css" href="styles/jquery.timepicker.min.css" />
-  <link rel="stylesheet" type="text/css" href="styles/jquery.ptTimeSelect.min.css" />
-  <link rel="stylesheet" type="text/css" href="styles/jquery.weekLine.min.css" />
+  <link rel="stylesheet" type="text/css" href="/styles/jquery.timepicker.min.css" />
+  <link rel="stylesheet" type="text/css" href="/styles/jquery.weekLine.min.css" />
 
   <link rel="stylesheet" href="bower_components/basictable/basictable.css">
 
-  <link href="styles/pnotify.custom.min.css" media="all" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="styles/tooltipster.min.css" />
-
-
-  <!-- Margo CSS Styles  -->
-  <link rel="stylesheet" type="text/css" href="styles/style.min.css" media="screen">
+  <link href="/styles/pnotify.custom.min.css" media="all" rel="stylesheet" type="text/css" />
 
   <!-- Responsive CSS Styles  -->
-  <link rel="stylesheet" type="text/css" href="styles/responsive.min.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/styles/responsive.min.css" media="screen">
 
   <!-- Css3 Transitions Styles  -->
-  <link rel="stylesheet" type="text/css" href="styles/animate.min.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="/styles/animate.min.css" media="screen">
+  
+  <!-- Margo CSS Styles  -->
+  <link rel="stylesheet" type="text/css" href="/styles/style.min.css" media="screen">
 
   <!-- Color CSS Styles  -->
-  <link rel="stylesheet" type="text/css" href="styles/jade.min.css" title="jade" media="screen" />
+  <link rel="stylesheet" type="text/css" href="/styles/jade.min.css" title="jade" media="screen" />
 
-  <!-- Margo JS  -->
-  <script src="js/jquery-2.1.4.min.js" onload="window.$ = window.jQuery;"></script>
-  <script type="text/javascript" src="js/jquery.migrate.js"></script>
-  <script type="text/javascript" src="js/modernizrr.js"></script>
-  <script type="text/javascript" src="asset/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/jquery.fitvids.js"></script>
-  <script type="text/javascript" src="js/owl.carousel.min.js"></script>
-  <script type="text/javascript" src="js/nivo-lightbox.min.js"></script>
-  <script type="text/javascript" src="js/jquery.isotope.min.js"></script>
-  <script type="text/javascript" src="js/jquery.appear.js"></script>
-  <script type="text/javascript" src="js/count-to.js"></script>
-  <script type="text/javascript" src="js/jquery.textillate.js"></script>
-  <script type="text/javascript" src="js/jquery.lettering.js"></script>
-  <script type="text/javascript" src="js/jquery.easypiechart.min.js"></script>
-  <script type="text/javascript" src="js/jquery.nicescroll.min.js"></script>
-  <script type="text/javascript" src="js/jquery.parallax.js"></script>
-  
-  <script type="text/javascript" src="js/jquery.slicknav.js"></script>
-  <script src="js/jquery.timepicker.js"></script>
-  <script src="js/jquery.ptTimeSelect.js"></script>
-  <script src="js/jquery.weekLine.min.js"></script>
-  <script type="text/javascript" src='bower_components/moment/min/moment.min.js'></script>
-  <script src="js/datepair.min.js"></script>
-  <script src="js/jquery.datepair.min.js"></script>
-  <script type="text/javascript" src='bower_components/fullcalendar/dist/fullcalendar.js'></script>
-  <script type="text/javascript" src='bower_components/basictable/jquery.basictable.min.js'></script>
-  <script type="text/javascript" src="js/pnotify.custom.min.js"></script>
-  <script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
-  
-
-  <!--[if IE 8]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-
-</head>
 <body>
-<style>
-  body{
-    background:none;
-  }
-</style>
-<div id="schedules"><div class="loader loader-large"></div> <div class="status">Loading Schedule...</div></div>
-  <script type="text/javascript" src="asset/js/schedulizer_bundle.min.js"></script>
+   <ui-view> 
+      <div id="content">
+        <div class="container">
+          <div class="page-content">
+            <div class="row">
+              <div class="col-md-12">
+                <i>Loading ....</i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ui-view>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+  <script src="/asset/angularjs/config.js"></script>
   <script>
-    mscSchedulizer.getLargeSchedule(mscSchedulizer.queryData(location.search,true).crn,mscSchedulizer.createSchedules);
+    require(['main']);
   </script>
-
+  <style>
+    body{
+      background:none;
+    }
+  </style>
+  <style>
+    .ui-select-container input.ui-select-search {
+      width: 100% !important;
+    }
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+    .inline{
+      display:inline;
+    }
+  </style>
 </body>
 
 </html>

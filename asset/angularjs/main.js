@@ -79,6 +79,11 @@ define([
           templateUrl: '/templates/favorites.html',
           controller: 'FavoritesCtrl'
         });
+       $stateProvider.state({
+          name: 'preview',
+          url: "/preview",
+          component: 'previewPage',
+        });
       $urlRouterProvider.otherwise("/");
      
     }]);//;
@@ -315,6 +320,23 @@ define([
         var $ctrl = this;
         $ctrl.updateFilters = function(){
           $ctrl.change({value:$ctrl.filters})
+        };
+      }
+    });
+    app.component("previewPage",{
+      templateUrl: '/templates/preview.html',
+      controllerAs: "$ctrl",
+      controller: function($scope, $stateParams, $state, $location, userService, schedulizerService){
+        var $ctrl = this;
+        $ctrl.$onInit = function () {
+          console.log("locationparams", $location.search());
+          $ctrl.loading_schedule= true;
+          schedulizerService.get_schedule($location.search().crn,$location.search().semester)
+          .then(function(courses){
+            $ctrl.schedule = courses;
+            $ctrl.loading_schedule = false;
+          });
+          console.log("This is the preview page",$ctrl);
         };
       }
     });

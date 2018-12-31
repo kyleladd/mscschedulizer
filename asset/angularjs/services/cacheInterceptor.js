@@ -4,7 +4,6 @@ define(['angular'], function (angular) {
     var ttlMap = {};
     return {
       request: function(config) {
-        // debugger;
         if (config.ttl) {
           var ttl = config.ttl;
           ttl = ttl * 60 * 1000; //convert to minutes

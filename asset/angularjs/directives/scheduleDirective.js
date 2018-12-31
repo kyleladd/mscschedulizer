@@ -100,11 +100,18 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                   }
                 });
             };
+            //TODO-KL Favorites should be passed in so they are only fetched once opposed to fetching for each generated combination schedule result
             $ctrl.isFavorite = function(schedule){
-                return false;
+                return schedulizerHelperService.findFavorite(userService.get_favorite_schedules(), schedule) !== -1;
             };
+            //TODO-KL Move logic out of here
             $ctrl.toggleFavorite = function(schedule){
+                if(schedulizerHelperService.findFavorite(userService.get_favorite_schedules(), schedule) !== -1){
 
+                }
+                else{
+
+                }
             };
 
             $ctrl.openPreview = function(schedule){

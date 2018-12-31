@@ -61,10 +61,17 @@ define(['angular','./cacheInterceptor'], function (angular) {
         };
 
         factory.get_schedule = function(crns, semester_termcode) {
-            if(!crns || !semester_termcode){
-                return $q.reject("A semester term code and course crns are required"); //TODO-KL Double check intended response obj or list
+            if(!crns){ //|| !semester_termcode
+                return $q.reject("Course crns are required"); //TODO-KL Double check intended response obj or list //A semester term code and c
             }
-            return $http.get(base_url + "/info/?crn=" + crns.join("&crn[]=") + "&semester=" + semester_termcode);
+            var url = base_url + "/info/?crn=" + crns.join("&crn[]=");
+            if(semester_termcode){
+                url += "&semester=" + semester_termcode;
+            }
+            return $http.get(url)
+            .then(function(data){
+                return data.data;
+            });
         };
         
         factory.get_course_infos = function(courses, semester_termcode) {
