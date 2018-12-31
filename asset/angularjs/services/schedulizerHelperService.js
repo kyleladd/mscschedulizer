@@ -212,6 +212,25 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
           }
           return courses;
         };
+        factory.getTotalCredits = function(courses){
+            var total_credits = 0;
+            for (var i in courses) {
+                var course = courses[i];
+                for (var s in course.Sections) {
+                    var section = course.Sections[s];
+                    if(section.Credits === null){
+                        section.Credits = "variable";
+                    }
+                    else{
+                        var credits = parseInt(section.Credits);
+                        if(!isNaN(credits)){
+                            total_credits += credits;
+                        }
+                    }
+                }
+            }
+            return total_credits;
+        };
 
         factory.requiredFilters = function(section){
           var filteredOut = false;
@@ -222,6 +241,9 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
         factory.applyFiltersToSection = function(section,filters){
             var filteredOut = false;
             filteredOut = factory.requiredFilters(section);
+            if(!filters){
+                return filteredOut;
+            }
             if(typeof filters.Campuses !== "undefined" && filteredOut === false){
                 filteredOut = factory.campusFilter(section,filters.Campuses);
             }
@@ -380,7 +402,7 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
               var course = courses[i];
               var aSectionCombination = factory.getSectionCombinations(course.Sections, user_selections, filters);
               sectionCombinations.push(aSectionCombination);
-              courseslist.push({DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle});
+              courseslist.push({DepartmentCode:course.DepartmentCode,CourseNumber:course.CourseNumber,CourseTitle:course.CourseTitle, Description: course.Description});
             }
             var scheduleCombinations = factory.getScheduleCombinations(sectionCombinations);
             // For each schedule
@@ -677,10 +699,6 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             schedule.lateEndTime = lateEndTime;
             schedule.events = events;
             schedule.courseWithoutMeeting = noMeetings;
-            console.log("schedule with calc fields",schedule);
-            if(events.length === 0){
-                // debugger;
-            }
             return schedule;
         };
 

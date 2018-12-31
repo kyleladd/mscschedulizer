@@ -131,10 +131,10 @@ define([
       controller: function($scope, userService, schedulizerService, schedulizerHelperService){
         var $ctrl = this;
         $ctrl.courses = [];
-          $ctrl.unmodified_courses = [];
-          $ctrl.gen_course_combinations = [];
-          $ctrl.loading_courses = true;
-          $ctrl.displayed_schedules = [];
+        $ctrl.unmodified_courses = [];
+        $ctrl.gen_course_combinations = [];
+        $ctrl.loading_courses = true;
+        $ctrl.displayed_schedules = [];
         $ctrl.$onInit = function () {
           $ctrl.semester = userService.get_semester();
           $ctrl.courses_selected = userService.get_courses_selected();

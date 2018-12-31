@@ -1,9 +1,10 @@
-define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService','../services/userService','ui.bootstrap','basictable','../components/modalComponent','ui.calendar'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService,userService) {
-    angular.module("scheduleDirective", ['ngSanitize','userService','schedulizerHelperService','ui.bootstrap','uibootstrapmodalcomponent','ui.calendar'])
+define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService','../services/userService','ui.bootstrap','basictable','../components/courseListingsModalComponent','ui.calendar', '../directives/courseListingsDirective'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService,userService) {
+    angular.module("scheduleDirective", ['ngSanitize','userService','schedulizerHelperService','ui.bootstrap','uibootstrapcourselistingsmodalcomponent','ui.calendar','courseListingsDirective'])
     .component("scheduleComponent",{
         templateUrl:'/asset/angularjs/directives/schedule.html',
         bindings: { 
-            schedule: '<'
+            schedule: '<',
+            options: '<'
         },
         controllerAs: '$ctrl',
         controller: function($scope,$uibModal,$element,$timeout,userService,schedulizerHelperService) {
@@ -11,7 +12,6 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             $ctrl.$onInit = function () {
                 $ctrl.schedule = schedulizerHelperService.calcScheduleDetails($ctrl.schedule, userService.colors);
                 $ctrl.events = [];
-                console.log("Courses without meeting",$ctrl.schedule.courseWithoutMeeting.length);
             };
             $ctrl.$postLink = function () {
                 $timeout(function() {
@@ -52,9 +52,70 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                             $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
                           }
                         }
-                    },{});//options
-                    $($element).removeClass("hidden")
+                    },{}); //TODO-KL options passed in param #2
+                    $($element).removeClass("hidden");
                 });
+            };
+        }
+    })
+    .component("optionsComponent",{
+        templateUrl:'/asset/angularjs/directives/options.html',
+        bindings: { 
+            schedule: '<',
+            options: '<'
+        },
+        controllerAs: '$ctrl',
+        controller: function($scope,$element,$timeout,$uibModal,userService,schedulizerHelperService) {
+            var $ctrl = this;
+            console.log("options component", $ctrl);
+            $ctrl.$onInit = function () {
+                $ctrl.schedule = schedulizerHelperService.calcScheduleDetails($ctrl.schedule, userService.colors);
+                $ctrl.events = [];
+            };
+            $ctrl.$postLink = function () {
+                $timeout(function() {
+                    $ctrl.options = node_generic_functions.merge_options(
+                    {
+                        favorite:true,
+                        details:true,
+                        preview:true,
+                        export:true
+                    },$ctrl.options);
+                });
+            };
+            $ctrl.openScheduleDetailsModal = function(schedule){
+                console.log("opening modal",schedule, schedule.length);
+                var modalInstance = $uibModal.open({
+                  animation: true,
+                  component: 'courseListingsModalComponent',
+                  resolve: {
+                    title: function(){
+                        return "Schedule Details"
+                    },
+                    body: function(){
+                        var body = "hello<course-listings-component courses=\"$ctrl.schedule\" icons=\"false\" show-crn-selections=\"false\" show-total-credits=\"true\"></course-listings-component>";
+                        console.log("body", body);
+                        return body;
+                    },
+                    schedule: function(){
+                        return schedule;
+                    }
+                  }
+                });
+            };
+            $ctrl.isFavorite = function(schedule){
+                return false;
+            };
+            $ctrl.toggleFavorite = function(schedule){
+
+            };
+
+            $ctrl.openPreview = function(schedule){
+
+            };
+
+            $ctrl.export = function(schedule){
+
             };
         }
     }); 

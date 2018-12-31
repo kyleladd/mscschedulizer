@@ -1268,62 +1268,62 @@ module.exports = {
     //         $("#"+mscSchedulizer_config.html_elements.schedules_container).html("<p><span class=\"notice\">No schedules. Adjust your selections and/or filters.</span> " + ((!(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["visual_filter.html"])) && !(node_generic_functions.inList(location.pathname.substr(location.pathname.lastIndexOf("/")+1).toLowerCase(), ["favorites.html"]))) ? "<a href=\"visual_filter.html\">Try the visual filter</a>" : "") + (mscSchedulizer.errors.generate_errors.length > 0 ? "<br>" : "") + mscSchedulizer.errors.generate_errors.join("<br>") + "</p>");
     //     }
     // },
-    initSchedules:function(schedules,start,count,options){
-        if(typeof options === 'undefined'){
-            options = {};
-        }
-        for (var i = 0; i < count ; i++) {
-            var num = start + i;
-            if(schedules[num] !== undefined){
-                var final_options = mscSchedulizer.merge_options(
-                {
-                    editable: false,
-                    handleWindowResize: true,
-                    slotEventOverlap:false,
-                    weekends: false, // Hide weekends
-                    defaultView: 'agendaWeek', // Only show week view
-                    header: false, // Hide buttons/titles
-                    minTime: moment(schedules[num].earlyStartTime,"Hmm").format("HH:mm"), // Start time for the calendar
-                    maxTime: moment(schedules[num].lateEndTime,"Hmm").format("HH:mm"), // End time for the calendar
-                    columnFormat: {
-                        week: 'ddd' // Only show day of the week names
-                    },
-                    displayEventTime: true,
-                    height:'auto',
-                    // allDayText: 'TBD',
-                    allDaySlot: false,
-                    events: schedules[num].events,
-                    eventRender: function (event, element) {
-                        element.attr("data-event-id",event._id); //for converting fullcal js object to html element
-                    },
-                    eventMouseover: function( event, jsEvent, view ) {
-                      var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
-                        return el.section.CourseCRN === event.section.CourseCRN;
-                      });
-                      for(var i in matching_section_events){
-                        $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
-                      }
-                    },
-                    eventMouseout: function( event, jsEvent, view ) {
-                      var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
-                        return el.section.CourseCRN === event.section.CourseCRN;
-                      });
-                      for(var i in matching_section_events){
-                        $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
-                      }
-                    }
-                },options);
-                $('#schedule_' + num).fullCalendar(final_options);
-                // var additionalOutput = "";
-                // if(schedules[num].courseWithoutMeeting.length > 0){
-                //     additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
-                // }
-                // additionalOutput += mscSchedulizer.optionsOutput(schedules[num],final_options);
-                // $('#schedule_' + num).append(additionalOutput);
-                // mscSchedulizer.num_loaded++;
-            }
-        }
-    },
+    // initSchedules:function(schedules,start,count,options){
+    //     if(typeof options === 'undefined'){
+    //         options = {};
+    //     }
+    //     for (var i = 0; i < count ; i++) {
+    //         var num = start + i;
+    //         if(schedules[num] !== undefined){
+    //             var final_options = mscSchedulizer.merge_options(
+    //             {
+    //                 editable: false,
+    //                 handleWindowResize: true,
+    //                 slotEventOverlap:false,
+    //                 weekends: false, // Hide weekends
+    //                 defaultView: 'agendaWeek', // Only show week view
+    //                 header: false, // Hide buttons/titles
+    //                 minTime: moment(schedules[num].earlyStartTime,"Hmm").format("HH:mm"), // Start time for the calendar
+    //                 maxTime: moment(schedules[num].lateEndTime,"Hmm").format("HH:mm"), // End time for the calendar
+    //                 columnFormat: {
+    //                     week: 'ddd' // Only show day of the week names
+    //                 },
+    //                 displayEventTime: true,
+    //                 height:'auto',
+    //                 // allDayText: 'TBD',
+    //                 allDaySlot: false,
+    //                 events: schedules[num].events,
+    //                 eventRender: function (event, element) {
+    //                     element.attr("data-event-id",event._id); //for converting fullcal js object to html element
+    //                 },
+    //                 eventMouseover: function( event, jsEvent, view ) {
+    //                   var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+    //                     return el.section.CourseCRN === event.section.CourseCRN;
+    //                   });
+    //                   for(var i in matching_section_events){
+    //                     $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").addClass("event-hover");
+    //                   }
+    //                 },
+    //                 eventMouseout: function( event, jsEvent, view ) {
+    //                   var matching_section_events = $(this).closest(".fc").fullCalendar('clientEvents').filter(function (el) {
+    //                     return el.section.CourseCRN === event.section.CourseCRN;
+    //                   });
+    //                   for(var i in matching_section_events){
+    //                     $(this).closest(".fc").find("[data-event-id='" + matching_section_events[i]._id + "']").removeClass("event-hover");
+    //                   }
+    //                 }
+    //             },options);
+    //             $('#schedule_' + num).fullCalendar(final_options);
+    //             // var additionalOutput = "";
+    //             // if(schedules[num].courseWithoutMeeting.length > 0){
+    //             //     additionalOutput += mscSchedulizer.genNoMeetingsOutput(schedules[num].courseWithoutMeeting);
+    //             // }
+    //             // additionalOutput += mscSchedulizer.optionsOutput(schedules[num],final_options);
+    //             // $('#schedule_' + num).append(additionalOutput);
+    //             // mscSchedulizer.num_loaded++;
+    //         }
+    //     }
+    // },
     optionsOutput:function(schedule,options){
         if(typeof(options) === "undefined"){
             options = {};

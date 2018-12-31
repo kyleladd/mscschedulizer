@@ -18,10 +18,11 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
         controllerAs: '$ctrl',
         controller: function($scope,$uibModal,$element,$timeout,schedulizerHelperService) {
             var $ctrl = this;
+            console.log("course listings");
             $ctrl.$onInit = function () {
+                console.log("courses",$ctrl.courses);
                 $ctrl.department_courses = angular.copy($ctrl.courses);
                 $ctrl.userCourseAdjustments = {Courses:[],Sections:[],Meetings:[]};
-                $ctrl.showCrnSelections = true;//TODO-KL
                 $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
             };
             $ctrl.changedValue = function(value){
@@ -109,6 +110,9 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                     }
                 }
                 return grouped_meeting_sections;
+            };
+            $ctrl.getTotalCredits = function(){
+                return schedulizerHelperService.getTotalCredits($ctrl.courses);
             };
             $ctrl.openModal = function(course){
                 var modalInstance = $uibModal.open({

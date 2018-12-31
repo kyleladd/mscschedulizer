@@ -14,6 +14,8 @@ define(['angular'], function (angular) {
       close: '&',
       dismiss: '&'
     },
+    transclude:true,
+    replace:true,
     controller: function () {
       var $ctrl = this;
       console.log("modal component");
