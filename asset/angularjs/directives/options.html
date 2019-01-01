@@ -1,6 +1,6 @@
 <div class="options">
-	<a ng-if="$ctrl.options.favorite" ng-click="$ctrl.toggleFavorite()" class="favoriting">{{ $ctrl.isFavorite($ctrl.schedule) ? "Unfavorite" : "Favorite"}}</a>
-	<a ng-if="$ctrl.options.details" ng-click="$ctrl.openScheduleDetailsModal($ctrl.schedule)" class="favoriting">Details</a>
-	<a ng-if="$ctrl.options.preview" ng-click="$ctrl.openPreview($ctrl.schedule)" class="favoriting">Preview</a>
-	<a ng-if="$ctrl.options.export" ng-click="$ctrl.export($ctrl.schedule)" class="favoriting">Favorite</a>
+	<a ng-if="$ctrl.options.favorite" ng-click="$ctrl.toggleFavorite($ctrl.schedule)" class="favoriting">{{ $ctrl.isFavorite($ctrl.schedule) ? "Unfavorite" : "Favorite"}}</a>
+	<a ng-if="$ctrl.options.details" ng-click="$ctrl.openScheduleDetailsModal($ctrl.schedule)">Details</a>
+	<a ng-if="$ctrl.options.preview" ng-click="$ctrl.openPreview($ctrl.schedule)">Preview</a>
+	<a ng-if="$ctrl.options.export" ng-click="$ctrl.export($ctrl.schedule)">Export</a>
 </div>

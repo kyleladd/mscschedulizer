@@ -4,7 +4,8 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
         templateUrl:'/asset/angularjs/directives/schedule.html',
         bindings: { 
             schedule: '<',
-            options: '<'
+            options: '<',
+            scheduleOptions: '<'
         },
         controllerAs: '$ctrl',
         controller: function($scope,$uibModal,$element,$timeout,userService,schedulizerHelperService) {
@@ -65,7 +66,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             options: '<'
         },
         controllerAs: '$ctrl',
-        controller: function($scope,$element,$timeout,$uibModal,userService,schedulizerHelperService) {
+        controller: function($scope,$element,$timeout,$state,$uibModal,userService,schedulizerHelperService) {
             var $ctrl = this;
             $ctrl.$onInit = function () {
                 $ctrl.schedule = schedulizerHelperService.calcScheduleDetails($ctrl.schedule, userService.colors);
@@ -106,6 +107,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             };
             //TODO-KL Move logic out of here
             $ctrl.toggleFavorite = function(schedule){
+                console.log("Toggling favorite");
                 if(schedulizerHelperService.findFavorite(userService.get_favorite_schedules(), schedule) !== -1){
 
                 }
@@ -115,11 +117,15 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             };
 
             $ctrl.openPreview = function(schedule){
-
+                console.log("preview",schedule);
+                var crns = schedulizerHelperService.extractCourseCRNs(schedule);
+                // var url = $state.href('preview?crn='+crns.join("&crn="));
+                var url ='/preview.html/#!/preview?crn='+crns.join("&crn=") + "&semester=" + schedule[0].Sections[0].Semester;
+                window.open(url,'_blank');
             };
 
             $ctrl.export = function(schedule){
-
+                console.log("export",schedule);
             };
         }
     }); 

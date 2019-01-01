@@ -1,2 +1,2 @@
-<li ng-if="$ctrl.loading_schedule"><div class="loader"></div> <div class="status">Loading Schedule...</div></li>
-<schedule-component ng-if="$ctrl.loading_schedule === false" schedule="$ctrl.schedule" class="hidden" options="$ctrl.options"></schedule-component>
+<div ng-if="$ctrl.loading_schedule"><div class="loader"></div> <div class="status">Loading Schedule...</div></div>
+<schedule-component ng-if="$ctrl.loading_schedule === false" schedule="$ctrl.schedule" class="hidden" schedule-options="$ctrl.scheduleOptions"></schedule-component>

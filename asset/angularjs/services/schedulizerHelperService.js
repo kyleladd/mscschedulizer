@@ -693,6 +693,19 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             schedule.courseWithoutMeeting = noMeetings;
             return schedule;
         };
+        factory.extractCourseCRNs = function(schedule){
+            var crns = [];
+            for (var c in schedule) {
+                var course = schedule[c];
+                for (var s in course.Sections) {
+                    var section = course.Sections[s];
+                    if(crns.indexOf(section.CourseCRN) === -1){
+                        crns.push(section.CourseCRN);
+                    }
+                }
+            }
+            return crns;
+        };
 
         factory.findFavorite = function(favorites, schedule){
             return node_generic_functions.searchListObjects(favorites,schedule);

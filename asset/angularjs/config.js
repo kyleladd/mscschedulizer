@@ -4,6 +4,7 @@
  * or 3rd party libraries
  */
 require.config({
+    waitSeconds : 30,
     baseUrl: '/asset/angularjs/',
     paths: {
         // 'domReady': '../lib/requirejs-domready/domReady',
