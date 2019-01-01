@@ -15,7 +15,7 @@
             <li><div class="loader"></div> <div class="status">Loading Course Listings...</div></li>
           </ul>
           <div ng-if="!$ctrl.loading_courses">
-              <course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="true" show-crn-selections="true" show-total-credits="true" change="$ctrl.selectionsChanged(value)"></course-listings-component>
+              <course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="true" show-crn-selections="true" show-total-credits="false" change="$ctrl.selectionsChanged(value)"></course-listings-component>
           </div>
         </div>
         <!-- End Page Content-->
