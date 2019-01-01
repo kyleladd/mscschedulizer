@@ -1,3 +1,17 @@
+<div ng-if="$ctrl.showTerms && $ctrl.terms.length > 0" >
+	<table class="term_details table">
+	    <thead>
+	    	<tr class="field-name">
+	    		<td>Term Code</td><td>Start Date</td><td>End Date</td>
+	    	</tr>
+	    </thead>
+	    <tr ng-repeat="term in $ctrl.terms">
+	    	<td>{{term.TermCode}}</td>
+	    	<td>{{$ctrl.moment(term.TermStart).format("M/D/YY")}}</td>
+	    	<td>{{$ctrl.moment(term.TermEnd).format("M/D/YY")}}</td>
+	    </tr>
+	</table>
+</div>
 <div ng-repeat="course in $ctrl.courses">
 
 	<h4 class='classic-title'>

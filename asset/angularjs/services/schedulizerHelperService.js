@@ -706,6 +706,19 @@ define(['angular','node_generic_functions','moment','combinatorics'], function (
             }
             return crns;
         };
+        factory.extractTerms = function(schedule){
+            var terms = [];
+            for (var c in schedule) {
+                var course = schedule[c];
+                for (var s in course.Sections) {
+                    var section = course.Sections[s];
+                    if(node_generic_functions.searchListDictionaries(terms,section.CourseTerm,true) == -1){
+                        terms.push(section.CourseTerm);
+                    }
+                }
+            }
+            return terms;
+        };
 
         factory.findFavorite = function(favorites, schedule){
             return node_generic_functions.searchListObjects(favorites,schedule);

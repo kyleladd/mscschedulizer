@@ -3,7 +3,7 @@ define(['angular','../directives/courseListingsDirective'], function (angular) {
     template: '<div class="modal-header">\
                   <h3 class="modal-title" ng-bind-html="$ctrl.resolve.title"></h3>\
               </div>\
-              <div class="modal-body"><course-listings-component courses=\"$ctrl.schedule\" icons=\"false\" show-crn-selections=\"false\" show-total-credits=\"true\"></course-listings-component>\
+              <div class="modal-body"><course-listings-component courses=\"$ctrl.schedule\" icons=\"false\" show-crn-selections=\"false\" show-total-credits=\"true\" show-terms=\"true\"></course-listings-component>\
               </div>\
               <div class="modal-footer">\
                   <button class="btn btn-primary" type="button" ng-click="$ctrl.close()">Close</button>\

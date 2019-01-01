@@ -11,6 +11,8 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             icons: '<',
             showCrnSelections: '<',
             showTotalCredits: '<',
+            showTerms: '<',
+            
             //i don't like this passed in, apply to courses beforehand
             userCourseAdjustments: '<',
             change:'&'
@@ -18,10 +20,13 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
         controllerAs: '$ctrl',
         controller: function($scope,$uibModal,$element,$timeout,schedulizerHelperService) {
             var $ctrl = this;
+            $ctrl.moment = moment;
+            $ctrl.terms = [];
             $ctrl.$onInit = function () {
                 $ctrl.department_courses = angular.copy($ctrl.courses);
                 $ctrl.userCourseAdjustments = {Courses:[],Sections:[],Meetings:[]};
                 $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
+                $ctrl.terms = $ctrl.getTerms($ctrl.courses);
             };
             $ctrl.changedValue = function(value){
                 $ctrl.change({value:value});
@@ -99,6 +104,9 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             };
             $ctrl.getTotalCredits = function(){
                 return schedulizerHelperService.getTotalCredits($ctrl.courses);
+            };
+            $ctrl.getTerms = function(){
+                return schedulizerHelperService.extractTerms($ctrl.courses);
             };
             $ctrl.openModal = function(course){
                 var modalInstance = $uibModal.open({

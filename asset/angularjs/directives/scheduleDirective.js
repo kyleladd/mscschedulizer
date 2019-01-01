@@ -92,7 +92,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                         return "Schedule Details"
                     },
                     body: function(){
-                        var body = "hello<course-listings-component courses=\"$ctrl.schedule\" icons=\"false\" show-crn-selections=\"false\" show-total-credits=\"true\"></course-listings-component>";
+                        var body = "<course-listings-component courses=\"$ctrl.schedule\" icons=\"false\" show-crn-selections=\"false\" show-total-credits=\"true\" show-terms=\"true\"></course-listings-component>";
                         return body;
                     },
                     schedule: function(){
