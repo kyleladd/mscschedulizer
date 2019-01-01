@@ -11,6 +11,7 @@
 	    	<td>{{$ctrl.moment(term.TermEnd).format("M/D/YY")}}</td>
 	    </tr>
 	</table>
+	<div ng-bind-html="$ctrl.mscSpecialMessages()"></div>
 </div>
 <div ng-repeat="course in $ctrl.courses">
 

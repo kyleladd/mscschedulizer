@@ -108,6 +108,27 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             $ctrl.getTerms = function(){
                 return schedulizerHelperService.extractTerms($ctrl.courses);
             };
+            //TODO-KL bad
+            $ctrl.mscSpecialMessages = function(){
+                if(true === true && node_generic_functions.endsWith("06",userService.get_semester().TermCode)){
+                    var d_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"D"}) ;
+                    var e_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"E"});
+                    // Make this a function
+                    if(d_poterm !== null){
+                        special_msc_message += "<strong>Part of Term D Classes meeting:</strong><br/>";
+                        special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
+                        special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
+
+                    }
+                    if(e_poterm !== null){
+                        special_msc_message += "<strong>Part of Term E Classes meeting:</strong><br/>";
+                        special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
+                        special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
+                    }
+                    special_msc_message += "<br/>";
+                }
+                return special_msc_message;
+            };
             $ctrl.openModal = function(course){
                 var modalInstance = $uibModal.open({
                   animation: true,
