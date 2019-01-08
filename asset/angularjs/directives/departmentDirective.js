@@ -41,7 +41,6 @@ define(['angular', 'angular-ui-select', 'ngSanitize','../services/schedulizerSer
                     $ctrl.changedValue($ctrl.department);
                 });
                 // .catch((err,data)=>{
-                //     debugger;
                 //     $ctrl.departments=[];
                 // });
             }

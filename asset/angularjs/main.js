@@ -177,7 +177,6 @@ define([
         $ctrl.onFavorite = function(schedule){
           console.log("generate page on favorite");
           $ctrl.favorites.push(schedule);
-          debugger;
           userService.set_favorite_schedules($ctrl.favorites);
         };
 
@@ -185,7 +184,6 @@ define([
           // $ctrl.favorites.splice(i,1);
           console.log("generate page on unfavorite");
           var favorite_index = schedulizerHelperService.findFavorite($ctrl.favorites, schedule);
-          debugger;
           $ctrl.favorites.splice(favorite_index,1);
           userService.set_favorite_schedules($ctrl.favorites);
         };
@@ -377,18 +375,12 @@ define([
       controllerAs: "$ctrl",
       controller: function($scope, userService, schedulizerService, schedulizerHelperService){
         var $ctrl = this;
-        $ctrl.courses = [];
-        $ctrl.unmodified_courses = [];
-        // $ctrl.gen_course_combinations = [];
-        $ctrl.loading_courses = true;
         $ctrl.displayed_schedules = [];
         $ctrl.$onInit = function () {
           $ctrl.semester = userService.get_semester();
           $ctrl.courses_selected = userService.get_courses_selected();
-          $ctrl.filters = userService.get_schedule_filters();
           $ctrl.favorites = userService.get_favorite_schedules();
           $ctrl.displayed_schedules = $ctrl.favorites.slice(0, 10);
-
         };
 
         $ctrl.showMoreSchedules = function(){
@@ -410,6 +402,7 @@ define([
         $ctrl.onUnfavorite = function(schedule){
           var favorite_index = schedulizerHelperService.findFavorite($ctrl.favorites, schedule);
           $ctrl.favorites.splice(favorite_index,1);
+          $ctrl.displayed_schedules.splice(favorite_index,1);
           userService.set_favorite_schedules($ctrl.favorites);
         };
 

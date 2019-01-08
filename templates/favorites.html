@@ -6,15 +6,11 @@
           <div class="col-md-12">
             <!-- Classic Heading -->
             <h4 class="classic-title"><span>Schedules</span></h4>
-            <filters-component filters="$ctrl.filters" change="$ctrl.updateFilters(value)"></filters-component>
-            <!-- <div ng-if="$ctrl.loading_courses"><div class="loader loader-large"></div> <div class="status">Loading Favorites...</div></div>
-            <div ng-if="!$ctrl.loading_courses"> -->
-              <span ng-if="!$ctrl.favorites" class="notice">No favorites. Adjust your selections and/or filters.</span>
+              <span ng-if="!$ctrl.favorites" class="notice">No favorites.</span>
               <span ng-if="$ctrl.favorites" class="notice">{{$ctrl.favorites.length}} schedule{{$ctrl.favorites.length > 1 ? 's' : ''}}</span>
                 <div infinite-scroll="$ctrl.showMoreSchedules()" infinite-scroll-distance="2">
                   <schedule-component ng-repeat='schedule in $ctrl.displayed_schedules' schedule="schedule" class="hidden" options="$ctrl.options" favorites="$ctrl.favorites" on-favorite="$ctrl.onFavorite(schedule)" on-unfavorite="$ctrl.onUnfavorite(schedule)"></schedule-component>
                 </div>
-            <!-- </div> -->
           </div>
         </div>
     </div>
