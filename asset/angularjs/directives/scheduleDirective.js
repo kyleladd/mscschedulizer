@@ -5,7 +5,10 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
         bindings: { 
             schedule: '<',
             options: '<',
-            scheduleOptions: '<'
+            scheduleOptions: '<',
+            onFavorite: '&',
+            onUnfavorite: '&',
+            favorites: '<'
         },
         controllerAs: '$ctrl',
         controller: function($scope,$uibModal,$element,$timeout,userService,schedulizerHelperService) {
@@ -57,13 +60,19 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
                     $($element).removeClass("hidden");
                 });
             };
+            // $scope.$on('favorite_schedules:set', function(event, data){
+            //   $ctrl.favorites = data;
+            // });
         }
     })
     .component("optionsComponent",{
         templateUrl:'/asset/angularjs/directives/options.html',
         bindings: { 
             schedule: '<',
-            options: '<'
+            options: '<',
+            favorites: '<',
+            onFavorite: '&',
+            onUnfavorite: '&'
         },
         controllerAs: '$ctrl',
         controller: function($scope,$element,$timeout,$state,$uibModal,userService,schedulizerHelperService) {
@@ -103,18 +112,29 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             };
             //TODO-KL Favorites should be passed in so they are only fetched once opposed to fetching for each generated combination schedule result
             $ctrl.isFavorite = function(schedule){
-                return schedulizerHelperService.findFavorite(userService.get_favorite_schedules(), schedule) !== -1;
+                return schedulizerHelperService.findFavorite($ctrl.favorites, schedule) !== -1;
             };
             //TODO-KL Move logic out of here
             $ctrl.toggleFavorite = function(schedule){
                 console.log("Toggling favorite");
-                if(schedulizerHelperService.findFavorite(userService.get_favorite_schedules(), schedule) !== -1){
-
+                var favorite_index = schedulizerHelperService.findFavorite(userService.get_favorite_schedules(), schedule);
+                if(favorite_index !== -1){
+                    //remove favorite
+                    $ctrl.onUnfavorite({schedule:schedule});
+                    // $ctrl.favorites.splice(i,1);
+                    // userService.set_favorite_schedules($ctrl.favorites);
                 }
                 else{
-
+                    //add favorite
+                    $ctrl.onFavorite({schedule:schedule});
+                    // $ctrl.favorites.push(schedule);
+                    // userService.set_favorite_schedules($ctrl.favorites);
                 }
             };
+
+            // $ctrl.addFavorite = function(){
+
+            // };
 
             $ctrl.openPreview = function(schedule){
                 console.log("preview",schedule);
@@ -127,6 +147,9 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             $ctrl.export = function(schedule){
                 console.log("export",schedule);
             };
+            // $scope.$on('favorite_schedules:set', function(event, data){
+            //   $ctrl.favorites = data;
+            // });
         }
     }); 
 });

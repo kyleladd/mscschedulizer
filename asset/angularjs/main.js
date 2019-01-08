@@ -76,8 +76,8 @@ define([
           name: 'favorites',
           // url: '/view1/{bowlingID}',
           url: "/favorites",
-          templateUrl: '/templates/favorites.html',
-          controller: 'FavoritesCtrl'
+          // templateUrl: '/templates/favorites.html',
+          component: 'favoritesPage'
         });
        $stateProvider.state({
           name: 'preview',
@@ -144,6 +144,7 @@ define([
           $ctrl.semester = userService.get_semester();
           $ctrl.courses_selected = userService.get_courses_selected();
           $ctrl.filters = userService.get_schedule_filters();
+          $ctrl.favorites = userService.get_favorite_schedules();
           $ctrl.user_course_adjustments = userService.get_user_course_adjustments();
           schedulizerService.get_course_infos($ctrl.courses_selected,$ctrl.semester)
           .then(function(courses){
@@ -169,12 +170,36 @@ define([
             $ctrl.displayed_schedules.push(item_to_load[0]);
           }
         };
+        
         $ctrl.updateFilters = function(value){
           userService.set_schedule_filters(value);
         };
+        $ctrl.onFavorite = function(schedule){
+          console.log("generate page on favorite");
+          $ctrl.favorites.push(schedule);
+          debugger;
+          userService.set_favorite_schedules($ctrl.favorites);
+        };
+
+        $ctrl.onUnfavorite = function(schedule){
+          // $ctrl.favorites.splice(i,1);
+          console.log("generate page on unfavorite");
+          var favorite_index = schedulizerHelperService.findFavorite($ctrl.favorites, schedule);
+          debugger;
+          $ctrl.favorites.splice(favorite_index,1);
+          userService.set_favorite_schedules($ctrl.favorites);
+        };
+
+        // $ctrl.toggleFavorite = function(value){
+        //   userService.set_schedule_filters(value);
+        // };
+
         $scope.$on('schedule_filters:set', function(event, data){
           $ctrl.filters = data;
           $ctrl.generateResults();
+        });
+        $scope.$on('favorite_schedules:set', function(event, data){
+          $ctrl.favorites = data;
         });
       }
     });
@@ -347,7 +372,54 @@ define([
     });
     app.controller('VisualFilterCtrl', ['$scope',function ($scope) {
     }]);
-    app.controller('FavoritesCtrl', ['$scope',function ($scope) {
-    }]);
+    app.component("favoritesPage",{
+      templateUrl: '/templates/favorites.html',
+      controllerAs: "$ctrl",
+      controller: function($scope, userService, schedulizerService, schedulizerHelperService){
+        var $ctrl = this;
+        $ctrl.courses = [];
+        $ctrl.unmodified_courses = [];
+        // $ctrl.gen_course_combinations = [];
+        $ctrl.loading_courses = true;
+        $ctrl.displayed_schedules = [];
+        $ctrl.$onInit = function () {
+          $ctrl.semester = userService.get_semester();
+          $ctrl.courses_selected = userService.get_courses_selected();
+          $ctrl.filters = userService.get_schedule_filters();
+          $ctrl.favorites = userService.get_favorite_schedules();
+          $ctrl.displayed_schedules = $ctrl.favorites.slice(0, 10);
+
+        };
+
+        $ctrl.showMoreSchedules = function(){
+          var last_index = $ctrl.displayed_schedules.length - 1;
+          var item_to_load = $ctrl.favorites.slice(last_index + 1,last_index + 2);
+          if(item_to_load && item_to_load.length > 0){
+            $ctrl.displayed_schedules.push(item_to_load[0]);
+          }
+        };
+        
+        $ctrl.updateFilters = function(value){
+          userService.set_schedule_filters(value);
+        };
+        $ctrl.onFavorite = function(schedule){
+          $ctrl.favorites.push(schedule);
+          userService.set_favorite_schedules($ctrl.favorites);
+        };
+
+        $ctrl.onUnfavorite = function(schedule){
+          var favorite_index = schedulizerHelperService.findFavorite($ctrl.favorites, schedule);
+          $ctrl.favorites.splice(favorite_index,1);
+          userService.set_favorite_schedules($ctrl.favorites);
+        };
+
+        $scope.$on('schedule_filters:set', function(event, data){
+          $ctrl.filters = data;
+        });
+        $scope.$on('favorite_schedules:set', function(event, data){
+          $ctrl.favorites = data;
+        });
+      }
+    });
     angular.bootstrap(document, ['app']);
 });
