@@ -1,0 +1,15 @@
+<div class="modal-header">
+  <h3 class="modal-title">Visual Filters</h3>
+</div>
+<div class="modal-body">
+	<div ng-if="$ctrl.adjustments.Courses.length === 0 && $ctrl.adjustments.Sections.length === 0 && $ctrl.adjustments.Meetings.length === 0">
+		Check out the <a ui-sref="visual-filter">visual filter view</a> to visually filter course sections.
+	</div>
+	<div ng-if="!($ctrl.adjustments.Courses.length === 0 && $ctrl.adjustments.Sections.length === 0 && $ctrl.adjustments.Meetings.length === 0)">
+		<course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="true" show-crn-selections="true" show-total-credits="false" show-terms="true" change="$ctrl.selectionsChanged(value)"></course-listings-component>
+	</div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" type="button" ng-click="$ctrl.close()">Close</button>
+  <!--<button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>-->
+</div>
