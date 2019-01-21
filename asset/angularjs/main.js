@@ -69,8 +69,7 @@ define([
           name: 'visual-filter',
           // url: '/view1/{bowlingID}',
           url: "/visual-filter",
-          templateUrl: '/templates/visual-filter.html',
-          controller: 'VisualFilterCtrl'
+          component: 'visualFilterPage'
         });
        $stateProvider.state({
           name: 'favorites',
@@ -368,8 +367,85 @@ define([
         };
       }
     });
-    app.controller('VisualFilterCtrl', ['$scope',function ($scope) {
-    }]);
+    //TODO-KL
+    app.component("visualFilterPage",{
+      templateUrl: '/templates/visual-filter.html',
+      controllerAs: "$ctrl",
+      controller: function($scope, userService, schedulizerService, schedulizerHelperService){
+        var $ctrl = this;
+        $ctrl.courses = [];
+        $ctrl.unmodified_courses = [];
+        $ctrl.gen_course_combinations = [];
+        $ctrl.loading_courses = true;
+        $ctrl.displayed_schedules = [];
+        $ctrl.$onInit = function () {
+          $ctrl.semester = userService.get_semester();
+          $ctrl.courses_selected = userService.get_courses_selected();
+          $ctrl.filters = userService.get_schedule_filters();
+          $ctrl.favorites = userService.get_favorite_schedules();
+          $ctrl.user_course_adjustments = userService.get_user_course_adjustments();
+          $ctrl.scheduleOptions = node_generic_functions.merge_options(
+          {
+              favorite:false,
+              details:true,
+              preview:true,
+              export:false
+          },$ctrl.scheduleOptions);
+          schedulizerService.get_course_infos($ctrl.courses_selected,$ctrl.semester)
+          .then(function(courses){
+            $ctrl.unmodified_courses = courses;
+            //todo-kl probably need to save that request off elsewhere
+            $ctrl.generateResults();
+          })
+          .catch(function (data) {
+            // Handle error here
+            console.log("error", data);
+          });
+        };
+        $ctrl.generateResults = function(){
+          $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.unmodified_courses, $ctrl.user_course_adjustments, $ctrl.filters);
+          $ctrl.gen_course_combinations = [$ctrl.courses];//schedulizerHelperService.getCombinations($ctrl.courses, $ctrl.courses_selected, $ctrl.filters);
+          $ctrl.loading_courses = false;
+          $ctrl.displayed_schedules = $ctrl.gen_course_combinations.slice(0, 10);
+        };
+        $ctrl.showMoreSchedules = function(){
+          var last_index = $ctrl.displayed_schedules.length - 1;
+          var item_to_load = $ctrl.gen_course_combinations.slice(last_index + 1,last_index + 2);
+          if(item_to_load && item_to_load.length > 0){
+            $ctrl.displayed_schedules.push(item_to_load[0]);
+          }
+        };
+        
+        $ctrl.updateFilters = function(value){
+          userService.set_schedule_filters(value);
+        };
+        $ctrl.onFavorite = function(schedule){
+          console.log("generate page on favorite");
+          $ctrl.favorites.push(schedule);
+          userService.set_favorite_schedules($ctrl.favorites);
+        };
+
+        $ctrl.onUnfavorite = function(schedule){
+          // $ctrl.favorites.splice(i,1);
+          console.log("generate page on unfavorite");
+          var favorite_index = schedulizerHelperService.findFavorite($ctrl.favorites, schedule);
+          $ctrl.favorites.splice(favorite_index,1);
+          userService.set_favorite_schedules($ctrl.favorites);
+        };
+
+        // $ctrl.toggleFavorite = function(value){
+        //   userService.set_schedule_filters(value);
+        // };
+
+        $scope.$on('schedule_filters:set', function(event, data){
+          $ctrl.filters = data;
+          $ctrl.generateResults();
+        });
+        $scope.$on('favorite_schedules:set', function(event, data){
+          $ctrl.favorites = data;
+        });
+      }
+    });
     app.component("favoritesPage",{
       templateUrl: '/templates/favorites.html',
       controllerAs: "$ctrl",

@@ -1,5 +1,5 @@
-define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService','ui.bootstrap','basictable','../components/modalComponent'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService) {
-    angular.module("courseListingsDirective", ['ngSanitize','schedulizerHelperService','ui.bootstrap','uibootstrapmodalcomponent'])
+define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_functions','../services/schedulizerHelperService','../services/userService','ui.bootstrap','basictable','../components/modalComponent'], function (angular,uiselect,ngsanitize,moment,node_generic_functions,schedulizerHelperService,userService) {
+    angular.module("courseListingsDirective", ['ngSanitize','schedulizerHelperService','userService','ui.bootstrap','uibootstrapmodalcomponent'])
     .component("courseListingsComponent",{
         templateUrl:'/asset/angularjs/directives/courselistings.html',
         bindings: { 
@@ -18,7 +18,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             change:'&'
         },
         controllerAs: '$ctrl',
-        controller: function($scope,$uibModal,$element,$timeout,schedulizerHelperService) {
+        controller: function($scope,$uibModal,$element,$timeout,schedulizerHelperService,userService) {
             var $ctrl = this;
             $ctrl.moment = moment;
             $ctrl.terms = [];
@@ -110,6 +110,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             };
             //TODO-KL bad
             $ctrl.mscSpecialMessages = function(){
+                var special_msc_message = "";
                 if(true === true && node_generic_functions.endsWith("06",userService.get_semester().TermCode)){
                     var d_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"D"}) ;
                     var e_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"E"});

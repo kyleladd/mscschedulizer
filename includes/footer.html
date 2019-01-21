@@ -184,7 +184,10 @@
 //           mscSchedulizer.updateFilters(mscSchedulizer.schedule_filters);
 //           mscSchedulizer.loadAll(mscSchedulizer.gen_courses,{},mscSchedulizer.loadFullSchedule);
 //       });
-
+// TODO-KL
+// get course infos, apply user adjustments, 
+//load all passing in adjusted as the only  1 output combination
+// pass in a user-adjustment callback option
 //       mscSchedulizer.getCourseInfos(function(courses){
 //         mscSchedulizer.fetched_courses = JSON.parse(JSON.stringify(courses));
 //         var adjusted_courses = JSON.parse(JSON.stringify(mscSchedulizer.applyUserAdjustments(courses,mscSchedulizer.user_course_adjustments)));
