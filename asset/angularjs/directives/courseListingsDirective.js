@@ -24,7 +24,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             $ctrl.terms = [];
             $ctrl.$onInit = function () {
                 $ctrl.department_courses = angular.copy($ctrl.courses);
-                $ctrl.userCourseAdjustments = {Courses:[],Sections:[],Meetings:[]};
+                $ctrl.userCourseAdjustments = {Courses:[],Sections:[],Meetings:[]}; ///TODO-KL
                 $ctrl.courses = schedulizerHelperService.applyUserModificationsToCourses($ctrl.department_courses, $ctrl.userCourseAdjustments, $ctrl.filters);
                 $ctrl.terms = $ctrl.getTerms($ctrl.courses);
             };
@@ -110,25 +110,7 @@ define(['angular', 'angular-ui-select', 'ngSanitize','moment','node_generic_func
             };
             //TODO-KL bad
             $ctrl.mscSpecialMessages = function(){
-                var special_msc_message = "";
-                if(true === true && node_generic_functions.endsWith("06",userService.get_semester().TermCode)){
-                    var d_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"D"}) ;
-                    var e_poterm = node_generic_functions.searchListDictionaries(terms,{TermCode:"E"});
-                    // Make this a function
-                    if(d_poterm !== null){
-                        special_msc_message += "<strong>Part of Term D Classes meeting:</strong><br/>";
-                        special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
-                        special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(d_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(d_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
-
-                    }
-                    if(e_poterm !== null){
-                        special_msc_message += "<strong>Part of Term E Classes meeting:</strong><br/>";
-                        special_msc_message += "Monday/Wednesday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(5).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(19).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(33).format("MMMM D") + ". <br/>";
-                        special_msc_message += "Tuesday/Thursday classes meet the following Fridays: " + moment(e_poterm.TermStart).day(12).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(26).format("MMMM D") + ", " + moment(e_poterm.TermStart).day(40).format("MMMM D") + ". <br />";
-                    }
-                    special_msc_message += "<br/>";
-                }
-                return special_msc_message;
+                return schedulizerHelperService.mscSpecialMessages(node_generic_functions.endsWith("06",userService.get_semester().TermCode));
             };
             $ctrl.openModal = function(course){
                 var modalInstance = $uibModal.open({

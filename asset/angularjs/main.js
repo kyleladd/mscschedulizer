@@ -13,6 +13,7 @@ define([
     './directives/departmentDirective',
     './directives/courseSelectionsDirective',
     './directives/timeblocksDirective',
+    './directives/adjustmentsListingComponent',
     // './directives/tooltipDirective',
     './directives/scheduleDirective',
     './directives/courseListingsDirective',
@@ -30,6 +31,7 @@ define([
         'courseListingsDirective',
         'scheduleDirective',
         'timeblocksDirective',
+        'adjustmentsListingDirective',
         // 'tooltipDirective',
         'ui.bootstrap',
         'userService',
@@ -320,7 +322,7 @@ define([
         filters: '<',
         change:'&'
       },
-      controller: function($scope, userService){
+      controller: function($scope, userService, $uibModal){
         var $ctrl = this;
         $ctrl.timeblockUpdated = function(timeblocks){
           $ctrl.filters.TimeBlocks = timeblocks;
@@ -328,6 +330,25 @@ define([
         };
         $ctrl.updateFilters = function(){
           $ctrl.change({value:$ctrl.filters})
+        };
+        $ctrl.openAltViewModal = function(){
+          var modalInstance = $uibModal.open({
+            animation: true,
+            component: 'adjustmentsListingComponent',
+            resolve: {
+              title: function(){
+                  return "Schedule Details"
+              },
+              body: function(){
+                  // var body = "<course-listings-component courses=\"$ctrl.schedule\" icons=\"false\" show-crn-selections=\"false\" show-total-credits=\"true\" show-terms=\"true\"></course-listings-component>";
+                  var body = "body";
+                  return body;
+              },
+              // schedule: function(){
+              //     return schedule;
+              // }
+            }
+          });
         };
       }
     });

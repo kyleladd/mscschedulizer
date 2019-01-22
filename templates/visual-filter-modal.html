@@ -6,7 +6,7 @@
 		Check out the <a ui-sref="visual-filter">visual filter view</a> to visually filter course sections.
 	</div>
 	<div ng-if="!($ctrl.adjustments.Courses.length === 0 && $ctrl.adjustments.Sections.length === 0 && $ctrl.adjustments.Meetings.length === 0)">
-		<course-listings-component filters="$ctrl.filters" courses="$ctrl.courses" course-selections="$ctrl.courses_selected" icons="true" show-crn-selections="true" show-total-credits="false" show-terms="true" change="$ctrl.selectionsChanged(value)"></course-listings-component>
+		<adjustments-listing-component change="$ctrl.selectionsChanged(value)"></adjustments-listing-component>
 	</div>
 </div>
 <div class="modal-footer">

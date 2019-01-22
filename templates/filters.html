@@ -15,8 +15,7 @@
 		<label><input type="checkbox" name="showInternational" id="showInternationalFilter" ng-model="$ctrl.filters.ShowInternational" ng-change="$ctrl.updateFilters()"> ONCAMPUS SUNY</label>
 	</span>
 	<span uib-tooltip="A visual view to filter course sections.">
-		<label><button id="altViewFilter" class="btn btn-1">Visual Filters</button></label>
-		<!--TODO-KL Modal-->
+		<label><button class="btn btn-1" ng-click="$ctrl.openAltViewModal()">Visual Filters</button></label>
 	</span>
 	<input class="inp-cbx" id="cbx" type="checkbox" style="display: none;"/>
 </div>

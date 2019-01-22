@@ -1,0 +1,21 @@
+<div ng-if="$ctrl.showTerms && $ctrl.terms.length > 0" >
+	<table class="term_details table">
+	    <thead>
+	    	<tr class="field-name">
+	    		<td>Term Code</td><td>Start Date</td><td>End Date</td>
+	    	</tr>
+	    </thead>
+	    <tr ng-repeat="term in $ctrl.terms">
+	    	<td>{{term.TermCode}}</td>
+	    	<td>{{$ctrl.moment(term.TermStart).format("M/D/YY")}}</td>
+	    	<td>{{$ctrl.moment(term.TermEnd).format("M/D/YY")}}</td>
+	    </tr>
+	</table>
+	<div ng-bind-html="$ctrl.mscSpecialMessages()"></div>
+</div>
+<table class="course_details table">
+	<thead><tr class="field-name"><td>P/T</td><td>Dept</td><td>Number</td><td>CRN</td><td>Sec</td><td>CrHr</td><td>Enrl/Max</td><td>Days</td><td>Time</td><td>Instructor</td></tr></thead>
+	<tbody>
+		<tr ng-repeat="adjustment in $ctrl.adjustments()" class="a_course_section"><td>{{adjustment.Section.Term }}</td><td>{{ adjustment.Section.Campus }}</td><td>{{ adjustment.Section.CourseCRN }}</td><td>{{ adjustment.Section.SectionNumber }}</td><td>{{ adjustment.Section.Credits }}</td><td>{{ adjustment.Section.CurrentEnrollment }}/{{ adjustment.Section.MaxEnrollment }}</td><td>{{ adjustment.days.join(" ") }}&nbsp;</td><td>{{ adjustment.startTime }} - {{ adjustment.endTime }}</td><td>{{ adjustment.Section.Instructor }}</td></tr>
+	</tbody>
+</table>
