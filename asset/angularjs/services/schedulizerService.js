@@ -61,7 +61,7 @@ define(['angular','./cacheInterceptor'], function (angular) {
         };
 
         factory.get_schedule = function(crns, semester_termcode) {
-            if(!crns){ //|| !semester_termcode
+            if(!crns || crns.length === 0){ //|| !semester_termcode
                 return $q.reject("Course crns are required"); //TODO-KL Double check intended response obj or list //A semester term code and c
             }
             var url = base_url + "/info/?crn=" + crns.join("&crn[]=");
@@ -75,7 +75,7 @@ define(['angular','./cacheInterceptor'], function (angular) {
         };
         
         factory.get_course_infos = function(courses, semester_termcode) {
-            if(!courses){
+            if(!courses || courses.length === 0){
                 return $q.reject("Courses required.");
             }
             var courses_list = "";
