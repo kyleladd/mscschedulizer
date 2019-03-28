@@ -150,12 +150,14 @@ define([
           schedulizerService.get_course_infos($ctrl.courses_selected,$ctrl.semester)
           .then(function(courses){
             $ctrl.unmodified_courses = courses;
-            //todo-kl probably need to save that request off elsewhere
-            $ctrl.generateResults();
           })
           .catch(function (data) {
             // Handle error here
             console.log("error", data);
+            $ctrl.unmodified_courses = [];
+          })
+          .finally(function(){
+            $ctrl.generateResults();
           });
         };
         $ctrl.generateResults = function(){
