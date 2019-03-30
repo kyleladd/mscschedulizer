@@ -20,6 +20,7 @@ require.config({
         'lodash':'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min',
         'ui.router':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.20/angular-ui-router.min',
         'angular-ui-select':'https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.min',
+        'flatted': '/node_modules/flatted/index',
         'lscache': 'https://cdnjs.cloudflare.com/ajax/libs/lscache/1.3.0/lscache.min',
         'node_generic_functions': '/node_modules/node_generic_functions/genericfunctions',
         'moment':'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min',
@@ -49,6 +50,10 @@ require.config({
         'lscache': {
             deps: [],
             exports: 'lscache'
+        },
+        'flatted':{
+            deps: [],
+            exports: 'Flatted'
         },
         'ngMessages': ['angular'],
         'ngAnimate': ['angular'],

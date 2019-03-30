@@ -1,4 +1,4 @@
-define(['angular', 'lscache'], function (angular,lscache) {
+define(['angular', 'lscache', 'flatted'], function (angular,lscache,Flatted) {
     var service = angular.module("userService", []);
     service.factory('userService', ['$rootScope','$http', function ($rootScope,$http) {
         var factory = {
@@ -37,10 +37,10 @@ define(['angular', 'lscache'], function (angular,lscache) {
             },
             get_courses_selected: function(){
                 var courses_selected = lscache.get("courses_selected");
-                return (courses_selected ? courses_selected : []);
+                return (courses_selected ? Flatted.parse(courses_selected) : []);
             },
             set_courses_selected: function(courses_selected){
-                lscache.set("courses_selected",courses_selected,7*24*60);
+                lscache.set("courses_selected",Flatted.stringify(courses_selected),7*24*60);
                 $rootScope.$broadcast('courses_selected:set', courses_selected);
             },
             get_favorite_schedules: function(){
