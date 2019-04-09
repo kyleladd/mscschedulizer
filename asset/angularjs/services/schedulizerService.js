@@ -64,6 +64,9 @@ define(['angular','./cacheInterceptor'], function (angular) {
             if(!crns || crns.length === 0){ //|| !semester_termcode
                 return $q.reject("Course crns are required"); //TODO-KL Double check intended response obj or list //A semester term code and c
             }
+            if(typeof crns === 'string'){
+                crns = crns.split(',');
+            }
             var url = base_url + "/info/?crn=" + crns.join("&crn[]=");
             if(semester_termcode){
                 url += "&semester=" + semester_termcode;
