@@ -6,8 +6,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npm install -g grunt-cli",
-    "build": "npm install && bower install && grunt --target=prod",
-    "test": "node-qunit-phantomjs test/index.html && jshint --verbose asset/js/schedulizer.js"
+    "build": "npm install && bower install && grunt"
   },
   "dependencies": {
     "flatted": "^2.0.0",
@@ -17,13 +16,8 @@
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-bower-task": "^0.5.0",
-    "grunt-browserify": "^5.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^1.0.1",
-    "grunt-contrib-uglify": "^1.0.1",
-    "grunt-contrib-watch": "^1.0.0",
-    "jshint": "^2.9.1",
-    "minifyify": "^7.3.2",
-    "watchify": "^3.7.0"
+    "grunt-contrib-watch": "^1.0.0"
   }
 }
